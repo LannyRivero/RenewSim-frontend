@@ -5,11 +5,14 @@ const apiService = {
   getTests: async () => {
     try {
       const response = await api.get("/test");
+      console.log("API Response in Frontend:", response.data); // ✅ Ver respuesta en consola
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || "Error fetching test data");
+      console.error("Error fetching data:", error);
+      return [];
     }
   },
+  
 
   // Crear un nuevo registro de prueba
   createTest: async (message) => {

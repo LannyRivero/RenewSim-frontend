@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import apiService from "../services/apiService"; // ✅ Asegurar que la ruta es correcta
 
 
-
 const TestPage = () => {
   const [tests, setTests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,6 +11,7 @@ const TestPage = () => {
     const fetchData = async () => {
       try {
         const data = await apiService.getTests();
+        console.log("Received data in TestPage:", data); // ✅ Ver datos en consola
         setTests(Array.isArray(data) ? data : []);
       } catch (error) {
         setError(error.message);
