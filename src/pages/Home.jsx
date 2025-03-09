@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import IntroSection from "../components/IntroSection";
 import FeatureCard from "../components/FeatureCard";
+import StatisticsSection from "../components/StatisticsSection";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -49,6 +50,11 @@ const Home = () => {
           title="Energía Hidroeléctrica" 
           description="Evalúa la viabilidad de proyectos hidroeléctricos." 
         />
+      </section>
+
+      {/* Statistics Section - Nueva Sección */}
+      <section className="mt-16 w-full">
+        <StatisticsSection />
       </section>
 
       {/* Footer */}
