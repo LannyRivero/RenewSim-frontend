@@ -1,35 +1,40 @@
 import api from "./api";
 
+
 const apiService = {
-  // Obtener todos los registros de prueba
   getTests: async () => {
     try {
       const response = await api.get("/test");
-      console.log("API Response in Frontend:", response.data); // ✅ Ver respuesta en consola
+      console.log("API Response in Frontend:", response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching data:", error);
-      return [];
+      
+      if (!error.response) {
+        throw new Error("⚠️ No connection to the server. Please check your internet connection or backend status.");
+      }
+
+      throw new Error(error.response.data?.message || "⚠️ Error fetching test data. Try again later.");
     }
   },
-  
 
-  // Crear un nuevo registro de prueba
   createTest: async (message) => {
     try {
-      const response = await api.post("/test", null, { params: { message } });  // 🔹 Enviar el mensaje como query param
+      const response = await api.post("/test", null, { params: { message } });
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || "Error creating test data");
+      console.error("Error creating test data:", error);
+
+      if (!error.response) {
+        throw new Error("⚠️ Unable to connect to the server. Please try again later.");
+      }
+
+      throw new Error(error.response.data?.message || "⚠️ Failed to create test data.");
     }
   },
-};  
-
-// ✅ Exportamos `fetchTests` como una función real
-export const fetchTests = async () => {
-  return await apiService.getAllTests();
 };
 
 export default apiService;
+
 
 
