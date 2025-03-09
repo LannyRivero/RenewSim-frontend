@@ -1,12 +1,18 @@
-import TestComponent from '../components/TestComponent';
-
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import IntroSection from "../components/IntroSection";
+import FeatureCard from "../components/FeatureCard";
 
 const Home = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-blue-600 to-green-500 text-white">
+      {/* Intro Section */}
+      <IntroSection />
+
       {/* Hero Section */}
-      <header className="text-center px-6">
+      <header className="text-center px-6 mt-12">
         <h1 className="text-4xl md:text-6xl font-extrabold drop-shadow-lg">
           Simulador de Energías Renovables ⚡
         </h1>
@@ -14,7 +20,10 @@ const Home = () => {
           Explora, analiza y optimiza fuentes de energía renovable de forma interactiva y precisa.
         </p>
         <div className="mt-6 space-x-4">
-          <button className="px-6 py-3 bg-yellow-400 text-black font-bold rounded-lg shadow-md hover:bg-yellow-300 transition">
+          <button
+            onClick={() => navigate("/configuration")}
+            className="px-6 py-3 bg-yellow-400 text-black font-bold rounded-lg shadow-md hover:bg-yellow-300 transition"
+          >
             Iniciar Simulación
           </button>
           <button className="px-6 py-3 border-2 border-white font-bold rounded-lg hover:bg-white hover:text-blue-600 transition">
@@ -50,14 +59,4 @@ const Home = () => {
   );
 };
 
-// Componente de Tarjeta para Features
-const FeatureCard = ({ icon, title, description }) => (
-  <div className="bg-white text-black p-6 rounded-lg shadow-lg text-center">
-    <div className="text-4xl">{icon}</div>
-    <h3 className="text-xl font-bold mt-2">{title}</h3>
-    <p className="mt-2 text-gray-700">{description}</p>
-  </div>
-);
-
 export default Home;
-
