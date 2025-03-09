@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import IntroSection from "../components/IntroSection";
 import FeatureCard from "../components/FeatureCard";
 import StatisticsSection from "../components/StatisticsSection";
+import TestimonialsSection from "../components/TestimonialsSection";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -55,6 +56,9 @@ const Home = () => {
       {/* Statistics Section - Nueva Sección */}
       <section className="mt-16 w-full">
         <StatisticsSection />
+      </section>
+      <section className="mt-16 w-full">
+        <TestimonialsSection  />
       </section>
 
       {/* Footer */}
