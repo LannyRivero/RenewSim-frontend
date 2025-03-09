@@ -1,7 +1,7 @@
 import TestComponent from '../components/TestComponent';
 
 import { useEffect, useState } from 'react';
-import { testBackendConnection } from '../services/api';
+//import { testBackendConnection } from '../services/api';
 import '../styles/home.css';
 
 export default function Home() {

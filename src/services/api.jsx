@@ -1,13 +1,13 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = 'http://localhost:8080/api/test'; // Asegurarme de que  el backend está corriendo
+const api = axios.create({
+  baseURL: "http://localhost:5000/api", // Cambia esto a la URL de tu backend
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-export const testBackendConnection = async () => {
-  try {
-    const response = await axios.get(API_URL);
-    return response.data;
-  } catch (error) {
-    console.error('Error connecting to backend:', error);
-    return 'Error';
-  }
-};
+export default api;
+
+
+
