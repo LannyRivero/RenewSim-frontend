@@ -1,17 +1,25 @@
-import './App.css';
-//import Home from './pages/Home';
-import TestList from './components/TestList';
+import React from "react";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import TestPage from "./pages/TestPage";
 
 function App() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-gray-900">
-      <h1 className="text-4xl font-bold text-blue-600">
-        Welcome to the Renewable Energy Simulator
-      </h1>
-      <p className="mt-4 text-lg">Now using Tailwind CSS!</p>
-      <TestList />
-    </div>
+    <Router>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+        <nav className="mb-4">
+          <Link to="/test" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition">
+            Go to Test Page
+          </Link>
+        </nav>
+
+        <Routes>
+          <Route path="/test" element={<TestPage />} />
+          <Route path="/" element={<h1 className="text-2xl font-bold">Home Page</h1>} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
 export default App;
+
