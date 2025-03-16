@@ -1,6 +1,5 @@
 import React from "react";
 import IntroSection from "../components/IntroSection";
-import bgImage from "../assets/generacion-eolica.jpg"; // ✅ Importar la imagen correctamente
 
 const Home = () => {
   return (
@@ -15,14 +14,7 @@ const Home = () => {
         {/* Sección de Introducción */}
         <IntroSection />
 
-        {/* Sección de estadísticas y testimonios (se puede descomentar cuando sea necesario) */}
-        {/*
-        <div className="flex flex-col md:flex-row justify-center gap-12 mt-12 w-full max-w-6xl px-4 lg:px-6">
-          <StatisticsSection />
-          <TestimonialsSection />
-        </div>
-        */}
-      </main>
+
     </div>
   );
 };
