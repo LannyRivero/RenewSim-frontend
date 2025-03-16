@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import IntroSection from "../components/IntroSection";
 import StatisticsSection from "../components/StatisticsSection";
+import TestimonialsPage from "./TestimonialsPage";
 
 // Importa la imagen correctamente si está en `src/assets/`
 import bgImage from "../assets/generacion-eolica.jpg"; 
@@ -24,6 +25,8 @@ const Home = () => {
         {/* Sección de estadísticas */}
         <section className="mt-4 w-full max-w-6xl px-6">
           <StatisticsSection />
+          <TestimonialsPage />
+
         </section>
       </main>
     </div>
