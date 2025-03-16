@@ -6,40 +6,66 @@ const IntroSection = () => {
   const navigate = useNavigate();
 
   const handleStartSimulation = () => {
-    navigate("/configuration");
+    const mainContent = document.querySelector(".home-main");
+    mainContent?.classList.add("fade-out");
+    setTimeout(() => {
+      navigate("/configuration");
+    }, 500);
   };
 
   return (
-    <section className="w-full min-h-screen flex flex-col items-center justify-center text-center bg-gradient-to-b from-green-700 via-green-600 to-green-500 text-white px-6 py-12">
-      {/* Contenedor Principal */}
-      <motion.div 
-        className="max-w-4xl bg-white bg-opacity-20 p-10 rounded-lg shadow-xl backdrop-blur-md border border-white/30"
-        initial={{ opacity: 0, y: 20 }}
+    <section className="flex flex-col items-center justify-center min-h-[80vh] text-center px-6">
+      {/* Contenedor animado */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+        className="max-w-3xl bg-black/60 p-6 md:p-8 rounded-lg shadow-2xl backdrop-blur-md"
       >
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white drop-shadow-md">
+        {/* Animación del título */}
+        <motion.h1 
+          initial={{ opacity: 0, scale: 0.8 }} 
+          animate={{ opacity: 1, scale: 1 }} 
+          transition={{ duration: 1, delay: 0.3 }}
+          className="text-3xl md:text-5xl font-bold text-white drop-shadow-md"
+        >
           Simulador de Energías Renovables ⚡
-        </h1>
-        <p className="text-lg md:text-xl opacity-90 mb-8">
-          Descubre cómo optimizar el uso de energías renovables en tu hogar o negocio. 
-          Analiza costos, beneficios y el impacto ambiental de tus decisiones energéticas.
-        </p>
+        </motion.h1>
 
-        {/* Botones */}
-        <div className="flex flex-col md:flex-row justify-center gap-6">
-          <button 
+        {/* Animación del párrafo */}
+        <motion.p 
+          initial={{ opacity: 0, x: -50 }} 
+          animate={{ opacity: 1, x: 0 }} 
+          transition={{ duration: 1, delay: 0.5 }}
+          className="mt-4 text-base md:text-lg text-gray-200 leading-relaxed"
+        >
+          Descubre cómo puedes optimizar el uso de energías renovables en tu hogar o negocio. 
+          Analiza costos, beneficios y el impacto ambiental de tus decisiones energéticas.
+        </motion.p>
+
+        {/* Animación de los botones */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 1, delay: 0.8 }}
+          className="mt-6 flex flex-col md:flex-row justify-center gap-4"
+        >
+          <motion.button 
+            whileHover={{ scale: 1.05 }} 
+            whileTap={{ scale: 0.95 }}
             onClick={handleStartSimulation}
-            className="bg-white text-green-700 font-semibold py-3 px-8 rounded-lg transition-all transform hover:scale-105 hover:bg-gray-100 shadow-lg"
+            className="bg-green-500 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-green-400 transition-all"
           >
             Comenzar Simulación
-          </button>
-          <button 
-            className="border-2 border-white text-white py-3 px-8 rounded-lg hover:bg-white hover:text-green-700 transition-all transform hover:scale-105 shadow-lg"
+          </motion.button>
+          <motion.button 
+            whileHover={{ scale: 1.05 }} 
+            whileTap={{ scale: 0.95 }}
+            className="border-2 border-green-500 text-green-500 py-3 px-6 rounded-lg hover:bg-green-500 hover:text-white transition-all shadow-lg"
           >
             Más información
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
       </motion.div>
     </section>
   );
