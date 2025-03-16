@@ -1,62 +1,33 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import IntroSection from "../components/IntroSection";
-import FeatureCard from "../components/FeatureCard";
+import bgImage from "../assets/generacion-eolica.jpg"; // ✅ Importar la imagen correctamente
 
 const Home = () => {
-  const navigate = useNavigate();
-
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-blue-600 to-green-500 text-white">
-      {/* Intro Section */}
-      <IntroSection />
+    <div 
+      className="relative min-h-screen w-full bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
+      {/* Capa de superposición para oscurecer la imagen */}
+      <div className="absolute inset-0 bg-black/60 md:bg-black/50 lg:bg-black/40"></div>
 
-      {/* Hero Section */}
-      <header className="text-center px-6 mt-12">
-        <h1 className="text-4xl md:text-6xl font-extrabold drop-shadow-lg">
-          Simulador de Energías Renovables ⚡
-        </h1>
-        <p className="mt-4 text-lg md:text-xl max-w-2xl">
-          Explora, analiza y optimiza fuentes de energía renovable de forma interactiva y precisa.
-        </p>
-        <div className="mt-6 space-x-4">
-          <button
-            onClick={() => navigate("/configuration")}
-            className="px-6 py-3 bg-yellow-400 text-black font-bold rounded-lg shadow-md hover:bg-yellow-300 transition"
-          >
-            Iniciar Simulación
-          </button>
-          <button className="px-6 py-3 border-2 border-white font-bold rounded-lg hover:bg-white hover:text-blue-600 transition">
-            Explorar Opciones
-          </button>
+      <main className="relative z-10 flex flex-col items-center justify-center text-center text-white px-6 pt-20 md:pt-28">
+        {/* Sección de Introducción */}
+        <IntroSection />
+
+        {/* Sección de estadísticas y testimonios (se puede descomentar cuando sea necesario) */}
+        {/*
+        <div className="flex flex-col md:flex-row justify-center gap-12 mt-12 w-full max-w-6xl px-4 lg:px-6">
+          <StatisticsSection />
+          <TestimonialsSection />
         </div>
-      </header>
-
-      {/* Features Section */}
-      <section className="mt-16 grid md:grid-cols-3 gap-8 px-6 max-w-6xl">
-        <FeatureCard 
-          icon="☀️" 
-          title="Energía Solar" 
-          description="Calcula el rendimiento de paneles solares en distintas ubicaciones." 
-        />
-        <FeatureCard 
-          icon="💨" 
-          title="Energía Eólica" 
-          description="Simula la eficiencia de turbinas eólicas en diversas regiones." 
-        />
-        <FeatureCard 
-          icon="💧" 
-          title="Energía Hidroeléctrica" 
-          description="Evalúa la viabilidad de proyectos hidroeléctricos." 
-        />
-      </section>
-
-      {/* Footer */}
-      <footer className="mt-16 text-center text-sm opacity-75">
-        © {new Date().getFullYear()} RenewSim. Energías Renovables para un Futuro Sostenible.
-      </footer>
+        */}
+      </main>
     </div>
   );
 };
 
 export default Home;
+
+
+
