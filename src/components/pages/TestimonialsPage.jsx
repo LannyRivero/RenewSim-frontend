@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Slider from "react-slick";
 import { useNavigate } from "react-router-dom";
-import SubmitTestimonial from "../components/SubmitTestimonial"; 
+import SubmitTestimonialModal from "../modals/SubmitTestimonialModal"; 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -70,7 +70,7 @@ const TestimonialsPage = () => {
             >
               ✖
             </button>
-            <SubmitTestimonial />
+            <SubmitTestimonialModal />
           </div>
         </div>
       )}

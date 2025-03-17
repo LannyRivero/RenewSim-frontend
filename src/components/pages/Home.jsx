@@ -1,11 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import IntroSection from "../components/IntroSection";
-import StatisticsSection from "../components/StatisticsSection";
+import IntroSection from "../section/IntroSection";
+import StatisticsSection from "../section/StatisticsSection";
 import TestimonialsPage from "./TestimonialsPage";
 
 // Importa la imagen correctamente si está en `src/assets/`
-import bgImage from "../assets/generacion-eolica.jpg"; 
+import bgImage from "../../assets/generacion-eolica.jpg"; 
 
 const Home = () => {
   return (
