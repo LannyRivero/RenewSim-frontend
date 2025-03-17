@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const SubmitTestimonial = () => {
+const SubmitTestimonialModal = () => {
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -114,5 +114,5 @@ const SubmitTestimonial = () => {
   );
 };
 
-export default SubmitTestimonial;
+export default SubmitTestimonialModal;
 
