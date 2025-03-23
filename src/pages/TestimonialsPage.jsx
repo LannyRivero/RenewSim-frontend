@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Slider from "react-slick";
 import { useNavigate } from "react-router-dom";
-import SubmitTestimonialModal from "../modals/SubmitTestimonialModal"; 
+import SubmitTestimonialModal from "../components/modals/SubmitTestimonialModal";
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 

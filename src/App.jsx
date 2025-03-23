@@ -2,8 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './middleware/ProtectedRoute';
-import HomePage from './pages/HomePage';
-import Dashboard from './pages/Dashboard';
+import Home from "./pages/Home";
+
+//import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 
 function App() {
@@ -11,12 +12,12 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
 
           {/* Rutas protegidas */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
+              {/*<Route path="/dashboard" element={<Dashboard />} /> */} 
           </Route>
         </Routes>
       </Router>
