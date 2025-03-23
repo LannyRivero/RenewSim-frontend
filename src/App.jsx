@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import TestPage from "./components/pages/TestPage";
-import Home from "./components/pages/Home";
+import Home1 from "./components/pages/Home1";
 import Header from "./components/Header";
 import TestimonialsPage from "./components/pages/TestimonialsPage";
 import "./App.css";
@@ -15,7 +15,7 @@ function App() {
         <div className="flex flex-col items-center justify-center flex-grow w-full px-4 py-8 md:px-12">
         <Header />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home1 />} />
             <Route path="/testimonials" element={<TestimonialsPage />} />
             <Route path="/test" element={<TestPage />} />
           </Routes>
