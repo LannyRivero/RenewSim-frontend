@@ -1,32 +1,31 @@
-import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
-import { AuthContext } from '../context/AuthContext';
+import React from 'react';
+import { useNavigate, Navigate } from 'react-router-dom';
+import LoginForm from '../components/forms/LoginForm';
+import { loginUser } from '../services/authService';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { user, login } = useAuth();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // ✅ Si ya hay usuario logueado, redirige
+  if (user) {
+    return <Navigate to="/simulation" />;
+  }
+
+  const handleLogin = async (credentials) => {
     try {
-      const response = await api.post('/auth/login', { email, password });
-      login(response.data.token, response.data.user);
-      navigate('/dashboard'); // Redirigir al dashboard
+      const { token, user } = await loginUser(credentials);
+      login(token, user);
+      navigate('/simulation');
     } catch (error) {
-      console.error('Error al iniciar sesión:', error);
+      alert('Credenciales incorrectas o error del servidor.');
     }
   };
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-      <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required />
-      <button type="submit">Iniciar Sesión</button>
-    </form>
-  );
+  return <LoginForm onLogin={handleLogin} />;
 };
 
 export default Login;
+
+
