@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaHome, FaCog, FaClipboardList, FaBook, FaMoon, FaSun, FaBars, FaTimes } from "react-icons/fa";
+import {
+  FaHome,
+  FaCog,
+  FaClipboardList,
+  FaBook,
+  FaMoon,
+  FaSun,
+  FaBars,
+  FaTimes,
+  FaShieldAlt
+} from "react-icons/fa";
 import logo from '../../assets/8408600.jpg';
 import { useAuth } from "../../context/AuthContext";
 import RoleWrapper from "../RoleWrapper";
@@ -9,7 +19,6 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const location = useLocation();
-
   const { user, logout } = useAuth();
 
   const toggleTheme = () => {
@@ -46,7 +55,7 @@ const Header = () => {
         </RoleWrapper>
 
         <RoleWrapper allowedRoles={['ADMIN']}>
-          <NavLink to="/admin" icon={<FaCog />} label="Admin" active={location.pathname === "/admin"} />
+          <NavLink to="/admin/users" icon={<FaShieldAlt />} label="Panel Admin" active={location.pathname === "/admin/users"} />
         </RoleWrapper>
       </nav>
 
@@ -73,11 +82,15 @@ const Header = () => {
         {user ? (
           <div className="relative">
             <button onClick={toggleMenu} className="flex items-center space-x-2 bg-gray-200 dark:bg-gray-700 px-3 py-2 rounded-md hover:bg-gray-300">
-              <img src="/path/to/avatar.jpg" alt="User Avatar" className="w-8 h-8 rounded-full" />
+              <img
+                src="https://www.gravatar.com/avatar/?d=mp"
+                alt="User Avatar"
+                className="w-8 h-8 rounded-full"
+              />
               <span className="hidden md:inline text-gray-700 dark:text-white">{user.username}</span>
             </button>
             {menuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2">
+              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 z-50">
                 <Link className="block px-4 py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700" to="/profile">Perfil</Link>
                 <Link className="block px-4 py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700" to="/settings">Configuración</Link>
                 <button onClick={logout} className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700">Cerrar sesión</button>
@@ -96,7 +109,7 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <nav className="absolute top-16 left-0 w-full bg-white dark:bg-gray-900 shadow-md flex flex-col items-center py-4 space-y-4 md:hidden">
+        <nav className="absolute top-16 left-0 w-full bg-white dark:bg-gray-900 shadow-md flex flex-col items-center py-4 space-y-4 md:hidden z-40">
           <NavLink to="/" icon={<FaHome />} label="Home" active={location.pathname === "/"} />
 
           <RoleWrapper allowedRoles={['USER', 'ADVANCED_USER', 'ADMIN']}>
@@ -108,7 +121,7 @@ const Header = () => {
           </RoleWrapper>
 
           <RoleWrapper allowedRoles={['ADMIN']}>
-            <NavLink to="/admin" icon={<FaCog />} label="Admin" active={location.pathname === "/admin"} />
+            <NavLink to="/admin/users" icon={<FaShieldAlt />} label="Panel Admin" active={location.pathname === "/admin/users"} />
           </RoleWrapper>
         </nav>
       )}
@@ -124,5 +137,6 @@ const NavLink = ({ to, icon, label, active }) => (
 );
 
 export default Header;
+
 
 
