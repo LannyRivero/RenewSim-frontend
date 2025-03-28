@@ -1,25 +1,33 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 
-// Crear el contexto
+// 1. Crear y exportar el contexto
 export const AuthContext = createContext();
 
-// Proveedor del contexto
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);         // Contiene info del usuario (incluye rol)
-  const [token, setToken] = useState(null);       // Contiene el JWT
+// 2. Crear y exportar el hook personalizado
+export const useAuth = () => useContext(AuthContext);
 
-  // Cargar usuario y token desde localStorage al iniciar
+// 3. Proveedor del contexto
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
+
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     const storedToken = localStorage.getItem('token');
-
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-      setToken(storedToken);
+  
+    try {
+      if (storedUser && storedToken) {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+        setToken(storedToken);
+      }
+    } catch (error) {
+      console.error('❌ Error al parsear el usuario desde localStorage:', error);
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
     }
   }, []);
 
-  // Función para iniciar sesión
   const login = (newToken, userData) => {
     localStorage.setItem('token', newToken);
     localStorage.setItem('user', JSON.stringify(userData));
@@ -27,7 +35,6 @@ export const AuthProvider = ({ children }) => {
     setToken(newToken);
   };
 
-  // Función para cerrar sesión
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -41,6 +48,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-// 👇 Esta es la parte que faltaba
-export const useAuth = () => useContext(AuthContext);

@@ -1,23 +1,18 @@
-import React from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
-import LoginForm from '../components/forms/LoginForm';
-import { loginUser } from '../services/authService';
+
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { loginUser } from '../services/AuthService';
+import LoginForm from '../components/forms/LoginForm';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { user, login } = useAuth();
-
-  // ✅ Si ya hay usuario logueado, redirige
-  if (user) {
-    return <Navigate to="/simulation" />;
-  }
+  const { login } = useAuth();
 
   const handleLogin = async (credentials) => {
     try {
-      const { token, user } = await loginUser(credentials);
-      login(token, user);
-      navigate('/simulation');
+      const { token, username, roles } = await loginUser(credentials);
+      login(token, { username, roles }); //  Guardamos los datos correctamente
+      navigate('/');
     } catch (error) {
       alert('Credenciales incorrectas o error del servidor.');
     }
