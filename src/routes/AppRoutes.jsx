@@ -2,21 +2,21 @@ import { Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
-import Layout from '../components/layout/Layout'; // contenedor con Header y <Outlet />
+import Layout from '../components/layout/Layout';
 
-// Páginas protegidas (ej. Dashboard, Config, etc.)
 import TestPage from '../pages/TestPage';
 import TestimonialsPage from '../pages/TestimonialsPage';
 
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Públicas */}
-      <Route path="/login" element={<Login />} />
+      {/* Layout para rutas públicas + privadas */}
+      <Route element={<Layout />}>
+        {/* Página pública: Login */}
+        <Route path="/login" element={<Home />} />
 
-      {/* Privadas con layout */}
-      <Route element={<ProtectedRoute />}>
-        <Route element={<Layout />}>
+        {/* Rutas privadas */}
+        <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Home />} />
           <Route path="/test" element={<TestPage />} />
           <Route path="/testimonials" element={<TestimonialsPage />} />
@@ -27,4 +27,5 @@ const AppRoutes = () => {
 };
 
 export default AppRoutes;
+
 
