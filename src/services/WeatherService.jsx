@@ -25,3 +25,13 @@ export const obtenerDatosClimaticos = async (ciudad) => {
   };
 };
 
+export const obtenerCiudadPorCoordenadas = async (lat, lon) => {
+  const response = await fetch(
+    `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${import.meta.env.VITE_OPENWEATHER_API_KEY}`
+  );
+
+  const data = await response.json();
+  return data[0]?.name || "Ciudad desconocida";
+};
+
+

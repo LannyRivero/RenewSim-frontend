@@ -1,6 +1,8 @@
-// src/components/SimulationForm.jsx
+
 import React, { useState } from "react";
 import { obtenerCiudadPorCoordenadas } from "../../services/WeatherService";
+
+import { obtenerDatosClimaticos } from "../../services/WeatherService";
 
 const SimulationForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -60,10 +62,19 @@ const SimulationForm = ({ onSubmit }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-    onSubmit(formData);
+
+    try {
+      const clima = await obtenerDatosClimaticos(formData.location);
+      console.log("📊 Datos climáticos:", clima);
+
+      onSubmit({ ...formData, clima });
+    } catch (error) {
+      console.error("Error al obtener datos climáticos:", error);
+      alert("Hubo un problema al obtener los datos climáticos.");
+    }
   };
 
   return (
