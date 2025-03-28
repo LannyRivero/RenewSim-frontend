@@ -13,7 +13,8 @@ import {
 } from "react-icons/fa";
 import logo from '../../assets/8408600.jpg';
 import { useAuth } from "../../context/AuthContext";
-import RoleWrapper from "../RoleWrapper";
+import RoleBasedAccess from "../auth/RoleBasedAccess";
+
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -46,17 +47,17 @@ const Header = () => {
       <nav className="hidden md:flex space-x-6">
         <NavLink to="/" icon={<FaHome />} label="Home" active={location.pathname === "/"} />
 
-        <RoleWrapper allowedRoles={['USER', 'ADVANCED_USER', 'ADMIN']}>
+        <RoleBasedAccess  allowedRoles={['USER', 'ADVANCED_USER', 'ADMIN']}>
           <>
             <NavLink to="/configuration" icon={<FaCog />} label="Configuration" active={location.pathname === "/configuration"} />
             <NavLink to="/recommendations" icon={<FaClipboardList />} label="Recommendations" active={location.pathname === "/recommendations"} />
             <NavLink to="/resources" icon={<FaBook />} label="Resources" active={location.pathname === "/resources"} />
           </>
-        </RoleWrapper>
+        </RoleBasedAccess >
 
-        <RoleWrapper allowedRoles={['ADMIN']}>
+        <RoleBasedAccess  allowedRoles={['ADMIN']}>
           <NavLink to="/admin/users" icon={<FaShieldAlt />} label="Panel Admin" active={location.pathname === "/admin/users"} />
-        </RoleWrapper>
+        </RoleBasedAccess >
       </nav>
 
       {/* Header Actions */}
@@ -112,17 +113,17 @@ const Header = () => {
         <nav className="absolute top-16 left-0 w-full bg-white dark:bg-gray-900 shadow-md flex flex-col items-center py-4 space-y-4 md:hidden z-40">
           <NavLink to="/" icon={<FaHome />} label="Home" active={location.pathname === "/"} />
 
-          <RoleWrapper allowedRoles={['USER', 'ADVANCED_USER', 'ADMIN']}>
+          <RoleBasedAccess  allowedRoles={['USER', 'ADVANCED_USER', 'ADMIN']}>
             <>
               <NavLink to="/configuration" icon={<FaCog />} label="Configuration" active={location.pathname === "/configuration"} />
               <NavLink to="/recommendations" icon={<FaClipboardList />} label="Recommendations" active={location.pathname === "/recommendations"} />
               <NavLink to="/resources" icon={<FaBook />} label="Resources" active={location.pathname === "/resources"} />
             </>
-          </RoleWrapper>
+          </RoleBasedAccess >
 
-          <RoleWrapper allowedRoles={['ADMIN']}>
+          <RoleBasedAccess  allowedRoles={['ADMIN']}>
             <NavLink to="/admin/users" icon={<FaShieldAlt />} label="Panel Admin" active={location.pathname === "/admin/users"} />
-          </RoleWrapper>
+          </RoleBasedAccess >
         </nav>
       )}
     </header>
