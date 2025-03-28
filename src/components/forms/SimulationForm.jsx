@@ -1,4 +1,6 @@
+// src/components/SimulationForm.jsx
 import React, { useState } from "react";
+import { obtenerCiudadPorCoordenadas } from "../../services/WeatherService";
 
 const SimulationForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -9,18 +11,51 @@ const SimulationForm = ({ onSubmit }) => {
   });
 
   const [errors, setErrors] = useState({});
+  const [loadingLocation, setLoadingLocation] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleUseMyLocation = async () => {
+    if (!navigator.geolocation) {
+      alert("La geolocalización no está disponible en este navegador.");
+      return;
+    }
+
+    setLoadingLocation(true);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const ciudad = await obtenerCiudadPorCoordenadas(latitude, longitude);
+          setFormData((prev) => ({
+            ...prev,
+            location: ciudad,
+          }));
+        } catch (error) {
+          alert("No se pudo obtener tu ubicación.");
+          console.error(error);
+        } finally {
+          setLoadingLocation(false);
+        }
+      },
+      (error) => {
+        console.error("Geolocation error:", error.message);
+        alert("No se pudo obtener tu ubicación.");
+        setLoadingLocation(false);
+      }
+    );
+  };
+
   const validate = () => {
     const newErrors = {};
-    if (!formData.location.trim()) newErrors.location = "Location is required";
+    if (!formData.location.trim()) newErrors.location = "La ubicación es obligatoria.";
     if (!formData.projectSize || isNaN(formData.projectSize))
-      newErrors.projectSize = "Enter a valid project size";
+      newErrors.projectSize = "Introduce un tamaño válido.";
     if (!formData.budget || isNaN(formData.budget))
-      newErrors.budget = "Enter a valid budget";
+      newErrors.budget = "Introduce un presupuesto válido.";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -32,80 +67,94 @@ const SimulationForm = ({ onSubmit }) => {
   };
 
   return (
-    <form
-      className="max-w-xl mx-auto bg-white p-6 rounded-xl shadow-md space-y-5 mt-10"
-      onSubmit={handleSubmit}
-    >
-      <h2 className="text-2xl font-semibold text-center text-green-700">Simulation Data</h2>
-
-      <div>
-        <label className="block font-medium text-gray-700">Location:</label>
-        <input
-          type="text"
-          name="location"
-          value={formData.location}
-          onChange={handleChange}
-          className={`w-full px-4 py-2 mt-1 border rounded-md ${
-            errors.location ? "border-red-500" : "border-gray-300"
-          }`}
-        />
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Ubicación */}
+      <div className="flex flex-col gap-1">
+        <label className="text-gray-700 font-medium">Ubicación</label>
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            name="location"
+            value={formData.location}
+            onChange={handleChange}
+            placeholder="Ej. Gijón"
+            className={`flex-1 px-4 py-2 border rounded-lg text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              errors.location ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          <button
+            type="button"
+            onClick={handleUseMyLocation}
+            disabled={loadingLocation}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm shadow-md transition"
+            title="Usar mi ubicación"
+          >
+            {loadingLocation ? "..." : "📍"}
+          </button>
+        </div>
         {errors.location && (
-          <p className="text-sm text-red-500">{errors.location}</p>
+          <p className="text-sm text-red-500 mt-1">{errors.location}</p>
         )}
       </div>
 
-      <div>
-        <label className="block font-medium text-gray-700">Energy Type:</label>
+      {/* Tipo de energía */}
+      <div className="flex flex-col gap-1">
+        <label className="text-gray-700 font-medium">Tipo de energía</label>
         <select
           name="energyType"
           value={formData.energyType}
           onChange={handleChange}
-          className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md"
+          className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
         >
           <option value="solar">Solar</option>
-          <option value="wind">Wind</option>
-          <option value="hydro">Hydroelectric</option>
+          <option value="wind">Eólica</option>
+          <option value="hydro">Hidroeléctrica</option>
         </select>
       </div>
 
-      <div>
-        <label className="block font-medium text-gray-700">Project Size (kW):</label>
+      {/* Tamaño del proyecto */}
+      <div className="flex flex-col gap-1">
+        <label className="text-gray-700 font-medium">Tamaño del proyecto (kW)</label>
         <input
           type="number"
           name="projectSize"
           value={formData.projectSize}
           onChange={handleChange}
-          className={`w-full px-4 py-2 mt-1 border rounded-md ${
+          placeholder="Ej. 150"
+          className={`px-4 py-2 border rounded-lg text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
             errors.projectSize ? "border-red-500" : "border-gray-300"
           }`}
         />
         {errors.projectSize && (
-          <p className="text-sm text-red-500">{errors.projectSize}</p>
+          <p className="text-sm text-red-500 mt-1">{errors.projectSize}</p>
         )}
       </div>
 
-      <div>
-        <label className="block font-medium text-gray-700">Estimated Budget (€):</label>
+      {/* Presupuesto */}
+      <div className="flex flex-col gap-1">
+        <label className="text-gray-700 font-medium">Presupuesto estimado (€)</label>
         <input
           type="number"
           name="budget"
           value={formData.budget}
           onChange={handleChange}
-          className={`w-full px-4 py-2 mt-1 border rounded-md ${
+          placeholder="Ej. 5000"
+          className={`px-4 py-2 border rounded-lg text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
             errors.budget ? "border-red-500" : "border-gray-300"
           }`}
         />
         {errors.budget && (
-          <p className="text-sm text-red-500">{errors.budget}</p>
+          <p className="text-sm text-red-500 mt-1">{errors.budget}</p>
         )}
       </div>
 
-      <div className="text-center">
+      {/* Botón */}
+      <div className="text-center pt-4">
         <button
           type="submit"
-          className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-all"
+          className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg text-sm transition-all shadow-md"
         >
-          Simulate
+          Simular
         </button>
       </div>
     </form>
