@@ -4,10 +4,11 @@ import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Layout from '../components/layout/Layout';
 import AdminPanel from '../pages/adminPanel/AdminPanel';
-import SimulationPage from '../pages/SimulationPage'; // 👈 Añadido
+import SimulationPage from '../pages/SimulationPage'; 
 
 import TestPage from '../pages/TestPage';
 import TestimonialsPage from '../pages/TestimonialsPage';
+import Unauthorized from '../pages/Unauthorized';
 
 const AppRoutes = () => {
   return (
@@ -16,6 +17,7 @@ const AppRoutes = () => {
       <Route element={<Layout />}>
         {/* Página pública: Login */}
         <Route path="/login" element={<Login />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
 
         {/* Rutas privadas */}
         <Route element={<ProtectedRoute />}>
