@@ -8,3 +8,10 @@ export const loginUser = async (credentials) => {
   return response.data; // Debe devolver { token, user }
 };
 
+
+export const registerUser = async (userData) => {
+  const response = await axios.post(`${API_URL}/register`, userData);
+  return response.data;
+};
+
+

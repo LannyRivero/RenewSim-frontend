@@ -3,6 +3,7 @@ import ProtectedRoute from './ProtectedRoute';
 
 import Home from '../pages/Home';
 import Login from '../pages/Login';
+import Register from '../pages/Register';
 import Unauthorized from '../pages/Unauthorized';
 
 import TestPage from '../pages/TestPage';
@@ -21,6 +22,7 @@ const AppRoutes = () => {
         {/* Rutas públicas */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
 
         {/* Rutas protegidas para usuarios autenticados */}

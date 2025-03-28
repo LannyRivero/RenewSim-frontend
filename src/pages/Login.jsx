@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import LoginForm from '../components/forms/LoginForm';
-import { loginUser } from '../services/authService';
+import { loginUser } from '../services/AuthService';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
