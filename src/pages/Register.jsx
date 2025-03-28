@@ -13,8 +13,8 @@ const Register = () => {
     const form = e.target;
 
     const newUser = {
-      name: form.name.value,
-      email: form.email.value,
+      username: form.name.value,
+     // email: form.email.value,
       password: form.password.value,
       confirmPassword: form.confirmPassword.value,
     };
