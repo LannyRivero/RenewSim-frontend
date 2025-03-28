@@ -100,6 +100,7 @@ const Header = () => {
                 >
                   Cerrar sesión
                 </button>
+
               </div>
             )}
           </div>

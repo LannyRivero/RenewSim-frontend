@@ -17,15 +17,18 @@ const LoginForm = () => {
       username: form.username.value,
       password: form.password.value,
     };
-
+  
     try {
-      const { token, user } = await loginUser(credentials);
-      login(token, user);
+      const { token, username, roles } = await loginUser(credentials);
+      console.log("🚀 Login response:", { token, username, roles });
+  
+      login(token, { username, roles });
       navigate('/simulation');
     } catch (error) {
       alert('Credenciales incorrectas o error del servidor.');
     }
   };
+  
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden">
