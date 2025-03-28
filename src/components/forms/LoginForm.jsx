@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { loginUser } from '../../services/AuthService';
+import { loginUser } from '../../services/authService';
 import backgroundImage from '../../assets/generacion-eolica.jpg'; // Cambia la ruta según tu estructura de carpetas
 
 const LoginForm = () => {
@@ -17,15 +17,18 @@ const LoginForm = () => {
       username: form.username.value,
       password: form.password.value,
     };
-
+  
     try {
-      const { token, user } = await loginUser(credentials);
-      login(token, user);
+      const { token, username, roles } = await loginUser(credentials);
+      console.log("🚀 Login response:", { token, username, roles });
+  
+      login(token, { username, roles });
       navigate('/simulation');
     } catch (error) {
       alert('Credenciales incorrectas o error del servidor.');
     }
   };
+  
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden">
