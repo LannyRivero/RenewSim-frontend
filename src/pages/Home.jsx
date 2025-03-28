@@ -1,51 +1,87 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import IntroSection from "../components/section/IntroSection";
-import StatisticsSection from "../components/section/StatisticsSection";
-import TestimonialsPage from "../pages/TestimonialsPage";
-
-// Usa una ruta relativa si `@` no funciona
-import bgImage from "../assets/generacion-eolica.jpg"; 
+import { Link } from "react-router-dom";
+import bgImage from "../assets/generacion-eolica.jpg";
 
 const Home = () => {
   return (
-    <div 
+    <div
       className="relative min-h-screen w-full bg-cover bg-center bg-no-repeat"
-      style={{ 
+      style={{
         backgroundImage: `url(${bgImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed"
+        backgroundAttachment: "fixed",
       }}
     >
-      {/* Superposición oscura para mejorar contraste */}
-      <div className="absolute inset-0 bg-black/50"></div>
+      <div className="absolute inset-0 bg-black/60"></div>
 
-      {/* Contenido Principal */}
-      <main className="relative z-10 flex flex-col items-center justify-center text-white text-center pt-14 gap-10">
-
-        {/* Sección de Introducción */}
-        <IntroSection />
-
-        {/* Sección de estadísticas y testimonios */}
-        <section className="mt-4 w-full max-w-6xl px-6">
-          <StatisticsSection />
-          <TestimonialsPage />
+      <main className="relative z-10 flex flex-col items-center text-white text-center px-4 py-20 gap-16">
+        {/* Hero principal */}
+        <section className="max-w-4xl space-y-6">
+          <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+            Simulador de Energías Renovables
+          </h1>
+          <p className="text-lg md:text-xl">
+            Analiza, compara y optimiza el uso de energías limpias en tu hogar, empresa o institución. Descubre el impacto ambiental y económico de tus decisiones.
+          </p>
+          <div className="flex flex-wrap gap-4 justify-center mt-6">
+            <Link to="/simulation"
+              className="bg-green-600 hover:bg-green-700 px-6 py-3 rounded text-white font-semibold transition">
+              Comenzar Simulación
+            </Link>
+            <Link to="/about"
+              className="bg-white text-green-700 px-6 py-3 rounded font-semibold hover:bg-gray-100 transition">
+              Más información
+            </Link>
+          </div>
         </section>
 
-        {/* Botones bien alineados */}
-        <div className="flex gap-4 mt-4">
-          <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">Comenzar Simulación</button>
-          <button className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition">Más información</button>
-        </div>
+        {/* Impacto */}
+        <section className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-5xl w-full bg-white/10 backdrop-blur-sm rounded-xl py-10 px-6">
+          <div>
+            <h3 className="text-3xl font-bold">500+</h3>
+            <p>Hogares han reducido su huella de carbono</p>
+          </div>
+          <div>
+            <h3 className="text-3xl font-bold">1M+</h3>
+            <p>Toneladas de CO₂ evitadas</p>
+          </div>
+          <div>
+            <h3 className="text-3xl font-bold">800+</h3>
+            <p>Proyectos sostenibles completados</p>
+          </div>
+        </section>
 
+        {/* Testimonio destacado */}
+        <section className="max-w-3xl bg-white/80 text-black p-6 rounded-xl shadow-lg">
+          <h3 className="text-xl font-semibold mb-2">Lo que dicen nuestros usuarios</h3>
+          <p className="italic">
+            "Las herramientas son intuitivas y nos ayudaron a reducir nuestros costos energéticos un 20% en solo 3 meses."
+          </p>
+          <p className="mt-2 font-medium">Carlos García, México</p>
+        </section>
+
+        {/* CTA adicional */}
+        <section className="text-white text-center mt-12">
+          <h2 className="text-2xl md:text-3xl font-bold">Comparte tu experiencia o descubre recursos para implementar energías limpias.</h2>
+          <div className="mt-4 flex flex-wrap gap-4 justify-center">
+            <Link to="/resources" className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700">
+              Ver recursos
+            </Link>
+            <Link to="/testimonials" className="border border-white px-6 py-3 rounded hover:bg-white hover:text-black">
+              Leer más testimonios
+            </Link>
+          </div>
+        </section>
       </main>
     </div>
   );
 };
 
 export default Home;
+
+
 
 
 

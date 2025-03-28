@@ -1,9 +1,7 @@
 import axios from 'axios';
 
-// Base URL del backend
-const API_URL = 'http://localhost:5000/api'; // Cambia según tu backend
+const API_URL = 'http://localhost:5000/api';
 
-// Crear instancia de Axios
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -11,10 +9,9 @@ const api = axios.create({
   },
 });
 
-// Middleware para inyectar el token en cada petición
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token'); // Obtener token
+    const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -23,8 +20,16 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;
-
-
-
-
