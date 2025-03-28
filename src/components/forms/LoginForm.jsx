@@ -1,37 +1,111 @@
+import React from 'react';
+import { useNavigate, Navigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { loginUser } from '../../services/AuthService';
+import backgroundImage from '../../assets/generacion-eolica.jpg'; // Cambia la ruta según tu estructura de carpetas
 
-import React, { useState } from 'react';
+const LoginForm = () => {
+  const navigate = useNavigate();
+  const { user, login } = useAuth();
 
-const LoginForm = ({ onLogin }) => {
-  const [credentials, setCredentials] = useState({ username: '', password: '' });
+  if (user) return <Navigate to="/simulation" />;
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCredentials({ ...credentials, [name]: value });
-  };
-
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    onLogin(credentials);
+    const form = e.target;
+    const credentials = {
+      username: form.username.value,
+      password: form.password.value,
+    };
+
+    try {
+      const { token, user } = await loginUser(credentials);
+      login(token, user);
+      navigate('/simulation');
+    } catch (error) {
+      alert('Credenciales incorrectas o error del servidor.');
+    }
   };
 
   return (
-    <form className="max-w-md mx-auto p-6 shadow-md rounded-xl bg-white" onSubmit={handleSubmit}>
-      <h2 className="text-2xl font-bold mb-4 text-center">Iniciar sesión</h2>
+    <div className="relative min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden">
+  {/* Imagen de fondo */}
+  <div
+    className="absolute inset-0 bg-cover bg-center"
+    style={{ backgroundImage: `url(${backgroundImage})` }}
+  ></div>
 
-      <input type="text" name="username" placeholder="Usuario"
-        className="w-full p-2 mb-4 border rounded-lg"
-        onChange={handleChange} required />
+  {/* Capa oscura encima */}
+  <div className="absolute inset-0 bg-black opacity-40"></div>
 
-      <input type="password" name="password" placeholder="Contraseña"
-        className="w-full p-2 mb-4 border rounded-lg"
-        onChange={handleChange} required />
+      {/* Formulario centrado */}
+      <form
+        onSubmit={handleLogin}
+        className="relative z-10 bg-white p-8 rounded-2xl shadow-lg w-full max-w-md space-y-6"
+      >
+        <h2 className="text-3xl font-semibold text-center text-gray-800">Welcome Back</h2>
+        <p className="text-center text-sm text-gray-500">
+          Please enter your email and password to continue
+        </p>
 
-      <button type="submit"
-        className="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition duration-200">
-        Iniciar sesión
-      </button>
-    </form>
+        {/* Email */}
+        <div>
+          <label className="block text-sm text-gray-600 mb-1">Email address:</label>
+          <input
+            type="email"
+            name="username"
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="you@email.com"
+          />
+        </div>
+
+        {/* Password */}
+        <div>
+          <div className="flex justify-between items-center mb-1">
+            <label className="text-sm text-gray-600">Password</label>
+            <a href="#" className="text-sm text-blue-500 hover:underline">
+              Forgot Password?
+            </a>
+          </div>
+          <input
+            type="password"
+            name="password"
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="••••••••"
+          />
+        </div>
+
+        {/* Remember me */}
+        <div className="flex items-center">
+          <input type="checkbox" id="remember" className="mr-2" />
+          <label htmlFor="remember" className="text-sm text-gray-600">Remember Password</label>
+        </div>
+
+        {/* Botón */}
+        <button
+          type="submit"
+          className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg transition"
+        >
+          Login to Account
+        </button>
+
+        {/* Register */}
+        <p className="text-center text-sm text-gray-500">
+          Don’t have an account?{' '}
+          <span
+            className="text-blue-500 hover:underline cursor-pointer"
+            onClick={() => navigate('/register')}
+          >
+            Create Account
+          </span>
+        </p>
+      </form>
+    </div>
   );
 };
 
 export default LoginForm;
+
+
