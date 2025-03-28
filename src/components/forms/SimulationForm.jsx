@@ -1,95 +1,111 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const SimulationForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
-    location: '',
-    projectSize: '',
-    cost: '',
-    energySource: 'solar',
+    location: "",
+    energyType: "solar",
+    projectSize: "",
+    budget: "",
   });
 
+  const [errors, setErrors] = useState({});
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.location.trim()) newErrors.location = "Location is required";
+    if (!formData.projectSize || isNaN(formData.projectSize))
+      newErrors.projectSize = "Enter a valid project size";
+    if (!formData.budget || isNaN(formData.budget))
+      newErrors.budget = "Enter a valid budget";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!validate()) return;
     onSubmit(formData);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-2xl px-8 pt-6 pb-8 mb-4 max-w-lg mx-auto">
-      <h2 className="text-2xl font-bold text-center mb-4">Simulación Personalizada</h2>
+    <form
+      className="max-w-xl mx-auto bg-white p-6 rounded-xl shadow-md space-y-5 mt-10"
+      onSubmit={handleSubmit}
+    >
+      <h2 className="text-2xl font-semibold text-center text-green-700">Simulation Data</h2>
 
-      <div className="mb-4">
-        <label htmlFor="location" className="block text-gray-700 font-bold mb-2">
-          Ubicación
-        </label>
+      <div>
+        <label className="block font-medium text-gray-700">Location:</label>
         <input
           type="text"
-          id="location"
           name="location"
           value={formData.location}
           onChange={handleChange}
-          className="w-full p-2 border rounded-lg"
-          required
+          className={`w-full px-4 py-2 mt-1 border rounded-md ${
+            errors.location ? "border-red-500" : "border-gray-300"
+          }`}
         />
+        {errors.location && (
+          <p className="text-sm text-red-500">{errors.location}</p>
+        )}
       </div>
 
-      <div className="mb-4">
-        <label htmlFor="projectSize" className="block text-gray-700 font-bold mb-2">
-          Tamaño del Proyecto (kW)
-        </label>
-        <input
-          type="number"
-          id="projectSize"
-          name="projectSize"
-          value={formData.projectSize}
-          onChange={handleChange}
-          className="w-full p-2 border rounded-lg"
-          required
-        />
-      </div>
-
-      <div className="mb-4">
-        <label htmlFor="cost" className="block text-gray-700 font-bold mb-2">
-          Costo (€)
-        </label>
-        <input
-          type="number"
-          id="cost"
-          name="cost"
-          value={formData.cost}
-          onChange={handleChange}
-          className="w-full p-2 border rounded-lg"
-          required
-        />
-      </div>
-
-      <div className="mb-4">
-        <label htmlFor="energySource" className="block text-gray-700 font-bold mb-2">
-          Fuente de Energía
-        </label>
+      <div>
+        <label className="block font-medium text-gray-700">Energy Type:</label>
         <select
-          id="energySource"
-          name="energySource"
-          value={formData.energySource}
+          name="energyType"
+          value={formData.energyType}
           onChange={handleChange}
-          className="w-full p-2 border rounded-lg"
+          className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md"
         >
           <option value="solar">Solar</option>
-          <option value="wind">Eólica</option>
-          <option value="hydro">Hidroeléctrica</option>
+          <option value="wind">Wind</option>
+          <option value="hydro">Hydroelectric</option>
         </select>
       </div>
 
-      <div className="flex items-center justify-center">
+      <div>
+        <label className="block font-medium text-gray-700">Project Size (kW):</label>
+        <input
+          type="number"
+          name="projectSize"
+          value={formData.projectSize}
+          onChange={handleChange}
+          className={`w-full px-4 py-2 mt-1 border rounded-md ${
+            errors.projectSize ? "border-red-500" : "border-gray-300"
+          }`}
+        />
+        {errors.projectSize && (
+          <p className="text-sm text-red-500">{errors.projectSize}</p>
+        )}
+      </div>
+
+      <div>
+        <label className="block font-medium text-gray-700">Estimated Budget (€):</label>
+        <input
+          type="number"
+          name="budget"
+          value={formData.budget}
+          onChange={handleChange}
+          className={`w-full px-4 py-2 mt-1 border rounded-md ${
+            errors.budget ? "border-red-500" : "border-gray-300"
+          }`}
+        />
+        {errors.budget && (
+          <p className="text-sm text-red-500">{errors.budget}</p>
+        )}
+      </div>
+
+      <div className="text-center">
         <button
           type="submit"
-          className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:scale-105 text-white font-bold py-2 px-6 rounded-lg transition-transform duration-200"
+          className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-all"
         >
-          Iniciar Simulación
+          Simulate
         </button>
       </div>
     </form>
