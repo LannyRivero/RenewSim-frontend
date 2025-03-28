@@ -1,10 +1,9 @@
-
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FaHome, FaCog, FaClipboardList, FaBook, FaMoon, FaSun, FaBars, FaTimes } from "react-icons/fa";
 import logo from '../../assets/8408600.jpg';
 import { useAuth } from "../../context/AuthContext";
-import useRole from "../../hooks/useRole";
+import RoleWrapper from "../RoleWrapper";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -12,8 +11,6 @@ const Header = () => {
   const location = useLocation();
 
   const { user, logout } = useAuth();
-  const isAdmin = useRole(['ADMIN']);
-  const isUser = useRole(['USER', 'ADVANCED_USER', 'ADMIN']);
 
   const toggleTheme = () => {
     setDarkMode(!darkMode);
@@ -39,16 +36,18 @@ const Header = () => {
       {/* Desktop Navigation */}
       <nav className="hidden md:flex space-x-6">
         <NavLink to="/" icon={<FaHome />} label="Home" active={location.pathname === "/"} />
-        {isUser && (
+
+        <RoleWrapper allowedRoles={['USER', 'ADVANCED_USER', 'ADMIN']}>
           <>
             <NavLink to="/configuration" icon={<FaCog />} label="Configuration" active={location.pathname === "/configuration"} />
             <NavLink to="/recommendations" icon={<FaClipboardList />} label="Recommendations" active={location.pathname === "/recommendations"} />
             <NavLink to="/resources" icon={<FaBook />} label="Resources" active={location.pathname === "/resources"} />
           </>
-        )}
-        {isAdmin && (
+        </RoleWrapper>
+
+        <RoleWrapper allowedRoles={['ADMIN']}>
           <NavLink to="/admin" icon={<FaCog />} label="Admin" active={location.pathname === "/admin"} />
-        )}
+        </RoleWrapper>
       </nav>
 
       {/* Header Actions */}
@@ -99,23 +98,24 @@ const Header = () => {
       {menuOpen && (
         <nav className="absolute top-16 left-0 w-full bg-white dark:bg-gray-900 shadow-md flex flex-col items-center py-4 space-y-4 md:hidden">
           <NavLink to="/" icon={<FaHome />} label="Home" active={location.pathname === "/"} />
-          {isUser && (
+
+          <RoleWrapper allowedRoles={['USER', 'ADVANCED_USER', 'ADMIN']}>
             <>
               <NavLink to="/configuration" icon={<FaCog />} label="Configuration" active={location.pathname === "/configuration"} />
               <NavLink to="/recommendations" icon={<FaClipboardList />} label="Recommendations" active={location.pathname === "/recommendations"} />
               <NavLink to="/resources" icon={<FaBook />} label="Resources" active={location.pathname === "/resources"} />
             </>
-          )}
-          {isAdmin && (
+          </RoleWrapper>
+
+          <RoleWrapper allowedRoles={['ADMIN']}>
             <NavLink to="/admin" icon={<FaCog />} label="Admin" active={location.pathname === "/admin"} />
-          )}
+          </RoleWrapper>
         </nav>
       )}
     </header>
   );
 };
 
-// Componente reutilizable para enlaces de navegación
 const NavLink = ({ to, icon, label, active }) => (
   <Link to={to} className={`flex items-center space-x-2 text-gray-700 dark:text-white hover:text-blue-500 transition ${active ? "font-bold" : ""}`}>
     {icon}
@@ -124,4 +124,5 @@ const NavLink = ({ to, icon, label, active }) => (
 );
 
 export default Header;
+
 
