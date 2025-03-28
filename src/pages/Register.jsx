@@ -20,8 +20,11 @@ const Register = () => {
     };
   
     try {
-      const { token } = await registerUser(userData);
-      login(token); // Guarda el token en el contexto
+      const { token, username, roles } = await registerUser(userData);
+  
+      // ✅ Login automático correctamente con todos los datos
+      login(token, { username, roles });
+  
       navigate('/');
     } catch (error) {
       alert('Error al registrar. Verifica los datos o inténtalo más tarde.');

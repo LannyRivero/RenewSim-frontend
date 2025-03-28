@@ -37,7 +37,7 @@ const Header = () => {
 
   const handleLogout = () => {
     logout();
-    setMenuOpen(false); // 👈 cerrar el menú si está abierto
+    setMenuOpen(false); 
     navigate("/login");
   };
 
@@ -82,13 +82,14 @@ const Header = () => {
         {/* User Info / Login Button */}
         {user ? (
           <div className="relative">
+ 
             <button onClick={toggleMenu} className="flex items-center space-x-2 bg-gray-200 dark:bg-gray-700 px-3 py-2 rounded-md hover:bg-gray-300">
               <img
                 src="https://www.gravatar.com/avatar/?d=mp"
                 alt="User Avatar"
                 className="w-8 h-8 rounded-full"
               />
-              <span className="hidden md:inline text-gray-700 dark:text-white">{user.username}</span>
+              <span className="hidden md:inline text-gray-700 dark:text-white">Hola {user.username}👋</span>
             </button>
             {menuOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 z-50">
