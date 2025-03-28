@@ -1,5 +1,5 @@
 
-// src/services/ClimaService.js
+
 import axios from "axios";
 
 const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
@@ -15,14 +15,13 @@ export const obtenerDatosClimaticos = async (ciudad) => {
 
   const { temp, humidity } = response.data.main;
   const windSpeed = response.data.wind.speed;
-  const irradiancia = response.data.clouds.all; // Aproximado
+  const irradiancia = response.data.clouds.all; // Porcentaje de nubes
 
   return {
     temperatura: temp,
     humedad: humidity,
-    viento: windSpeed,
-    irradianciaEstimativa: 1000 * (1 - irradiancia / 100), // Aprox en W/m²
+    viento: windSpeed, // m/s
+    irradianciaEstimativa: 1000 * (1 - irradiancia / 100), // W/m² estimado
   };
 };
-
 
