@@ -1,21 +1,17 @@
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import api from '../services/api';
 
 export const fetchData = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/resources`);
-    if (!response.ok) {
-      throw new Error('Error fetching data');
-    }
-    return await response.json();
+    const response = await api.get('/resources');
+    return response.data;
   } catch (error) {
-    console.error('API Fetch Error:', error);
+    console.error('API Axios Error:', error);
     return null;
   }
 };
 
 
-export default checkBackendStatus;  // Exportación por defecto
+
 
 
 

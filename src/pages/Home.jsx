@@ -4,6 +4,7 @@ import IntroSection from "../components/section/IntroSection";
 import StatisticsSection from "../components/section/StatisticsSection";
 import TestimonialsPage from "../pages/TestimonialsPage";
 
+
 // Usa una ruta relativa si `@` no funciona
 import bgImage from "../assets/generacion-eolica.jpg"; 
 
