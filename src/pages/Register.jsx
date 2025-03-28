@@ -1,33 +1,28 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../services/AuthService';
+import { registerUser } from '../services/authService';
 import backgroundImage from '../assets/generacion-eolica.jpg';
 import RegisterForm from '../components/forms/RegisterForm';
+import { useAuth } from '../context/AuthContext'; // ✅ Añadir esto
 
 const Register = () => {
   const navigate = useNavigate();
+  const { login } = useAuth(); // ✅ Obtenemos la función login del contexto
 
   const handleRegister = async (e) => {
     e.preventDefault();
     const form = e.target;
-
-    const newUser = {
-      username: form.name.value,
-     // email: form.email.value,
+  
+    const userData = {
+      username: form.email.value,
       password: form.password.value,
-      confirmPassword: form.confirmPassword.value,
     };
-
-    if (newUser.password !== newUser.confirmPassword) {
-      alert('Passwords do not match');
-      return;
-    }
-
+  
     try {
-      await registerUser(newUser);
-      alert('Registro exitoso. Ahora puedes iniciar sesión.');
-      navigate('/login');
+      const { token } = await registerUser(userData);
+      login(token); // Guarda el token en el contexto
+      navigate('/');
     } catch (error) {
       alert('Error al registrar. Verifica los datos o inténtalo más tarde.');
     }
