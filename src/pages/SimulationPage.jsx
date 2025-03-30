@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SimulationForm from "../components/forms/SimulationForm";
-import ResultadosSimulacion from "../components/resultados/ResultadosSimulacion"; // si tienes uno
+import SimulationResults from "../components/result/SimulationResults";
 
 const SimulationPage = () => {
   const [resultados, setResultados] = useState(null);
@@ -41,7 +41,7 @@ const SimulationPage = () => {
         {/* Mostrar resultados si están disponibles */}
         {resultados && (
           <div className="mt-10">
-            <ResultadosSimulacion datos={resultados} />
+            <SimulationResults datos={resultados} />
           </div>
         )}
       </div>
