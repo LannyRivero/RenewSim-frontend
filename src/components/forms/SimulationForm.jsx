@@ -10,6 +10,7 @@ const SimulationForm = ({ onSubmit }) => {
     energyType: "solar",
     projectSize: "",
     budget: "",
+    energyConsumption: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -58,6 +59,10 @@ const SimulationForm = ({ onSubmit }) => {
       newErrors.projectSize = "Introduce un tamaño válido.";
     if (!formData.budget || isNaN(formData.budget))
       newErrors.budget = "Introduce un presupuesto válido.";
+    if (!formData.energyConsumption || isNaN(formData.energyConsumption) ||
+      formData.energyConsumption < 50 || formData.energyConsumption > 100000) {
+      newErrors.energyConsumption = "Debe estar entre 50 y 100000 kWh/mes.";
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -65,26 +70,26 @@ const SimulationForm = ({ onSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-  
+
     try {
       const climate = await obtenerDatosClimaticos(formData.location);
       console.log("📊 Datos climáticos:", climate);
-  
+
       const climaNormalizado = {
         irradiance: climate.irradianciaEstimativa, // 🔁 renombrado para el backend
         wind: climate.viento,
         hydrology: 3.0, // valor arbitrario para la simulación hidroeléctrica
       };
-  
+
       console.log("✅ Enviando clima normalizado:", climaNormalizado);
-  
+
       onSubmit({ ...formData, climate: climaNormalizado });
     } catch (error) {
       console.error("Error al obtener datos climáticos:", error);
       alert("Hubo un problema al obtener los datos climáticos.");
     }
   };
-  
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -98,9 +103,8 @@ const SimulationForm = ({ onSubmit }) => {
             value={formData.location}
             onChange={handleChange}
             placeholder="Ej. Gijón"
-            className={`flex-1 px-4 py-2 border rounded-lg text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              errors.location ? "border-red-500" : "border-gray-300"
-            }`}
+            className={`flex-1 px-4 py-2 border rounded-lg text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.location ? "border-red-500" : "border-gray-300"
+              }`}
           />
           <button
             type="button"
@@ -141,12 +145,27 @@ const SimulationForm = ({ onSubmit }) => {
           value={formData.projectSize}
           onChange={handleChange}
           placeholder="Ej. 150"
-          className={`px-4 py-2 border rounded-lg text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            errors.projectSize ? "border-red-500" : "border-gray-300"
-          }`}
+          className={`px-4 py-2 border rounded-lg text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.projectSize ? "border-red-500" : "border-gray-300"
+            }`}
         />
         {errors.projectSize && (
           <p className="text-sm text-red-500 mt-1">{errors.projectSize}</p>
+        )}
+      </div>
+      {/* Consumo energético */}
+      <div className="flex flex-col gap-1">
+        <label className="text-gray-700 font-medium">Consumo energético mensual (kWh)</label>
+        <input
+          type="number"
+          name="energyConsumption"
+          value={formData.energyConsumption}
+          onChange={handleChange}
+          placeholder="Ej. 800"
+          className={`px-4 py-2 border rounded-lg text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.energyConsumption ? "border-red-500" : "border-gray-300"
+            }`}
+        />
+        {errors.energyConsumption && (
+          <p className="text-sm text-red-500 mt-1">{errors.energyConsumption}</p>
         )}
       </div>
 
@@ -159,9 +178,8 @@ const SimulationForm = ({ onSubmit }) => {
           value={formData.budget}
           onChange={handleChange}
           placeholder="Ej. 5000"
-          className={`px-4 py-2 border rounded-lg text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            errors.budget ? "border-red-500" : "border-gray-300"
-          }`}
+          className={`px-4 py-2 border rounded-lg text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.budget ? "border-red-500" : "border-gray-300"
+            }`}
         />
         {errors.budget && (
           <p className="text-sm text-red-500 mt-1">{errors.budget}</p>
