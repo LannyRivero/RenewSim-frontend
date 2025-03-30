@@ -5,6 +5,8 @@ import { obtenerCiudadPorCoordenadas } from "../../services/WeatherService";
 import { obtenerDatosClimaticos } from "../../services/WeatherService";
 import InputFieldWithHint from "../common/inputField/InputFieldWithHint";
 import InputWithButton from "../common/inputField/InputWithButton";
+import ErrorToast from "../common/ErrorToast";
+
 
 
 const SimulationForm = ({ onSubmit }) => {
@@ -89,11 +91,18 @@ const SimulationForm = ({ onSubmit }) => {
       onSubmit({ ...formData, climate: climaNormalizado });
     } catch (error) {
       console.error("Error al obtener datos climáticos o al simular:", error);
-    
-      const mensajeError =
-        error.response?.data?.message || "Ocurrió un error inesperado al simular.";
-    
-      alert(mensajeError);
+
+      let mensajeError = "Ocurrió un error inesperado al simular.";
+
+      if (error.response?.data?.message) {
+        mensajeError = error.response.data.message;
+      } else if (error.request) {
+        mensajeError = "No se pudo conectar con el servidor. Verifica tu conexión a internet.";
+      } else if (error.message?.includes("timeout")) {
+        mensajeError = "La solicitud tardó demasiado en responder. Intenta nuevamente más tarde.";
+      }
+
+      setErrorMessage(mensajeError);
     }
   };
 
@@ -176,6 +185,10 @@ const SimulationForm = ({ onSubmit }) => {
           Simular
         </button>
       </div>
+      {errorMessage && (
+        <ErrorToast message={errorMessage} onClose={() => setErrorMessage("")} />
+      )}
+
     </form>
   );
 };
