@@ -88,8 +88,12 @@ const SimulationForm = ({ onSubmit }) => {
 
       onSubmit({ ...formData, climate: climaNormalizado });
     } catch (error) {
-      console.error("Error al obtener datos climáticos:", error);
-      alert("Hubo un problema al obtener los datos climáticos.");
+      console.error("Error al obtener datos climáticos o al simular:", error);
+    
+      const mensajeError =
+        error.response?.data?.message || "Ocurrió un error inesperado al simular.";
+    
+      alert(mensajeError);
     }
   };
 
