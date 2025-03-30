@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { obtenerCiudadPorCoordenadas } from "../../services/WeatherService";
 
 import { obtenerDatosClimaticos } from "../../services/WeatherService";
+import InputFieldWithHint from "../common/inputField/InputFieldWithHint";
+
 
 const SimulationForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -153,21 +155,18 @@ const SimulationForm = ({ onSubmit }) => {
         )}
       </div>
       {/* Consumo energético */}
-      <div className="flex flex-col gap-1">
-        <label className="text-gray-700 font-medium">Consumo energético mensual (kWh)</label>
-        <input
-          type="number"
-          name="energyConsumption"
-          value={formData.energyConsumption}
-          onChange={handleChange}
-          placeholder="Ej. 800"
-          className={`px-4 py-2 border rounded-lg text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.energyConsumption ? "border-red-500" : "border-gray-300"
-            }`}
-        />
-        {errors.energyConsumption && (
-          <p className="text-sm text-red-500 mt-1">{errors.energyConsumption}</p>
-        )}
-      </div>
+      <InputFieldWithHint
+        label="Consumo energético mensual (kWh)"
+        name="energyConsumption"
+        type="number"
+        value={formData.energyConsumption}
+        onChange={handleChange}
+        placeholder="Ej. 800"
+        hint="Rango aceptado: 50 – 100000 kWh/mes."
+        error={errors.energyConsumption}
+        title="Introduce tu consumo mensual estimado en kilovatios-hora (kWh)."
+      />
+
 
       {/* Presupuesto */}
       <div className="flex flex-col gap-1">
