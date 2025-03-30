@@ -3,7 +3,7 @@ import apiCliente from "./ApiClient";
 
 const SimulationService = {
     async simulate(data){
-        const response = await apiCliente.post('/simulations', data);
+        const response = await apiCliente.post('/simulation', data);
         return response.data;           
     },
 

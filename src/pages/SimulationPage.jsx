@@ -33,7 +33,7 @@ const SimulationPage = () => {
 
         {resultados && (
           <div className="mt-10">
-            <SimulationResults datos={resultados} />
+            <SimulationResults data={resultados} />
           </div>
         )}
       </div>
