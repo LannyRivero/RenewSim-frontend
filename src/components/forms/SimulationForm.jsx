@@ -6,6 +6,8 @@ import { obtenerDatosClimaticos } from "../../services/WeatherService";
 import InputFieldWithHint from "../common/inputField/InputFieldWithHint";
 import InputWithButton from "../common/inputField/InputWithButton";
 import ErrorToast from "../common/ErrorToast";
+import { buscarUbicaciones } from "../../services/WeatherService";
+
 
 
 
@@ -19,11 +21,34 @@ const SimulationForm = ({ onSubmit }) => {
   });
 
   const [errors, setErrors] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
   const [loadingLocation, setLoadingLocation] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    // Si está escribiendo en el campo de ubicación
+    if (name === "location") {
+      if (value.length >= 3) {
+        try {
+          const results = await buscarUbicaciones(value);
+          setSuggestions(results.slice(0, 5)); // mostrar hasta 5 sugerencias
+          setShowSuggestions(true);
+        } catch (err) {
+          console.error("Error al buscar ubicaciones:", err);
+          setSuggestions([]);
+          setShowSuggestions(false);
+        }
+      } else {
+        setSuggestions([]);
+        setShowSuggestions(false);
+      }
+    }
   };
+
 
   const handleUseMyLocation = async () => {
     if (!navigator.geolocation) {
@@ -121,6 +146,30 @@ const SimulationForm = ({ onSubmit }) => {
         disabled={loadingLocation}
         title="Usar mi ubicación actual"
       />
+      {showSuggestions && suggestions.length > 0 && (
+        <ul className="absolute z-10 bg-white border border-gray-300 rounded-md shadow-md max-h-48 overflow-y-auto mt-1 w-full text-sm">
+          {suggestions.map((s, idx) => (
+            <li
+              key={idx}
+              className="flex items-center gap-2 px-4 py-2 hover:bg-blue-100 cursor-pointer"
+              onClick={() => {
+                setFormData({ ...formData, location: s.display_name });
+                setSuggestions([]);
+                setShowSuggestions(false);
+              }}
+            >
+              {s.country_code && (
+                <img
+                  src={`https://flagcdn.com/w20/${s.country_code}.png`}
+                  alt={s.country_code}
+                  className="w-5 h-3 rounded-sm object-cover"
+                />
+              )}
+              <span>{s.display_name}</span>
+            </li>
+          ))}
+        </ul>
+      )}
       {/* Tipo de energía */}
       <InputFieldWithHint
         label="Tipo de energía"

@@ -1,5 +1,4 @@
 
-
 import axios from "axios";
 
 const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
@@ -34,4 +33,14 @@ export const obtenerCiudadPorCoordenadas = async (lat, lon) => {
   return data[0]?.name || "Ciudad desconocida";
 };
 
+export const buscarUbicaciones = async (query) => {
+  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`;
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error("Error al buscar ubicaciones.");
+  }
+
+  return await response.json(); // Devuelve array de ubicaciones
+};
 
