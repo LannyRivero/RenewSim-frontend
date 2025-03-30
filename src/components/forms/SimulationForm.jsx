@@ -26,6 +26,8 @@ const SimulationForm = ({ onSubmit }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [consumptionUnit, setConsumptionUnit] = useState("kWh");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
 
   const handleChange = async (e) => {
@@ -102,6 +104,7 @@ const SimulationForm = ({ onSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
+    setIsSubmitting(true);
 
     try {
       const climate = await obtenerDatosClimaticos(formData.location);
@@ -112,12 +115,11 @@ const SimulationForm = ({ onSubmit }) => {
         wind: climate.viento,
         hydrology: 3.0, // valor arbitrario para la simulación hidroeléctrica
       };
-
-      console.log("✅ Enviando clima normalizado:", climaNormalizado);
       const consumoConvertido = consumptionUnit === "MWh" ? formData.energyConsumption * 1000 : formData.energyConsumption;
 
-      onSubmit({ ...formData, energyConsumption: consumoConvertido, climate: climaNormalizado },
+      await onSubmit({ ...formData, energyConsumption: consumoConvertido, climate: climaNormalizado },
         consumptionUnit);
+
     } catch (error) {
       console.error("Error al obtener datos climáticos o al simular:", error);
 
@@ -132,7 +134,10 @@ const SimulationForm = ({ onSubmit }) => {
       }
 
       setErrorMessage(mensajeError);
+    } finally {
+      setIsSubmitting(false);
     }
+
   };
 
   return (
@@ -253,9 +258,11 @@ const SimulationForm = ({ onSubmit }) => {
       <div className="text-center pt-4">
         <button
           type="submit"
-          className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg text-sm transition-all shadow-md"
+          disabled={isSubmitting}
+          className={`bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg text-sm transition-all shadow-md ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+            }`}
         >
-          Simular
+          {isSubmitting ? "Simulando..." : "Simular"}
         </button>
       </div>
       {errorMessage && (
