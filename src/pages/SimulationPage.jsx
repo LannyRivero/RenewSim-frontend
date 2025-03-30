@@ -1,30 +1,24 @@
 import React, { useState } from "react";
 import SimulationForm from "../components/forms/SimulationForm";
 import SimulationResults from "../components/result/SimulationResults";
+import SimulationService from "../services/SimulationService";
 
 const SimulationPage = () => {
   const [resultados, setResultados] = useState(null);
 
-  const manejarSimulacion = async (datosCompletos) => {
+  const manejarSimulacion = async (formData) => {
     console.log("🚀 Ejecutando simulación con:", datosCompletos);
 
     // Aquí podrías hacer una petición al backend, por ejemplo:
     try {
-      const response = await fetch("http://localhost:8080/api/v1/simulacion", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(datosCompletos),
-      });
-
-      if (!response.ok) throw new Error("Error al simular");
-
-      const resultadosSimulacion = await response.json();
-      setResultados(resultadosSimulacion); // Mostrar resultados
-    } catch (error) {
-      console.error("❌ Error en la simulación:", error);
-      alert("Hubo un problema al ejecutar la simulación.");
-    }
-  };
+      const response = await SimulationService.simulate(formData);
+        setResultados(response);
+      } catch (error) {
+        console.error("❌ Error en la simulación:", error);
+        alert("Hubo un problema al ejecutar la simulación.");
+      }
+    
+    };  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
