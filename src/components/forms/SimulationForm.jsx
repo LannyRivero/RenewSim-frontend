@@ -116,7 +116,8 @@ const SimulationForm = ({ onSubmit }) => {
       console.log("✅ Enviando clima normalizado:", climaNormalizado);
       const consumoConvertido =  consumptionUnit === "MWh" ? formData.energyConsumption * 1000 : formData.energyConsumption;
 
-      onSubmit({ ...formData, energyConsumption: consumoConvertido, climate: climaNormalizado });
+      onSubmit({ ...formData, energyConsumption: consumoConvertido, climate: climaNormalizado },
+        consumptionUnit );
     } catch (error) {
       console.error("Error al obtener datos climáticos o al simular:", error);
 
@@ -226,8 +227,6 @@ const SimulationForm = ({ onSubmit }) => {
           <option value="MWh">MWh</option>
         </select>
       </div>
-
-
       {/* Presupuesto */}
       <InputFieldWithHint
         label="Presupuesto estimado (€)"

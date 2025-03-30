@@ -5,19 +5,23 @@ import SimulationService from "../services/SimulationService";
 
 const SimulationPage = () => {
   const [resultados, setResultados] = useState(null);
+  const [unidad, setUnidad] = useState("kWh");
 
-  const manejarSimulacion = async (data) => {
+
+  const manejarSimulacion = async (data, unidadSeleccionada) => {
     console.log("🚀 Ejecutando simulación con:", data);
-
+  
     try {
       const response = await SimulationService.simulate(data);
       console.log("✅ Respuesta de simulación:", response);
       setResultados(response);
+      setUnidad(unidadSeleccionada); // ✅ Guardamos la unidad
     } catch (error) {
       console.error("❌ Error en la simulación:", error);
       alert("Hubo un problema al ejecutar la simulación.");
     }
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
@@ -32,9 +36,9 @@ const SimulationPage = () => {
         <SimulationForm onSubmit={manejarSimulacion} />
 
         {resultados && (
-          <div className="mt-10">
-            <SimulationResults data={resultados} />
-          </div>
+           <div className="mt-10">
+           <SimulationResults data={resultados} unidad={unidad} />
+         </div>
         )}
       </div>
     </div>
