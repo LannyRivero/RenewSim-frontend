@@ -6,19 +6,18 @@ import SimulationService from "../services/SimulationService";
 const SimulationPage = () => {
   const [resultados, setResultados] = useState(null);
 
-  const manejarSimulacion = async (formData) => {
-    console.log("🚀 Ejecutando simulación con:", datosCompletos);
+  const manejarSimulacion = async (data) => {
+    console.log("🚀 Ejecutando simulación con:", data);
 
-    // Aquí podrías hacer una petición al backend, por ejemplo:
     try {
-      const response = await SimulationService.simulate(formData);
-        setResultados(response);
-      } catch (error) {
-        console.error("❌ Error en la simulación:", error);
-        alert("Hubo un problema al ejecutar la simulación.");
-      }
-    
-    };  
+      const response = await SimulationService.simulate(data);
+      console.log("✅ Respuesta de simulación:", response);
+      setResultados(response);
+    } catch (error) {
+      console.error("❌ Error en la simulación:", error);
+      alert("Hubo un problema al ejecutar la simulación.");
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
@@ -32,7 +31,6 @@ const SimulationPage = () => {
 
         <SimulationForm onSubmit={manejarSimulacion} />
 
-        {/* Mostrar resultados si están disponibles */}
         {resultados && (
           <div className="mt-10">
             <SimulationResults datos={resultados} />
@@ -44,4 +42,5 @@ const SimulationPage = () => {
 };
 
 export default SimulationPage;
+
 

@@ -2,7 +2,7 @@
 import apiCliente from "./ApiClient";
 
 const SimulationService = {
-    async simulate(date){
+    async simulate(data){
         const response = await apiCliente.post('/simulations', data);
         return response.data;           
     },
