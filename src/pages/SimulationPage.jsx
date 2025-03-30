@@ -1,9 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import SimulationForm from "../components/forms/SimulationForm";
+import ResultadosSimulacion from "../components/resultados/ResultadosSimulacion"; // si tienes uno
 
-const SimulationPage = ({ onSubmit }) => {
+const SimulationPage = () => {
+  const [resultados, setResultados] = useState(null);
+
+  const manejarSimulacion = async (datosCompletos) => {
+    console.log("🚀 Ejecutando simulación con:", datosCompletos);
+
+    // Aquí podrías hacer una petición al backend, por ejemplo:
+    try {
+      const response = await fetch("http://localhost:8080/api/v1/simulacion", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datosCompletos),
+      });
+
+      if (!response.ok) throw new Error("Error al simular");
+
+      const resultadosSimulacion = await response.json();
+      setResultados(resultadosSimulacion); // Mostrar resultados
+    } catch (error) {
+      console.error("❌ Error en la simulación:", error);
+      alert("Hubo un problema al ejecutar la simulación.");
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gree-60 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
       <div className="w-full max-w-2xl p-10 rounded-2xl shadow-2xl border border-gray-200">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-1">
           Datos para la simulación
@@ -12,10 +36,18 @@ const SimulationPage = ({ onSubmit }) => {
           Introduce los datos del proyecto para estimar el rendimiento energético.
         </p>
 
-        <SimulationForm onSubmit={onSubmit} />
+        <SimulationForm onSubmit={manejarSimulacion} />
+
+        {/* Mostrar resultados si están disponibles */}
+        {resultados && (
+          <div className="mt-10">
+            <ResultadosSimulacion datos={resultados} />
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
 export default SimulationPage;
+
