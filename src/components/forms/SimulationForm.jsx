@@ -114,10 +114,10 @@ const SimulationForm = ({ onSubmit }) => {
       };
 
       console.log("✅ Enviando clima normalizado:", climaNormalizado);
-      const consumoConvertido =  consumptionUnit === "MWh" ? formData.energyConsumption * 1000 : formData.energyConsumption;
+      const consumoConvertido = consumptionUnit === "MWh" ? formData.energyConsumption * 1000 : formData.energyConsumption;
 
       onSubmit({ ...formData, energyConsumption: consumoConvertido, climate: climaNormalizado },
-        consumptionUnit );
+        consumptionUnit);
     } catch (error) {
       console.error("Error al obtener datos climáticos o al simular:", error);
 
@@ -204,29 +204,39 @@ const SimulationForm = ({ onSubmit }) => {
       />
 
       {/* Consumo energético */}
-      <div className="flex items-center gap-2">
-        <InputFieldWithHint
-          label="Consumo energético mensual"
-          name="energyConsumption"
-          type="number"
-          value={formData.energyConsumption}
-          onChange={handleChange}
-          placeholder="Ej. 800"
-          error={errors.energyConsumption}
-          hint="Rango aceptado: 50 – 100000 kWh/mes."
-          title="Introduce tu consumo mensual estimado."
-          icon="⚡"
-        />
-        <select
-          value={consumptionUnit}
-          onChange={(e) => setConsumptionUnit(e.target.value)}
-          className="mt-7 px-2 py-1 border rounded-md text-sm shadow-sm bg-white"
-          title="Unidad de consumo"
-        >
-          <option value="kWh">kWh</option>
-          <option value="MWh">MWh</option>
-        </select>
+      <div className="flex items-end gap-2">
+        <div className="flex-1">
+          <InputFieldWithHint
+            label="Consumo energético mensual"
+            name="energyConsumption"
+            type="number"
+            value={formData.energyConsumption}
+            onChange={handleChange}
+            placeholder="Ej. 800"
+            error={errors.energyConsumption}
+            hint={
+              consumptionUnit === "kWh"
+                ? "Rango aceptado: 50 – 100000 kWh/mes."
+                : "Rango aceptado: 0.05 – 100 MWh/mes."
+            }
+            title="Introduce tu consumo mensual estimado."
+            icon="⚡"
+          />
+        </div>
+
+        <div className="pt-6">
+          <select
+            value={consumptionUnit}
+            onChange={(e) => setConsumptionUnit(e.target.value)}
+            className="px-2 py-2 border rounded-md text-sm shadow-sm bg-white"
+            title="Unidad de consumo"
+          >
+            <option value="kWh">kWh</option>
+            <option value="MWh">MWh</option>
+          </select>
+        </div>
       </div>
+
       {/* Presupuesto */}
       <InputFieldWithHint
         label="Presupuesto estimado (€)"
