@@ -65,17 +65,26 @@ const SimulationForm = ({ onSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-
+  
     try {
       const clima = await obtenerDatosClimaticos(formData.location);
       console.log("📊 Datos climáticos:", clima);
-
-      onSubmit({ ...formData, clima });
+  
+      const climaNormalizado = {
+        irradiancia: clima.irradianciaEstimativa, // 🔁 renombrado para el backend
+        viento: clima.viento,
+        hidrologia: 3.0, // valor arbitrario para la simulación hidroeléctrica
+      };
+  
+      console.log("✅ Enviando clima normalizado:", climaNormalizado);
+  
+      onSubmit({ ...formData, clima: climaNormalizado });
     } catch (error) {
       console.error("Error al obtener datos climáticos:", error);
       alert("Hubo un problema al obtener los datos climáticos.");
     }
   };
+  
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
