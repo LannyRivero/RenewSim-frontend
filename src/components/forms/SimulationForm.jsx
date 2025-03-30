@@ -1,9 +1,10 @@
 
 import React, { useState } from "react";
-import { obtenerCiudadPorCoordenadas } from "../../services/WeatherService";
 
+import { obtenerCiudadPorCoordenadas } from "../../services/WeatherService";
 import { obtenerDatosClimaticos } from "../../services/WeatherService";
 import InputFieldWithHint from "../common/inputField/InputFieldWithHint";
+import InputWithButton from "../common/inputField/InputWithButton";
 
 
 const SimulationForm = ({ onSubmit }) => {
@@ -78,7 +79,7 @@ const SimulationForm = ({ onSubmit }) => {
       console.log("📊 Datos climáticos:", climate);
 
       const climaNormalizado = {
-        irradiance: climate.irradianciaEstimativa, // 🔁 renombrado para el backend
+        irradiance: climate.irradianciaEstimativa,
         wind: climate.viento,
         hydrology: 3.0, // valor arbitrario para la simulación hidroeléctrica
       };
@@ -92,68 +93,50 @@ const SimulationForm = ({ onSubmit }) => {
     }
   };
 
-
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Ubicación */}
-      <div className="flex flex-col gap-1">
-        <label className="text-gray-700 font-medium">Ubicación</label>
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            name="location"
-            value={formData.location}
-            onChange={handleChange}
-            placeholder="Ej. Gijón"
-            className={`flex-1 px-4 py-2 border rounded-lg text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.location ? "border-red-500" : "border-gray-300"
-              }`}
-          />
-          <button
-            type="button"
-            onClick={handleUseMyLocation}
-            disabled={loadingLocation}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm shadow-md transition"
-            title="Usar mi ubicación"
-          >
-            {loadingLocation ? "..." : "📍"}
-          </button>
-        </div>
-        {errors.location && (
-          <p className="text-sm text-red-500 mt-1">{errors.location}</p>
-        )}
-      </div>
-
+      <InputWithButton
+        label="Ubicación"
+        name="location"
+        value={formData.location}
+        onChange={handleChange}
+        placeholder="Ej. Gijón"
+        error={errors.location}
+        buttonLabel={loadingLocation ? "..." : "📍"}
+        onButtonClick={handleUseMyLocation}
+        disabled={loadingLocation}
+        title="Usar mi ubicación actual"
+      />
       {/* Tipo de energía */}
-      <div className="flex flex-col gap-1">
-        <label className="text-gray-700 font-medium">Tipo de energía</label>
-        <select
-          name="energyType"
-          value={formData.energyType}
-          onChange={handleChange}
-          className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-        >
-          <option value="solar">Solar</option>
-          <option value="wind">Eólica</option>
-          <option value="hydro">Hidroeléctrica</option>
-        </select>
-      </div>
+      <InputFieldWithHint
+        label="Tipo de energía"
+        name="energyType"
+        type="select"
+        value={formData.energyType}
+        onChange={handleChange}
+        options={[
+          { value: "solar", label: "Solar ☀️" },
+          { value: "wind", label: "Eólica 💨" },
+          { value: "hydro", label: "Hidroeléctrica 💧" },
+        ]}
+        title="Selecciona la fuente de energía renovable."
+      />
 
       {/* Tamaño del proyecto */}
-      <div className="flex flex-col gap-1">
-        <label className="text-gray-700 font-medium">Tamaño del proyecto (kW)</label>
-        <input
-          type="number"
-          name="projectSize"
-          value={formData.projectSize}
-          onChange={handleChange}
-          placeholder="Ej. 150"
-          className={`px-4 py-2 border rounded-lg text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.projectSize ? "border-red-500" : "border-gray-300"
-            }`}
-        />
-        {errors.projectSize && (
-          <p className="text-sm text-red-500 mt-1">{errors.projectSize}</p>
-        )}
-      </div>
+      <InputFieldWithHint
+        label="Tamaño del proyecto (kW)"
+        name="projectSize"
+        type="number"
+        value={formData.projectSize}
+        onChange={handleChange}
+        placeholder="Ej. 150"
+        error={errors.projectSize}
+        hint="Debe estar entre 1 y 500 kW."
+        title="Ingresa la capacidad total estimada del sistema (en kilovatios)."
+        icon="🔧"
+      />
+
       {/* Consumo energético */}
       <InputFieldWithHint
         label="Consumo energético mensual (kWh)"
@@ -162,29 +145,24 @@ const SimulationForm = ({ onSubmit }) => {
         value={formData.energyConsumption}
         onChange={handleChange}
         placeholder="Ej. 800"
-        hint="Rango aceptado: 50 – 100000 kWh/mes."
         error={errors.energyConsumption}
-        title="Introduce tu consumo mensual estimado en kilovatios-hora (kWh)."
+        hint="Rango aceptado: 50 – 100000 kWh/mes."
+        title="Introduce tu consumo mensual estimado en kilovatios-hora."
+        icon="⚡"
       />
 
-
       {/* Presupuesto */}
-      <div className="flex flex-col gap-1">
-        <label className="text-gray-700 font-medium">Presupuesto estimado (€)</label>
-        <input
-          type="number"
-          name="budget"
-          value={formData.budget}
-          onChange={handleChange}
-          placeholder="Ej. 5000"
-          className={`px-4 py-2 border rounded-lg text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.budget ? "border-red-500" : "border-gray-300"
-            }`}
-        />
-        {errors.budget && (
-          <p className="text-sm text-red-500 mt-1">{errors.budget}</p>
-        )}
-      </div>
-
+      <InputFieldWithHint
+        label="Presupuesto estimado (€)"
+        name="budget"
+        type="number"
+        value={formData.budget}
+        onChange={handleChange}
+        placeholder="Ej. 5000"
+        error={errors.budget}
+        icon="💶"
+        title="Ingresa el presupuesto disponible para tu instalación."
+      />
       {/* Botón */}
       <div className="text-center pt-4">
         <button
