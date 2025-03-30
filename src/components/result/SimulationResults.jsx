@@ -9,8 +9,8 @@ const SimulationResults = ({ data  }) => {
     if (!data) return;
 
     const chartData = [
-      { label: "Energy (kWh)", value: data.energiaGenerada },
-      { label: "Savings (€)", value: data.ahorroEstimado },
+      { label: "Energia (kWh)", value: data.energyGenerated },
+      { label: "Ahorro (€)", value: data.estimatedSavings },
     ];
 
     const width = 400;
@@ -79,9 +79,9 @@ const SimulationResults = ({ data  }) => {
   return (
     <div className="p-6 bg-white rounded-lg shadow-md border border-gray-200 relative">
       <h3 className="text-xl font-bold text-gray-800 mb-4">Simulation Results</h3>
-      <p><strong>Annual Energy Generated:</strong> {data.energiaGenerada?.toFixed(2)} kWh</p>
-      <p><strong>Estimated Savings:</strong> {data.ahorroEstimado?.toFixed(2)} €</p>
-      <p><strong>Return on Investment:</strong> {data.retornoInversion} years</p>
+      <p><strong>Energia Generada al Año:</strong> {data.energyGenerated?.toFixed(2)} kWh</p>
+      <p><strong>Ahorros Estimados:</strong> {data.estimatedSavings?.toFixed(2)} €</p>
+      <p><strong>Retorno de Inversión(ROI):</strong> {data.returnOnInvestment} years</p>
 
       <div className="mt-6 w-full">
         <svg ref={svgRef}></svg>

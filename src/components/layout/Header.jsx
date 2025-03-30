@@ -9,7 +9,8 @@ import {
   FaSun,
   FaBars,
   FaTimes,
-  FaShieldAlt
+  FaShieldAlt,
+  FaHistory
 } from "react-icons/fa";
 import logo from '../../assets/8408600.jpg';
 import { useAuth } from "../../context/AuthContext";
@@ -58,6 +59,7 @@ const Header = () => {
             <NavLink to="/configuration" icon={<FaCog />} label="Configuration" active={location.pathname === "/configuration"} />
             <NavLink to="/recommendations" icon={<FaClipboardList />} label="Recommendations" active={location.pathname === "/recommendations"} />
             <NavLink to="/resources" icon={<FaBook />} label="Resources" active={location.pathname === "/resources"} />
+            <NavLink to="/history" icon={<FaHistory />} label="Historial" active={location.pathname === "/history"} />
           </>
         </RoleBasedAccess>
 
@@ -82,7 +84,6 @@ const Header = () => {
         {/* User Info / Login Button */}
         {user ? (
           <div className="relative">
- 
             <button onClick={toggleMenu} className="flex items-center space-x-2 bg-gray-200 dark:bg-gray-700 px-3 py-2 rounded-md hover:bg-gray-300">
               <img
                 src="https://www.gravatar.com/avatar/?d=mp"
@@ -95,13 +96,14 @@ const Header = () => {
               <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 z-50">
                 <Link className="block px-4 py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700" to="/profile">Perfil</Link>
                 <Link className="block px-4 py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700" to="/settings">Configuración</Link>
+                <Link className="block px-4 py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700" to="/history">Historial</Link>
+               
                 <button
                   onClick={handleLogout}
                   className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
                   Cerrar sesión
                 </button>
-
               </div>
             )}
           </div>
@@ -125,6 +127,7 @@ const Header = () => {
               <NavLink to="/configuration" icon={<FaCog />} label="Configuration" active={location.pathname === "/configuration"} />
               <NavLink to="/recommendations" icon={<FaClipboardList />} label="Recommendations" active={location.pathname === "/recommendations"} />
               <NavLink to="/resources" icon={<FaBook />} label="Resources" active={location.pathname === "/resources"} />
+              <NavLink to="/history" icon={<FaHistory />} label="Historial" active={location.pathname === "/history"} />
             </>
           </RoleBasedAccess>
 
@@ -145,6 +148,7 @@ const NavLink = ({ to, icon, label, active }) => (
 );
 
 export default Header;
+
 
 
 

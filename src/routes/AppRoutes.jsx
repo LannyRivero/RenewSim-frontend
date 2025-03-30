@@ -10,6 +10,7 @@ import TestPage from '../pages/TestPage';
 import TestimonialsPage from '../pages/TestimonialsPage';
 import SimulationPage from '../pages/SimulationPage';
 import AdminPanel from '../pages/adminPanel/AdminPanel';
+import SimulationHistory from "../pages/history/SimulationHistory";
 
 import Layout from '../components/layout/Layout';
 
@@ -30,6 +31,8 @@ const AppRoutes = () => {
           <Route path="/test" element={<TestPage />} />
           <Route path="/testimonials" element={<TestimonialsPage />} />
           <Route path="/simulation" element={<SimulationPage />} />
+          <Route path="/history" element={<SimulationHistory />} />
+          
         </Route>
 
         {/*  Rutas solo para ADMIN */}
