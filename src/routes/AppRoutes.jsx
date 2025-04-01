@@ -8,8 +8,8 @@ import Unauthorized from '../pages/Unauthorized';
 
 import TestPage from '../pages/TestPage';
 import TestimonialsPage from '../pages/TestimonialsPage';
-import SimulationPage from '../pages/SimulationPage';
-import SimulationHistory from "../pages/history/SimulationHistory";
+import SimulationPage from '../pages/dashboard/simulation/SimulationPage';
+import SimulationHistory from "../pages/dashboard/history/SimulationHistory";
 import AdminPanel from '../pages/adminPanel/AdminPanel';
 
 import Layout from '../components/layout/Layout';
