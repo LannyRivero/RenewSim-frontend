@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { loginUser } from '../../services/authService';
+import { loginUser } from '../../services/AuthService';
 import backgroundImage from '../../assets/generacion-eolica.jpg'; // Cambia la ruta según tu estructura de carpetas
 
 const LoginForm = () => {
@@ -23,7 +23,7 @@ const LoginForm = () => {
       console.log("🚀 Login response:", { token, username, roles });
 
       login(token, { username, roles });
-        
+
       // Redirección según rol
       if (roles.includes("ADMIN")) {
         navigate("/admin-dashboard");
