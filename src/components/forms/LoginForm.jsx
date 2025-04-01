@@ -8,7 +8,14 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const { user, login } = useAuth();
 
-  if (user) return <Navigate to="/simulation" />;
+  if (user?.roles?.includes("ADMIN")) {
+    return <Navigate to="/dashboard/admin/users" />;
+  } else if (user?.roles?.includes("ADVANCED_USER")) {
+    return <Navigate to="/dashboard/advanced" />;
+  } else if (user) {
+    return <Navigate to="/dashboard/simulation" />;
+  }
+  
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,14 +31,18 @@ const LoginForm = () => {
 
       login(token, { username, roles });
 
-      // Redirección según rol
-      if (roles.includes("ADMIN")) {
-        navigate("/admin-dashboard");
-      } else if (roles.includes("ADVANCED_USER")) {
-        navigate("/advanced-dashboard");
+
+      // Redirigir directamente usando `roles` desde la respuesta
+      const userRoles = roles || [];
+
+      if (userRoles.includes("ADMIN")) {
+        navigate("/dashboard/admin/users");
+      } else if (userRoles.includes("ADVANCED_USER")) {
+        navigate("/dashboard/advanced");
       } else {
-        navigate("/dashboard"); // usuario normal
+        navigate("/dashboard/simulation");
       }
+
     } catch (error) {
       alert('Credenciales incorrectas o error del servidor.');
     }
