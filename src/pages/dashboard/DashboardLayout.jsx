@@ -1,5 +1,6 @@
 import React from "react";
 import DashboardHeader from '../../pages/dashboard/DashboardHeader';
+import DashboardFooter from "../../pages/dashboard/DashboardFooter";
 
 const DashboardLayout = ({ children }) => {
   return (
@@ -11,6 +12,7 @@ const DashboardLayout = ({ children }) => {
           {children}
         </main>
       </div>
+      <DashboardFooter />   
     </div>
   );
 };
