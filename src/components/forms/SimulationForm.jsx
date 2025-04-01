@@ -8,9 +8,6 @@ import InputWithButton from "../common/inputField/InputWithButton";
 import ErrorToast from "../common/ErrorToast";
 import { buscarUbicaciones } from "../../services/WeatherService";
 
-
-
-
 const SimulationForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
     location: "",
@@ -111,7 +108,7 @@ const SimulationForm = ({ onSubmit }) => {
       console.log("📊 Datos climáticos:", climate);
 
       const climaNormalizado = {
-        irradiance: climate.irradianciaEstimativa,
+        irradiance: Math.max(climate.irradianciaEstimativa, 50), //mínimo razonable
         wind: climate.viento,
         hydrology: 3.0, // valor arbitrario para la simulación hidroeléctrica
       };

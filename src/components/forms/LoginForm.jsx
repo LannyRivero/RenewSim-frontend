@@ -17,29 +17,37 @@ const LoginForm = () => {
       username: form.username.value,
       password: form.password.value,
     };
-  
+
     try {
       const { token, username, roles } = await loginUser(credentials);
       console.log("🚀 Login response:", { token, username, roles });
-  
+
       login(token, { username, roles });
-      navigate('/simulation');
+        
+      // Redirección según rol
+      if (roles.includes("ADMIN")) {
+        navigate("/admin-dashboard");
+      } else if (roles.includes("ADVANCED_USER")) {
+        navigate("/advanced-dashboard");
+      } else {
+        navigate("/dashboard"); // usuario normal
+      }
     } catch (error) {
       alert('Credenciales incorrectas o error del servidor.');
     }
   };
-  
+
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden">
-  {/* Imagen de fondo */}
-  <div
-    className="absolute inset-0 bg-cover bg-center"
-    style={{ backgroundImage: `url(${backgroundImage})` }}
-  ></div>
+      {/* Imagen de fondo */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+      ></div>
 
-  {/* Capa oscura encima */}
-  <div className="absolute inset-0 bg-black opacity-40"></div>
+      {/* Capa oscura encima */}
+      <div className="absolute inset-0 bg-black opacity-40"></div>
 
       {/* Formulario centrado */}
       <form
