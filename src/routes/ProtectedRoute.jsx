@@ -1,20 +1,20 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-
 
 const ProtectedRoute = ({ allowedRoles = [] }) => {
   const { user, token } = useAuth();
 
-
-  if (!user) {
+  // Si no hay sesión activa
+  if (!user || !token) {
     return <Navigate to="/login" replace />;
   }
 
+  // Si hay roles permitidos definidos, comprobar acceso
   if (allowedRoles.length > 0) {
     const userRoles = Array.isArray(user.roles)
-      ? user.roles.map(role => typeof role === 'string' ? role : role.name)
-      : [user.role];
+      ? user.roles.map(role => (typeof role === 'string' ? role : role.name))
+      : [];
 
     const hasAccess = allowedRoles.some(role => userRoles.includes(role));
 
@@ -23,9 +23,11 @@ const ProtectedRoute = ({ allowedRoles = [] }) => {
     }
   }
 
+  // Si todo está bien, renderiza los hijos protegidos
   return <Outlet />;
 };
 
 export default ProtectedRoute;
+
 
 

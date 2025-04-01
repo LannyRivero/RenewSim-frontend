@@ -9,9 +9,11 @@ export const loginUser = async (credentials) => {
   //Guardar el token
   const token = response.data.token;
   if (token) {
-    localStorage.setItem('token', token);
+    localStorage.setItem("token", response.data.token);
+
   }
- 
+  console.log("🔐 Token guardado:", token);
+
   return response.data;
 };
 

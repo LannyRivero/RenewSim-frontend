@@ -1,14 +1,21 @@
 import React from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { loginUser } from '../../services/authService';
+import { loginUser } from '../../services/AuthService';
 import backgroundImage from '../../assets/generacion-eolica.jpg'; // Cambia la ruta según tu estructura de carpetas
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const { user, login } = useAuth();
 
-  if (user) return <Navigate to="/simulation" />;
+  if (user?.roles?.includes("ADMIN")) {
+    return <Navigate to="/dashboard/admin/users" />;
+  } else if (user?.roles?.includes("ADVANCED_USER")) {
+    return <Navigate to="/dashboard/advanced" />;
+  } else if (user) {
+    return <Navigate to="/dashboard/simulation" />;
+  }
+  
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -17,29 +24,41 @@ const LoginForm = () => {
       username: form.username.value,
       password: form.password.value,
     };
-  
+
     try {
       const { token, username, roles } = await loginUser(credentials);
       console.log("🚀 Login response:", { token, username, roles });
-  
+
       login(token, { username, roles });
-      navigate('/simulation');
+
+
+      // Redirigir directamente usando `roles` desde la respuesta
+      const userRoles = roles || [];
+
+      if (userRoles.includes("ADMIN")) {
+        navigate("/dashboard/admin/users");
+      } else if (userRoles.includes("ADVANCED_USER")) {
+        navigate("/dashboard/advanced");
+      } else {
+        navigate("/dashboard/simulation");
+      }
+
     } catch (error) {
       alert('Credenciales incorrectas o error del servidor.');
     }
   };
-  
+
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden">
-  {/* Imagen de fondo */}
-  <div
-    className="absolute inset-0 bg-cover bg-center"
-    style={{ backgroundImage: `url(${backgroundImage})` }}
-  ></div>
+      {/* Imagen de fondo */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+      ></div>
 
-  {/* Capa oscura encima */}
-  <div className="absolute inset-0 bg-black opacity-40"></div>
+      {/* Capa oscura encima */}
+      <div className="absolute inset-0 bg-black opacity-40"></div>
 
       {/* Formulario centrado */}
       <form
