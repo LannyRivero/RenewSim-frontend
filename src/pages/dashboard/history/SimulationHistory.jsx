@@ -2,6 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../../context/AuthContext";
 
+const formatNumber = (value) =>
+  new Intl.NumberFormat("es-ES", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
+
 const SimulationHistory = () => {
   const { token } = useAuth();
   const [simulations, setSimulations] = useState([]);
@@ -16,7 +22,6 @@ const SimulationHistory = () => {
           },
         });
 
-        // Ordenar por fecha descendente
         const sorted = response.data.sort(
           (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
         );
@@ -35,7 +40,7 @@ const SimulationHistory = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">
-        🕓 Hitorial de Simulaciones
+        🕓 Historial de Simulaciones
       </h2>
 
       {loading ? (
@@ -59,36 +64,35 @@ const SimulationHistory = () => {
               {simulations.map((sim) => (
                 <tr key={sim.id} className="hover:bg-gray-50">
                   <td className="px-4 py-2">
-                    {new Date(sim.timestamp).toLocaleDateString()}
+                    {new Date(sim.timestamp).toLocaleDateString("es-ES")}
                   </td>
                   <td className="px-4 py-2">{sim.location}</td>
                   <td className="px-4 py-2 capitalize">{sim.energyType}</td>
-                  <td className="px-4 py-2">{sim.energyGenerated?.toFixed(2)}</td>
-                  <td className="px-4 py-2">{sim.estimatedSavings?.toFixed(2)}</td>
+                  <td className="px-4 py-2">{formatNumber(sim.energyGenerated)}</td>
+                  <td className="px-4 py-2">€ {formatNumber(sim.estimatedSavings)}</td>
                   <td className="px-4 py-2">
                     {sim.returnOnInvestment !== undefined ? (
                       <span
-                        className={`font-semibold ${sim.returnOnInvestment <= 3
+                        className={`font-semibold ${
+                          sim.returnOnInvestment <= 3
                             ? "text-green-600"
                             : sim.returnOnInvestment <= 6
-                              ? "text-yellow-600"
-                              : "text-red-600"
-                          }`}
+                            ? "text-yellow-600"
+                            : "text-red-600"
+                        }`}
+                        title={`Retorno estimado: ${sim.returnOnInvestment.toFixed(2)} años`}
                       >
                         {sim.returnOnInvestment.toFixed(2)} años{" "}
                         {sim.returnOnInvestment <= 3
                           ? "🟢"
                           : sim.returnOnInvestment <= 6
-                            ? "🟡"
-                            : "🔴"}
+                          ? "🟡"
+                          : "🔴"}
                       </span>
                     ) : (
                       "N/A"
                     )}
                   </td>
-
-
-
                 </tr>
               ))}
             </tbody>
@@ -100,4 +104,5 @@ const SimulationHistory = () => {
 };
 
 export default SimulationHistory;
+
 
