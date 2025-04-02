@@ -10,7 +10,8 @@ import TestPage from '../pages/TestPage';
 import TestimonialsPage from '../pages/TestimonialsPage';
 import SimulationPage from '../pages/dashboard/simulation/SimulationPage';
 import SimulationHistory from "../pages/dashboard/history/SimulationHistory";
-import AdminPanel from '../pages/adminPanel/AdminPanel';
+import AdminDashboard from "../pages/dashboard/adminPanel/AdminDashboard";
+
 
 import Layout from '../components/layout/Layout';
 import DashboardLayout from '../pages/dashboard/DashboardLayout'; // Nuevo layout para dashboard
@@ -40,7 +41,7 @@ const AppRoutes = () => {
 
           {/* Solo para ADMIN */}
           <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
-            <Route path="admin/users" element={<AdminPanel />} />
+            <Route path="admin/users" element={<AdminDashboard />} />
           </Route>
         </Route>
       </Route>

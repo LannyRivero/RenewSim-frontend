@@ -3,12 +3,12 @@ import {
   getAllUsers,
   updateUserRoles,
   deleteUser,
-} from "../../services/UserService";
-import AdminHeader from "../../components/admin/AdminHeader";
-import UserTable from "../../components/admin/UserTable";
-import SearchBar from "../../components/admin/SearchBar";
-import Pagination from "../../components/admin/Pagination";
-import RoleFilter from "../../components/admin/RoleFilter";
+} from "../../../services/UserService";
+import AdminHeader from "../../../components/admin/AdminHeader";
+import UserTable from "../../../components/admin/UserTable";
+import SearchBar from "../../../components/admin/SearchBar";
+import Pagination from "../../../components/admin/Pagination";
+import RoleFilter from "../../../components/admin/RoleFilter";
 import ConfirmModal from "@/components/admin/ConfirmModal";
 import ExportCSVButton from "@/components/admin/ExportCSVButton";
 
