@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { loginUser } from '../../services/authService';
 import backgroundImage from '../../assets/generacion-eolica.jpg'; // Cambia la ruta según tu estructura de carpetas
@@ -7,15 +7,6 @@ import backgroundImage from '../../assets/generacion-eolica.jpg'; // Cambia la r
 const LoginForm = () => {
   const navigate = useNavigate();
   const { user, login } = useAuth();
-
-  if (user?.roles?.includes("ADMIN")) {
-    return <Navigate to="/dashboard/admin/users" />;
-  } else if (user?.roles?.includes("ADVANCED_USER")) {
-    return <Navigate to="/dashboard/advanced" />;
-  } else if (user) {
-    return <Navigate to="/dashboard/simulation" />;
-  }
-  
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -31,8 +22,6 @@ const LoginForm = () => {
 
       login(token, { username, roles });
 
-
-      // Redirigir directamente usando `roles` desde la respuesta
       const userRoles = roles || [];
 
       if (userRoles.includes("ADMIN")) {
@@ -40,14 +29,16 @@ const LoginForm = () => {
       } else if (userRoles.includes("ADVANCED_USER")) {
         navigate("/dashboard/advanced");
       } else {
-        navigate("/dashboard/simulation");
+        navigate("/dashboard/user"); 
       }
-
     } catch (error) {
       alert('Credenciales incorrectas o error del servidor.');
     }
   };
 
+  if (user) {  
+    return <Navigate to="/dashboard/user" />;
+  }
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden">
@@ -129,5 +120,6 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
+
 
 

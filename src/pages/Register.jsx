@@ -1,32 +1,39 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../services/authService';
+import { registerUser, loginUser } from '../services/authService';
 import backgroundImage from '../assets/generacion-eolica.jpg';
 import RegisterForm from '../components/forms/RegisterForm';
-import { useAuth } from '../context/AuthContext'; // ✅ Añadir esto
+import { useAuth } from '../context/AuthContext';
 
 const Register = () => {
   const navigate = useNavigate();
-  const { login } = useAuth(); // ✅ Obtenemos la función login del contexto
+  const { login } = useAuth();
 
   const handleRegister = async (e) => {
     e.preventDefault();
     const form = e.target;
-  
+
     const userData = {
       username: form.email.value,
       password: form.password.value,
     };
-  
+
     try {
-      const { token, username, roles } = await registerUser(userData);
-  
-      // ✅ Login automático correctamente con todos los datos
+      await registerUser(userData);
+
+      const { token, username, roles } = await loginUser(userData);
       login(token, { username, roles });
-  
-      navigate('/');
+
+      if (roles.includes("ADMIN")) {
+        navigate("/dashboard/admin/users");
+      } else if (roles.includes("ADVANCED_USER")) {
+        navigate("/dashboard/advanced");
+      } else {
+        navigate("/dashboard/user");
+      }
+
     } catch (error) {
+      console.error("❌ Error al registrar:", error);
       alert('Error al registrar. Verifica los datos o inténtalo más tarde.');
     }
   };
@@ -45,3 +52,4 @@ const Register = () => {
 };
 
 export default Register;
+

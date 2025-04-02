@@ -38,7 +38,6 @@ const AppRoutes = () => {
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<SimulationPage />} />
-          <Route path="simulation" element={<SimulationPage />} />
           <Route path="history" element={<SimulationHistory />} />
           <Route path="user" element={<UserDashboard />} />
 

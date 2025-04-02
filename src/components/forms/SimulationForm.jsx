@@ -114,8 +114,14 @@ const SimulationForm = ({ onSubmit }) => {
       };
       const consumoConvertido = consumptionUnit === "MWh" ? formData.energyConsumption * 1000 : formData.energyConsumption;
 
-      await onSubmit({ ...formData, energyConsumption: consumoConvertido, climate: climaNormalizado },
-        consumptionUnit);
+      await onSubmit({
+        ...formData,
+        energyConsumption: consumoConvertido,
+        climate: climaNormalizado,
+        consumptionUnit,
+        date: new Date().toISOString(), // importante si quieres mostrarlo en la tabla
+      });
+      
 
     } catch (error) {
       console.error("Error al obtener datos climáticos o al simular:", error);
