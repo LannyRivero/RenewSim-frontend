@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import apiCliente from "../../services/ApiClient";
 import RoleSelect from "./RoleSelect";
 
 const AdminPanel = () => {
@@ -10,7 +10,7 @@ const AdminPanel = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("/api/v1/users", {
+      const res = await apiCliente.get("/users", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -43,7 +43,7 @@ const AdminPanel = () => {
 
     setLoadingUserId(userId);
     try {
-      await axios.put(`/api/v1/users/${userId}/roles`, { roles: rolesToUpdate }, {
+      await apiCliente.put(`/users/${userId}/roles`, { roles: rolesToUpdate }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
