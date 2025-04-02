@@ -79,12 +79,20 @@ const AdminPanel = () => {
       setTimeout(() => setMessage(null), 3000);
     }
   };
+  // Paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 10;
 
+  const startIndex = (currentPage - 1) * usersPerPage;
+  const endIndex = startIndex + usersPerPage;
+  const paginatedUsers = users.slice(startIndex, endIndex);
+
+  const totalPages = Math.ceil(users.length / usersPerPage);
   return (
     <div className="max-w-7xl mx-auto p-10 bg-white rounded-3xl shadow-xl">
       <div className="max-w-7xl mx-auto p-10 bg-white rounded-3xl shadow-xl">
         <AdminHeader message={message} />
-        <UserTable
+        <UserRow
           users={users}
           editedRoles={editedRoles}
           loadingUserId={loadingUserId}
@@ -125,6 +133,18 @@ const AdminPanel = () => {
         </tbody>
 
       </table>
+      <div className="flex justify-center mt-6 gap-2">
+        {[...Array(totalPages)].map((_, i) => (
+          <button
+            key={i}
+            className={`px-3 py-1 rounded ${currentPage === i + 1 ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+            onClick={() => setCurrentPage(i + 1)}
+          >
+            {i + 1}
+          </button>
+        ))}
+      </div>
+
     </div>
   );
 };
