@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   getAllUsers,
   updateUserRoles,
@@ -16,6 +16,8 @@ const AdminPanel = () => {
   const [loadingUserId, setLoadingUserId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const containerRef = useRef(null);
+  const searchInputRef = useRef(null);
 
   const usersPerPage = 10;
 
@@ -31,6 +33,9 @@ const AdminPanel = () => {
 
   useEffect(() => {
     fetchUsers();
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
   }, []);
 
   const handleRoleChange = (userId, newRoles) => {
@@ -43,6 +48,12 @@ const AdminPanel = () => {
       delete updated[userId];
       return updated;
     });
+  };
+
+  const scrollToTop = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const saveChanges = async (userId) => {
@@ -63,6 +74,7 @@ const AdminPanel = () => {
       setMessage({ type: "error", text: "Error al actualizar roles" });
     } finally {
       setLoadingUserId(null);
+      scrollToTop();
       setTimeout(() => setMessage(null), 3000);
     }
   };
@@ -80,6 +92,7 @@ const AdminPanel = () => {
       setMessage({ type: "error", text: "Error al eliminar el usuario" });
     } finally {
       setLoadingUserId(null);
+      scrollToTop();
       setTimeout(() => setMessage(null), 3000);
     }
   };
@@ -93,10 +106,14 @@ const AdminPanel = () => {
   const paginatedUsers = filteredUsers.slice(startIndex, startIndex + usersPerPage);
 
   return (
-    <div className="max-w-7xl mx-auto p-10 bg-white rounded-3xl shadow-xl">
+    <div
+      ref={containerRef}
+      className="max-w-7xl mx-auto p-10 bg-white rounded-3xl shadow-xl animate-fade-in"
+    >
       <AdminHeader message={message} />
       <SearchBar
         searchTerm={searchTerm}
+        inputRef={searchInputRef}
         onChange={(e) => {
           setSearchTerm(e.target.value);
           setCurrentPage(1);
@@ -121,6 +138,7 @@ const AdminPanel = () => {
 };
 
 export default AdminPanel;
+
 
 
 
