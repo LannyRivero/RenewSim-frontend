@@ -8,7 +8,8 @@ import AdminHeader from "../../components/admin/AdminHeader";
 import UserTable from "../../components/admin/UserTable";
 import SearchBar from "../../components/admin/SearchBar";
 import Pagination from "../../components/admin/Pagination";
-import RoleFilter from "../../components/admin/RoleFilter"; // 👈 Agrega esto
+import RoleFilter from "../../components/admin/RoleFilter";
+import ConfirmModal from "@/components/admin/ConfirmModal";
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
@@ -17,7 +18,10 @@ const AdminPanel = () => {
   const [loadingUserId, setLoadingUserId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [roleFilter, setRoleFilter] = useState("ALL"); // 👈 Asegúrate de tener esto
+  const [roleFilter, setRoleFilter] = useState("ALL");
+
+  const [showModal, setShowModal] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   const usersPerPage = 10;
 
@@ -69,19 +73,25 @@ const AdminPanel = () => {
     }
   };
 
-  const handleDeleteUser = async (userId) => {
-    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este usuario?");
-    if (!confirmDelete) return;
+  const handleDeleteUser = (userId) => {
+    setUserToDelete(userId);
+    setShowModal(true);
+  };
 
-    setLoadingUserId(userId);
+  const confirmDeleteUser = async () => {
+    if (!userToDelete) return;
+
+    setLoadingUserId(userToDelete);
     try {
-      await deleteUser(userId);
+      await deleteUser(userToDelete);
       setMessage({ type: "success", text: "Usuario eliminado correctamente" });
       await fetchUsers();
     } catch (error) {
       setMessage({ type: "error", text: "Error al eliminar el usuario" });
     } finally {
       setLoadingUserId(null);
+      setUserToDelete(null);
+      setShowModal(false);
       setTimeout(() => setMessage(null), 3000);
     }
   };
@@ -129,6 +139,13 @@ const AdminPanel = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+      />
+
+      <ConfirmModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={confirmDeleteUser}
+        message="¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer."
       />
     </div>
   );
