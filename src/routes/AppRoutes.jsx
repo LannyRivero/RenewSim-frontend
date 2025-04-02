@@ -10,11 +10,13 @@ import TestPage from '../pages/TestPage';
 import TestimonialsPage from '../pages/TestimonialsPage';
 import SimulationPage from '../pages/dashboard/simulation/SimulationPage';
 import SimulationHistory from "../pages/dashboard/history/SimulationHistory";
-import AdminDashboard from "../pages/dashboard/adminPanel/AdminDashboard";
+import UserDashboard from "@/pages/dashboard/user/UserDashboard";
+
+import AdminDashboard from "@/pages/dashboard/adminPanel/AdminDashboard";
 
 
 import Layout from '../components/layout/Layout';
-import DashboardLayout from '../pages/dashboard/DashboardLayout'; // Nuevo layout para dashboard
+import DashboardLayout from '../pages/dashboard/layout/DashboardLayout'; // Nuevo layout para dashboard
 
 const AppRoutes = () => {
   return (
@@ -38,8 +40,8 @@ const AppRoutes = () => {
           <Route index element={<SimulationPage />} />
           <Route path="simulation" element={<SimulationPage />} />
           <Route path="history" element={<SimulationHistory />} />
+          <Route path="user" element={<UserDashboard />} />
 
-          {/* Solo para ADMIN */}
           <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
             <Route path="admin/users" element={<AdminDashboard />} />
           </Route>
