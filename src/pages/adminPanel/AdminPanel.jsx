@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import RoleSelect from "./RoleSelect";
+import RoleSelect from "../../components/admin/RoleSelect";
 import { Users, Trash2 } from "lucide-react";
 import {
   getAllUsers,
   updateUserRoles,
   deleteUser,
 } from "../../services/UserService";
-import UserRow from "./UserRow";
+import UserRow from "../../components/admin/UserRow";
+import AdminHeader from "../../components/admin/AdminHeader";
 
 
 const AdminPanel = () => {
@@ -65,7 +66,7 @@ const AdminPanel = () => {
   const handleDeleteUser = async (userId) => {
     const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este usuario?");
     if (!confirmDelete) return;
-  
+
     setLoadingUserId(userId);
     try {
       await deleteUser(userId);
@@ -81,21 +82,17 @@ const AdminPanel = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-10 bg-white rounded-3xl shadow-xl">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-3xl font-bold text-green-700 flex items-center gap-2">
-          <Users className="w-7 h-7" /> Panel de Administración
-        </h2>
-        {message && (
-          <span
-            className={`text-sm px-4 py-2 rounded-full ${
-              message.type === "success"
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            }`}
-          >
-            {message.text}
-          </span>
-        )}
+      <div className="max-w-7xl mx-auto p-10 bg-white rounded-3xl shadow-xl">
+        <AdminHeader message={message} />
+        <UserTable
+          users={users}
+          editedRoles={editedRoles}
+          loadingUserId={loadingUserId}
+          onRoleChange={handleRoleChange}
+          onSave={saveChanges}
+          onCancel={cancelChanges}
+          onDelete={handleDeleteUser}
+        />
       </div>
 
       <table className="min-w-full divide-y divide-gray-200 text-sm">
@@ -107,25 +104,25 @@ const AdminPanel = () => {
           </tr>
         </thead>
         <tbody>
-  {paginatedUsers.map((user) => {
-    const originalRoles = user.roles.map((r) => r.name).sort();
-    const currentRoles = (editedRoles[user.id] || originalRoles).sort();
+          {paginatedUsers.map((user) => {
+            const originalRoles = user.roles.map((r) => r.name).sort();
+            const currentRoles = (editedRoles[user.id] || originalRoles).sort();
 
-    return (
-      <UserRow
-        key={user.id}
-        user={user}
-        currentRoles={currentRoles}
-        originalRoles={originalRoles}
-        loadingUserId={loadingUserId}
-        onRoleChange={handleRoleChange}
-        onSave={saveChanges}
-        onCancel={cancelChanges}
-        onDelete={handleDeleteUser}
-      />
-    );
-  })}
-</tbody>
+            return (
+              <UserRow
+                key={user.id}
+                user={user}
+                currentRoles={currentRoles}
+                originalRoles={originalRoles}
+                loadingUserId={loadingUserId}
+                onRoleChange={handleRoleChange}
+                onSave={saveChanges}
+                onCancel={cancelChanges}
+                onDelete={handleDeleteUser}
+              />
+            );
+          })}
+        </tbody>
 
       </table>
     </div>
