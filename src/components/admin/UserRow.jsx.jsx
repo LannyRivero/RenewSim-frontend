@@ -58,11 +58,11 @@ const UserRow = ({
           ))}
         </div>
         <RoleSelect
-          selectedRoles={(Array.isArray(currentRoles) ? currentRoles : [])
-            .filter((r) => typeof r === "string")
-            .map((r) => r.toUpperCase())}
+          selectedRoles={currentRoles}
+          originalRoles={originalRoles}
           onChange={(newRoles) => onRoleChange(user.id, newRoles)}
         />
+
       </td>
       <td className="p-3 text-center">
         {loadingUserId === user.id ? (
