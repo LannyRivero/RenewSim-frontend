@@ -113,12 +113,13 @@ const AdminPanel = () => {
       <AdminHeader message={message} />
       <SearchBar
         searchTerm={searchTerm}
-        inputRef={searchInputRef}
         onChange={(e) => {
           setSearchTerm(e.target.value);
           setCurrentPage(1);
         }}
+        
       />
+
       <UserTable
         users={paginatedUsers}
         editedRoles={editedRoles}
