@@ -6,6 +6,8 @@ import {
   updateUserRoles,
   deleteUser,
 } from "../../services/UserService";
+import UserRow from "./UserRow";
+
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
@@ -100,61 +102,26 @@ const AdminPanel = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => {
-            const originalRoles = user.roles.map((r) => r.name).sort();
-            const currentRoles = (editedRoles[user.id] || originalRoles).sort();
-            const rolesChanged =
-              JSON.stringify(originalRoles) !== JSON.stringify(currentRoles);
+  {paginatedUsers.map((user) => {
+    const originalRoles = user.roles.map((r) => r.name).sort();
+    const currentRoles = (editedRoles[user.id] || originalRoles).sort();
 
-            return (
-              <tr
-                key={user.id}
-                className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition"
-              >
-                <td className="p-3 font-medium text-gray-900">{user.username}</td>
-                <td className="p-3">
-                  <RoleSelect
-                    selectedRoles={currentRoles}
-                    onChange={(newRoles) => handleRoleChange(user.id, newRoles)}
-                  />
-                </td>
-                <td className="p-3 text-center">
-                  <div className="flex justify-center gap-2">
-                    {loadingUserId === user.id ? (
-                      <span className="text-blue-500 animate-pulse text-sm">
-                        Guardando...
-                      </span>
-                    ) : (
-                      rolesChanged && (
-                        <>
-                          <button
-                            onClick={() => saveChanges(user.id)}
-                            className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
-                          >
-                            Guardar
-                          </button>
-                          <button
-                            onClick={() => cancelChanges(user.id)}
-                            className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 rounded"
-                          >
-                            Deshacer
-                          </button>
-                        </>
-                      )
-                    )}
-                    <button
-                      onClick={() => handleDelete(user.id)}
-                      className="bg-red-600 hover:bg-red-700 text-white p-2 rounded"
-                      title="Eliminar usuario"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
+    return (
+      <UserRow
+        key={user.id}
+        user={user}
+        currentRoles={currentRoles}
+        originalRoles={originalRoles}
+        loadingUserId={loadingUserId}
+        onRoleChange={handleRoleChange}
+        onSave={saveChanges}
+        onCancel={cancelChanges}
+        onDelete={handleDeleteUser}
+      />
+    );
+  })}
+</tbody>
+
       </table>
     </div>
   );
