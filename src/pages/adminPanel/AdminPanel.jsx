@@ -6,7 +6,7 @@ import {
   updateUserRoles,
   deleteUser,
 } from "../../services/UserService";
-import UserRow from "../../components/admin/UserRow";
+import UserTable from "../../components/admin/UserTable";
 import AdminHeader from "../../components/admin/AdminHeader";
 
 
@@ -92,8 +92,8 @@ const AdminPanel = () => {
     <div className="max-w-7xl mx-auto p-10 bg-white rounded-3xl shadow-xl">
       <div className="max-w-7xl mx-auto p-10 bg-white rounded-3xl shadow-xl">
         <AdminHeader message={message} />
-        <UserRow
-          users={users}
+        <UserTable
+          users={paginatedUsers} // o simplemente users si no usas paginación aún
           editedRoles={editedRoles}
           loadingUserId={loadingUserId}
           onRoleChange={handleRoleChange}
@@ -101,6 +101,7 @@ const AdminPanel = () => {
           onCancel={cancelChanges}
           onDelete={handleDeleteUser}
         />
+
       </div>
 
       <table className="min-w-full divide-y divide-gray-200 text-sm">
