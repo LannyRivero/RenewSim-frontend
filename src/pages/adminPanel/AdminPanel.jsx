@@ -22,6 +22,7 @@ const AdminPanel = () => {
   const fetchUsers = async () => {
     try {
       const data = await getAllUsers();
+      console.log("📦 Usuarios con roles:", data);
       setUsers(data);
     } catch (err) {
       console.error("Error al obtener usuarios", err);

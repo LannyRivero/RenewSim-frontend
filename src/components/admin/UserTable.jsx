@@ -25,8 +25,9 @@ const UserTable = ({
       </thead>
       <tbody>
         {users.map((user) => {
-          const originalRoles = user.roles.map((r) => r.name).sort();
-          const currentRoles = (editedRoles[user.id] || originalRoles).sort();
+          const originalRoles = (user.roles || []).map((r) => r.toUpperCase()).sort();
+          const currentRoles = (editedRoles[user.id] || originalRoles).map(r => r.toUpperCase()).sort();
+
 
           return (
             <UserRow

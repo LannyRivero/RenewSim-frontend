@@ -1,58 +1,69 @@
 import React from "react";
 import RoleSelect from "./RoleSelect";
 
+const mapBackendRoleToLabel = (role) => {
+  if (!role || typeof role !== "string") return null;
+
+  switch (role.toUpperCase()) {
+    case "ADMIN":
+      return "Admin";
+    case "ADVANCED_USER":
+      return "Advanced User";
+    case "USER":
+      return "Basic User";
+    default:
+      return null;
+  }
+};
+
 const UserRow = ({
   user,
-  currentRoles,
-  originalRoles,
+  currentRoles = [], // valor por defecto si es undefined
+  originalRoles = [],
   loadingUserId,
   onRoleChange,
   onSave,
   onCancel,
   onDelete,
 }) => {
-  const rolesChanged = JSON.stringify(originalRoles) !== JSON.stringify(currentRoles);
+  const rolesChanged =
+    JSON.stringify(originalRoles.sort()) !== JSON.stringify(currentRoles.sort());
+
+  // Normalizar y filtrar los roles válidos
+  const displayedRoles = (Array.isArray(currentRoles) ? currentRoles : [])
+    .filter((r) => typeof r === "string")
+    .map((r) => r.toUpperCase())
+    .map(mapBackendRoleToLabel)
+    .filter(Boolean);
 
   return (
     <tr className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition">
       <td className="p-3 font-medium text-gray-900">
-        <div className="flex flex-col">
-          <span>{user.username}</span>
-
-          {/* Visualización de roles actuales */}
-          <div className="flex gap-1 mt-1">
-  {user.roles?.map((role, index) => {
-    const roleName = role?.name || "UNKNOWN";
-    const roleLabel = roleName.replace("_", " ").toLowerCase();
-    const badgeColor =
-      roleName === "ADMIN"
-        ? "bg-red-100 text-red-700"
-        : roleName === "ADVANCED_USER"
-        ? "bg-blue-100 text-blue-700"
-        : roleName === "USER"
-        ? "bg-green-100 text-green-700"
-        : "bg-gray-200 text-gray-600";
-
-    return (
-      <span
-        key={index}
-        className={`text-xs px-2 py-0.5 rounded-full font-semibold ${badgeColor}`}
-      >
-        {roleLabel}
-      </span>
-    );
-  })}
-</div>
-        </div>
+        {user.username}
+        {displayedRoles.length === 0 && (
+          <span className="ml-2 text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded">
+            unknown
+          </span>
+        )}
       </td>
-
       <td className="p-3">
+        <div className="flex flex-wrap gap-2 mb-2">
+          {displayedRoles.map((roleLabel, index) => (
+            <span
+              key={`${user.id}-role-${index}`} // Clave única y estable
+              className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded"
+            >
+              {roleLabel}
+            </span>
+          ))}
+        </div>
         <RoleSelect
-          selectedRoles={currentRoles}
+          selectedRoles={(Array.isArray(currentRoles) ? currentRoles : [])
+            .filter((r) => typeof r === "string")
+            .map((r) => r.toUpperCase())}
           onChange={(newRoles) => onRoleChange(user.id, newRoles)}
         />
       </td>
-
       <td className="p-3 text-center">
         {loadingUserId === user.id ? (
           <span className="text-blue-500 animate-pulse text-sm">Guardando...</span>
@@ -88,4 +99,7 @@ const UserRow = ({
 };
 
 export default UserRow;
+
+
+
 

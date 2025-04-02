@@ -5,8 +5,9 @@ const allRoles = ["ADMIN", "ADVANCED_USER", "BASIC_USER"];
 const formatRole = (role) =>
   role
     .toLowerCase()
-    .replace("_", " ")
-    .replace(/^\w/, (c) => c.toUpperCase());
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+
 
 const RoleSelect = ({ selectedRoles, onChange }) => {
   const handleCheckboxChange = (role) => {
