@@ -62,15 +62,20 @@ const AdminPanel = () => {
     }
   };
 
-  const handleDelete = async (userId) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
-      try {
-        await deleteUser(userId);
-        setMessage({ type: "success", text: "Usuario eliminado correctamente" });
-        await fetchUsers();
-      } catch (err) {
-        setMessage({ type: "error", text: "Error al eliminar usuario" });
-      }
+  const handleDeleteUser = async (userId) => {
+    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este usuario?");
+    if (!confirmDelete) return;
+  
+    setLoadingUserId(userId);
+    try {
+      await deleteUser(userId);
+      setMessage({ type: "success", text: "Usuario eliminado correctamente" });
+      await fetchUsers();
+    } catch (error) {
+      setMessage({ type: "error", text: "Error al eliminar el usuario" });
+    } finally {
+      setLoadingUserId(null);
+      setTimeout(() => setMessage(null), 3000);
     }
   };
 
