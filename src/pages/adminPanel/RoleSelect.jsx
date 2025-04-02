@@ -1,32 +1,44 @@
 import React from "react";
 
-const availableRoles = ["USER", "ADVANCED_USER", "ADMIN"];
+const allRoles = ["ADMIN", "ADVANCED_USER", "BASIC_USER"];
+
+const formatRole = (role) =>
+  role
+    .toLowerCase()
+    .replace("_", " ")
+    .replace(/^\w/, (c) => c.toUpperCase());
 
 const RoleSelect = ({ selectedRoles, onChange }) => {
-  const handleToggle = (role) => {
-    if (selectedRoles.includes(role)) {
-      onChange(selectedRoles.filter(r => r !== role));
-    } else {
-      onChange([...selectedRoles, role]);
-    }
+  const handleCheckboxChange = (role) => {
+    const updatedRoles = selectedRoles.includes(role)
+      ? selectedRoles.filter((r) => r !== role)
+      : [...selectedRoles, role];
+    onChange(updatedRoles);
   };
 
   return (
-    <div className="flex gap-2 flex-wrap">
-      {availableRoles.map(role => (
-        <button
+    <div className="flex flex-wrap gap-2">
+      {allRoles.map((role) => (
+        <label
           key={role}
-          className={`px-3 py-1 rounded border ${
-            selectedRoles.includes(role) ? "bg-blue-500 text-white" : "bg-white text-gray-700"
+          className={`flex items-center gap-2 px-3 py-1 border rounded-md cursor-pointer transition ${
+            selectedRoles.includes(role)
+              ? "bg-green-100 border-green-500 text-green-800"
+              : "bg-gray-100 hover:bg-gray-200 border-gray-300"
           }`}
-          onClick={() => handleToggle(role)}
-          type="button"
         >
-          {role}
-        </button>
+          <input
+            type="checkbox"
+            className="form-checkbox text-green-600"
+            checked={selectedRoles.includes(role)}
+            onChange={() => handleCheckboxChange(role)}
+          />
+          <span className="text-sm">{formatRole(role)}</span>
+        </label>
       ))}
     </div>
   );
 };
 
 export default RoleSelect;
+
