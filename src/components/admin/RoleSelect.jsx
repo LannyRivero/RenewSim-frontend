@@ -1,4 +1,5 @@
 import React from "react";
+import { ShieldCheck } from "lucide-react"; 
 
 const allRoles = ["ADMIN", "ADVANCED_USER", "BASIC_USER"];
 
@@ -34,13 +35,16 @@ const RoleSelect = ({ selectedRoles, onChange, originalRoles = [] }) => {
         const isOriginal = originalRoles.includes(originalBackendRole);
 
         return (
-          <div key={role} className="relative group">
+          <div
+            key={role}
+            className="relative group transition transform hover:scale-[1.02]"
+          >
             <label
-              className={`flex items-center gap-2 px-3 py-1 border rounded-md cursor-pointer transition ${
+              className={`flex items-center gap-2 px-3 py-1 border rounded-full shadow-sm cursor-pointer transition-all duration-200 ${
                 isSelected
                   ? "bg-green-100 border-green-500 text-green-800"
-                  : "bg-gray-100 hover:bg-gray-200 border-gray-300"
-              } ${isOriginal ? "opacity-70 cursor-not-allowed" : ""}`}
+                  : "bg-gray-100 hover:bg-gray-200 border-gray-300 text-gray-700"
+              } ${isOriginal ? "opacity-60 cursor-not-allowed" : ""}`}
             >
               <input
                 type="checkbox"
@@ -49,16 +53,19 @@ const RoleSelect = ({ selectedRoles, onChange, originalRoles = [] }) => {
                 disabled={isOriginal}
                 onChange={() => handleCheckboxChange(role)}
               />
-              <span className="text-sm">{formatRole(role)}</span>
+              <span className="text-sm font-medium">{formatRole(role)}</span>
 
               {isOriginal && (
-                <span className="text-xs text-blue-500 ml-1">ℹ️</span>
+                <ShieldCheck
+                  className="text-blue-500 w-4 h-4"
+                  title="Este rol está asignado por el sistema"
+                />
               )}
             </label>
 
             {isOriginal && (
-              <div className="absolute bottom-full left-0 mb-1 w-48 text-xs text-white bg-gray-800 px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-                Este rol está asignado por el sistema y no se puede modificar.
+              <div className="absolute bottom-full left-0 mb-1 w-56 text-xs text-white bg-gray-800 px-3 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50">
+                Este rol está asignado por el sistema y no puede modificarse.
               </div>
             )}
           </div>
@@ -69,3 +76,4 @@ const RoleSelect = ({ selectedRoles, onChange, originalRoles = [] }) => {
 };
 
 export default RoleSelect;
+
