@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import apiCliente from "../../services/ApiClient";
 import RoleSelect from "./RoleSelect";
-import { Users } from "lucide-react";
+import { Users, Search } from "lucide-react";
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [editedRoles, setEditedRoles] = useState({});
   const [message, setMessage] = useState(null);
   const [loadingUserId, setLoadingUserId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetchUsers = async () => {
     try {
@@ -68,6 +69,10 @@ const AdminPanel = () => {
     }
   };
 
+  const filteredUsers = users.filter((user) =>
+    user.username.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="max-w-7xl mx-auto p-10 bg-white rounded-3xl shadow-xl">
       <div className="flex items-center justify-between mb-6">
@@ -87,6 +92,17 @@ const AdminPanel = () => {
         )}
       </div>
 
+      <div className="mb-4 flex items-center gap-2">
+        <Search className="w-5 h-5 text-gray-500" />
+        <input
+          type="text"
+          placeholder="Buscar usuario por email..."
+          className="border border-gray-300 rounded px-3 py-2 w-full max-w-md focus:outline-none focus:ring focus:ring-green-300"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200 text-sm">
           <thead className="bg-gray-100 uppercase tracking-wider text-gray-600">
@@ -97,7 +113,7 @@ const AdminPanel = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => {
+            {filteredUsers.map((user) => {
               const originalRoles = user.roles.map((r) => r.name).sort();
               const currentRoles = (editedRoles[user.id] || originalRoles).sort();
               const rolesChanged =
@@ -117,7 +133,9 @@ const AdminPanel = () => {
                   </td>
                   <td className="p-3 text-center">
                     {loadingUserId === user.id ? (
-                      <span className="text-blue-500 animate-pulse text-sm">Guardando...</span>
+                      <span className="text-blue-500 animate-pulse text-sm">
+                        Guardando...
+                      </span>
                     ) : (
                       rolesChanged && (
                         <div className="flex justify-center gap-2">
