@@ -8,6 +8,7 @@ import {
 } from "../../services/UserService";
 import UserTable from "../../components/admin/UserTable";
 import AdminHeader from "../../components/admin/AdminHeader";
+import UserRow from "../../components/admin/UserRow.jsx";
 
 
 const AdminPanel = () => {
