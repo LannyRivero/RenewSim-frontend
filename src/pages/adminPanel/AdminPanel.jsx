@@ -10,6 +10,8 @@ import SearchBar from "../../components/admin/SearchBar";
 import Pagination from "../../components/admin/Pagination";
 import RoleFilter from "../../components/admin/RoleFilter";
 import ConfirmModal from "@/components/admin/ConfirmModal";
+import ExportCSVButton from "@/components/admin/ExportCSVButton";
+
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
@@ -126,6 +128,11 @@ const AdminPanel = () => {
           setCurrentPage(1);
         }}
       />
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-bold text-gray-800">Panel de Administración</h2>
+        <ExportCSVButton data={filteredUsers} filename="usuarios.csv" />
+      </div>
+
       <UserTable
         users={paginatedUsers}
         editedRoles={editedRoles}
