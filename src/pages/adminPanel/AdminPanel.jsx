@@ -6,19 +6,18 @@ import {
 } from "../../services/UserService";
 import AdminHeader from "../../components/admin/AdminHeader";
 import UserTable from "../../components/admin/UserTable";
+import SearchBar from "../../components/admin/SearchBar";
+import Pagination from "../../components/admin/Pagination";
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [editedRoles, setEditedRoles] = useState({});
   const [message, setMessage] = useState(null);
   const [loadingUserId, setLoadingUserId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
   const usersPerPage = 10;
-  const startIndex = (currentPage - 1) * usersPerPage;
-  const endIndex = startIndex + usersPerPage;
-  const paginatedUsers = users.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(users.length / usersPerPage);
 
   const fetchUsers = async () => {
     try {
@@ -84,9 +83,24 @@ const AdminPanel = () => {
     }
   };
 
+  const filteredUsers = users.filter((user) =>
+    user.username.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  const startIndex = (currentPage - 1) * usersPerPage;
+  const paginatedUsers = filteredUsers.slice(startIndex, startIndex + usersPerPage);
+
   return (
     <div className="max-w-7xl mx-auto p-10 bg-white rounded-3xl shadow-xl">
       <AdminHeader message={message} />
+      <SearchBar
+        searchTerm={searchTerm}
+        onChange={(e) => {
+          setSearchTerm(e.target.value);
+          setCurrentPage(1);
+        }}
+      />
       <UserTable
         users={paginatedUsers}
         editedRoles={editedRoles}
@@ -96,24 +110,16 @@ const AdminPanel = () => {
         onCancel={cancelChanges}
         onDelete={handleDeleteUser}
       />
-      <div className="flex justify-center mt-6 gap-2">
-        {[...Array(totalPages)].map((_, i) => (
-          <button
-            key={i}
-            className={`px-3 py-1 rounded ${
-              currentPage === i + 1
-                ? "bg-green-600 text-white"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-            }`}
-            onClick={() => setCurrentPage(i + 1)}
-          >
-            {i + 1}
-          </button>
-        ))}
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 };
 
 export default AdminPanel;
+
+
 
