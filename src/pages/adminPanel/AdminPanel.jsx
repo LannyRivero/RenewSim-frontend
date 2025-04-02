@@ -27,11 +27,11 @@ const AdminPanel = () => {
   }, []);
 
   const handleRoleChange = (userId, newRoles) => {
-    setEditedRoles(prev => ({ ...prev, [userId]: newRoles }));
+    setEditedRoles((prev) => ({ ...prev, [userId]: newRoles }));
   };
 
   const cancelChanges = (userId) => {
-    setEditedRoles(prev => {
+    setEditedRoles((prev) => {
       const updated = { ...prev };
       delete updated[userId];
       return updated;
@@ -44,13 +44,17 @@ const AdminPanel = () => {
 
     setLoadingUserId(userId);
     try {
-      await apiCliente.put(`/users/${userId}/roles`, { roles: rolesToUpdate }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      await apiCliente.put(
+        `/users/${userId}/roles`,
+        { roles: rolesToUpdate },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       setMessage({ type: "success", text: "Roles actualizados correctamente" });
-      setEditedRoles(prev => {
+      setEditedRoles((prev) => {
         const updated = { ...prev };
         delete updated[userId];
         return updated;
@@ -71,62 +75,74 @@ const AdminPanel = () => {
           <Users className="w-7 h-7" /> Panel de Administración
         </h2>
         {message && (
-          <span className={`text-sm px-4 py-2 rounded-full ${message.type === "success" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+          <span
+            className={`text-sm px-4 py-2 rounded-full ${
+              message.type === "success"
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
             {message.text}
           </span>
         )}
       </div>
 
-      <table className="min-w-full divide-y divide-gray-200 text-sm">
-        <thead className="bg-gray-100 uppercase tracking-wider text-gray-600">
-          <tr>
-            <th className="p-3 text-left">Usuario</th>
-            <th className="p-3 text-left">Roles</th>
-            <th className="p-3 text-center">Acción</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map(user => {
-            const originalRoles = user.roles.map(r => r.name).sort();
-            const currentRoles = (editedRoles[user.id] || originalRoles).sort();
-            const rolesChanged = JSON.stringify(originalRoles) !== JSON.stringify(currentRoles);
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200 text-sm">
+          <thead className="bg-gray-100 uppercase tracking-wider text-gray-600">
+            <tr>
+              <th className="p-3 text-left">Usuario</th>
+              <th className="p-3 text-left">Roles</th>
+              <th className="p-3 text-center">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => {
+              const originalRoles = user.roles.map((r) => r.name).sort();
+              const currentRoles = (editedRoles[user.id] || originalRoles).sort();
+              const rolesChanged =
+                JSON.stringify(originalRoles) !== JSON.stringify(currentRoles);
 
-            return (
-              <tr key={user.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition">
-                <td className="p-3 font-medium text-gray-900">{user.username}</td>
-                <td className="p-3">
-                  <RoleSelect
-                    selectedRoles={currentRoles}
-                    onChange={(newRoles) => handleRoleChange(user.id, newRoles)}
-                  />
-                </td>
-                <td className="p-3 text-center">
-                  {loadingUserId === user.id ? (
-                    <span className="text-blue-500 animate-pulse text-sm">Guardando...</span>
-                  ) : (
-                    rolesChanged && (
-                      <div className="flex justify-center gap-2">
-                        <button
-                          onClick={() => saveChanges(user.id)}
-                          className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
-                        >
-                          Guardar
-                        </button>
-                        <button
-                          onClick={() => cancelChanges(user.id)}
-                          className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 rounded"
-                        >
-                          Deshacer
-                        </button>
-                      </div>
-                    )
-                  )}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+              return (
+                <tr
+                  key={user.id}
+                  className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition"
+                >
+                  <td className="p-3 font-medium text-gray-900">{user.username}</td>
+                  <td className="p-3">
+                    <RoleSelect
+                      selectedRoles={currentRoles}
+                      onChange={(newRoles) => handleRoleChange(user.id, newRoles)}
+                    />
+                  </td>
+                  <td className="p-3 text-center">
+                    {loadingUserId === user.id ? (
+                      <span className="text-blue-500 animate-pulse text-sm">Guardando...</span>
+                    ) : (
+                      rolesChanged && (
+                        <div className="flex justify-center gap-2">
+                          <button
+                            onClick={() => saveChanges(user.id)}
+                            className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
+                          >
+                            Guardar
+                          </button>
+                          <button
+                            onClick={() => cancelChanges(user.id)}
+                            className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 rounded"
+                          >
+                            Deshacer
+                          </button>
+                        </div>
+                      )
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
