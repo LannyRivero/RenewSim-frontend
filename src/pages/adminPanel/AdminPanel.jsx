@@ -1,23 +1,22 @@
 import React, { useEffect, useState } from "react";
-import apiCliente from "../../services/ApiClient";
 import RoleSelect from "./RoleSelect";
-import { Users } from "lucide-react";
+import { Users, Trash2 } from "lucide-react";
+import {
+  getAllUsers,
+  updateUserRoles,
+  deleteUser,
+} from "../../services/UserService";
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [editedRoles, setEditedRoles] = useState({});
   const [message, setMessage] = useState(null);
   const [loadingUserId, setLoadingUserId] = useState(null);
-  const [selectedUserId, setSelectedUserId] = useState(null);
 
   const fetchUsers = async () => {
     try {
-      const res = await apiCliente.get("/users", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      setUsers(res.data);
+      const data = await getAllUsers();
+      setUsers(data);
     } catch (err) {
       console.error("Error al obtener usuarios", err);
     }
@@ -45,15 +44,7 @@ const AdminPanel = () => {
 
     setLoadingUserId(userId);
     try {
-      await apiCliente.put(
-        `/users/${userId}/roles`,
-        { roles: rolesToUpdate },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      await updateUserRoles(userId, rolesToUpdate);
       setMessage({ type: "success", text: "Roles actualizados correctamente" });
       setEditedRoles((prev) => {
         const updated = { ...prev };
@@ -72,18 +63,11 @@ const AdminPanel = () => {
   const handleDelete = async (userId) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
       try {
-        await apiCliente.delete(`/users/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        await deleteUser(userId);
         setMessage({ type: "success", text: "Usuario eliminado correctamente" });
         await fetchUsers();
-        setSelectedUserId(null);
-      } catch (error) {
+      } catch (err) {
         setMessage({ type: "error", text: "Error al eliminar usuario" });
-      } finally {
-        setTimeout(() => setMessage(null), 3000);
       }
     }
   };
@@ -125,12 +109,7 @@ const AdminPanel = () => {
             return (
               <tr
                 key={user.id}
-                onClick={() => setSelectedUserId(user.id)}
-                className={`cursor-pointer transition ${
-                  selectedUserId === user.id
-                    ? "bg-green-50"
-                    : "odd:bg-white even:bg-gray-50 hover:bg-gray-100"
-                }`}
+                className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition"
               >
                 <td className="p-3 font-medium text-gray-900">{user.username}</td>
                 <td className="p-3">
@@ -140,11 +119,13 @@ const AdminPanel = () => {
                   />
                 </td>
                 <td className="p-3 text-center">
-                  {loadingUserId === user.id ? (
-                    <span className="text-blue-500 animate-pulse text-sm">Guardando...</span>
-                  ) : (
-                    <div className="flex justify-center gap-2">
-                      {rolesChanged && (
+                  <div className="flex justify-center gap-2">
+                    {loadingUserId === user.id ? (
+                      <span className="text-blue-500 animate-pulse text-sm">
+                        Guardando...
+                      </span>
+                    ) : (
+                      rolesChanged && (
                         <>
                           <button
                             onClick={() => saveChanges(user.id)}
@@ -159,17 +140,16 @@ const AdminPanel = () => {
                             Deshacer
                           </button>
                         </>
-                      )}
-                      {selectedUserId === user.id && (
-                        <button
-                          onClick={() => handleDelete(user.id)}
-                          className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm"
-                        >
-                          Eliminar
-                        </button>
-                      )}
-                    </div>
-                  )}
+                      )
+                    )}
+                    <button
+                      onClick={() => handleDelete(user.id)}
+                      className="bg-red-600 hover:bg-red-700 text-white p-2 rounded"
+                      title="Eliminar usuario"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </td>
               </tr>
             );
