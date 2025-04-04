@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import SimulationForm from "@/components/forms/SimulationForm";
 import SimulationResults from "@/components/result/SimulationResults";
 import SimulationService from "@/services/SimulationService";
+import TechnologiesList from "@/components/technologies/TechnologiesList";
+
 
 const SimulationPage = () => {
   const [resultados, setResultados] = useState(null);
@@ -11,7 +13,7 @@ const SimulationPage = () => {
 
   const manejarSimulacion = async (data, unidadSeleccionada) => {
     console.log("🚀 Ejecutando simulación con:", data);
-  
+
     try {
       const response = await SimulationService.simulate(data);
       console.log("✅ Respuesta de simulación:", response);
@@ -23,7 +25,7 @@ const SimulationPage = () => {
       alert("Hubo un problema al ejecutar la simulación.");
     }
   };
-  
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
@@ -38,9 +40,12 @@ const SimulationPage = () => {
         <SimulationForm onSubmit={manejarSimulacion} />
 
         {resultados && (
-           <div className="mt-10">
-           <SimulationResults data={resultados} unidad={unidad} />
-         </div>
+          <div className="mt-10 space-y-8">
+            <SimulationResults data={resultados} unidad={unidad} />
+
+            {/* 🌟 Nueva sección: Tecnologías asociadas */}
+            <TechnologiesList simulationId={resultados.simulationId} />
+          </div>
         )}
       </div>
     </div>
