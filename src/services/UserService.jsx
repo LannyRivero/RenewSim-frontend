@@ -1,18 +1,36 @@
+//sevicio para la simulacion
 import apiCliente from "./ApiClient";
+import axios from "axios";
 
-export const getAllUsers = async () => {
-  const response = await apiCliente.get("/users");
-  return response.data;
+const API_URL = "http://localhost:8080/api/v1/simulation";
+
+const SimulationService = {
+  async simulate(data) {
+    const response = await apiCliente.post("/simulation", data);
+    return response.data;
+  },
+
+  async getUserSimualtions() {
+    const response = await apiCliente.get("/simulation/mis-simualciones");
+    return response.data;
+  },
+
+  async getSimulationHistory() {
+    const response = await axios.get(`${API_URL}/history`);
+    return response.data;
+  },
+
+  async deleteUserSimulations(token) {
+    const response = await axios.delete(`${API_URL}/user`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  },
 };
 
-export const updateUserRoles = async (userId, roles) => {
-  const response = await apiCliente.put(`/users/${userId}/roles`, { roles });
-  return response.data;
-};
+export default SimulationService;
 
-export const deleteUser = async (userId) => {
-  const response = await apiCliente.delete(`/users/${userId}`);
-  return response.data;
-};
 
 
