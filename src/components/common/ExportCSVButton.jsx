@@ -13,4 +13,3 @@ const ExportCSVButton = ({ data, filename = "data.csv" }) => {
 };
 
 export default ExportCSVButton;
-

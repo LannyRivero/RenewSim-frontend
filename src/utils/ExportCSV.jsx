@@ -1,4 +1,4 @@
-export const ExportToCSV = (data, filename = "data.csv") => {
+export const exportToCSV = (data, filename = "data.csv") => {
     if (!data || data.length === 0) return;
   
     const headers = Object.keys(data[0]);
@@ -11,8 +11,7 @@ export const ExportToCSV = (data, filename = "data.csv") => {
       })
     );
   
-    const csvContent =
-      [headers, ...rows].map((row) => row.join(",")).join("\n");
+    const csvContent = [headers, ...rows].map((row) => row.join(",")).join("\n");
   
     const blob = new Blob([csvContent], {
       type: "text/csv;charset=utf-8;",

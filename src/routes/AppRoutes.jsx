@@ -5,7 +5,6 @@ import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Unauthorized from "../pages/Unauthorized";
-import TestPage from "../pages/TestPage";
 import TestimonialsPage from "../pages/TestimonialsPage";
 
 import UserDashboard from "@/pages/dashboard/user/UserDashboard";
@@ -13,7 +12,7 @@ import SimulationPage from "@/pages/dashboard/simulation/SimulationPage";
 import SimulationHistory from "@/pages/dashboard/history/SimulationHistory";
 import UserSettings from "@/pages/dashboard/user/UserSettings";
 
-import AdminDashboard from "@/pages/dashboard/adminPanel/AdminDashboard";
+import AdminDashboard from "@/pages/dashboard/admin/AdminDashboard";
 
 import Layout from "../components/layout/Layout";
 import DashboardLayout from "@/components/layout/DashboardLayout";
@@ -26,8 +25,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/unauthorized" element={<Unauthorized />} />
-        <Route path="/test" element={<TestPage />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />      
         <Route path="/testimonials" element={<TestimonialsPage />} />
       </Route>
 
