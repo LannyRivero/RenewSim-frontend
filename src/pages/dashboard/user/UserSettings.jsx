@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import UserDashboardLayout from "./UserDashboardLayout";
 import toast from "react-hot-toast";
-import SimulationService from "@/services/SimulationService"; 
-
-
+import SimulationService from "@/services/SimulationService";
 
 const UserSettings = () => {
-  const [darkMode, setDarkMode] = useState(
-    localStorage.getItem("darkMode") === "true"
-  );
+  const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
   const [showModal, setShowModal] = useState(false);
   const [loadingReset, setLoadingReset] = useState(false);
   const navigate = useNavigate();
@@ -29,16 +24,12 @@ const UserSettings = () => {
     setLoadingReset(true);
 
     try {
-      // Backup local antes de borrar (opcional)
       const simulations = localStorage.getItem("userSimulations");
       if (simulations) {
         localStorage.setItem("backupUserSimulations", simulations);
       }
 
-      // Petición al backend para borrar las simulaciones del usuario
       await SimulationService.deleteUserSimulations();
-
-      // Limpieza local adicional por coherencia
       localStorage.removeItem("userSimulations");
 
       toast.success("Historial de simulaciones eliminado ✅");
@@ -46,8 +37,6 @@ const UserSettings = () => {
       setTimeout(() => {
         setLoadingReset(false);
         setShowModal(false);
-
-        // Redirigimos automáticamente al historial limpio
         navigate("/dashboard/user/history");
       }, 1000);
     } catch (error) {
@@ -58,7 +47,7 @@ const UserSettings = () => {
   };
 
   return (
-    <UserDashboardLayout>
+    <div>
       <h2 className="text-2xl font-semibold mb-6">⚙️ Configuración avanzada</h2>
 
       <div className="space-y-6">
@@ -87,7 +76,7 @@ const UserSettings = () => {
 
       {/* Modal de confirmación */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0  flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 space-y-4 shadow-xl max-w-sm w-full">
             <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
               ¿Estás seguro?
@@ -119,9 +108,10 @@ const UserSettings = () => {
           </div>
         </div>
       )}
-    </UserDashboardLayout>
+    </div>
   );
 };
 
 export default UserSettings;
+
 
