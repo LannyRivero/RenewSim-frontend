@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import DashboardHeader from "./DashboardHeader";
@@ -8,23 +8,35 @@ import UserSidebar from "./UserSidebar";
 
 const DashboardLayout = () => {
   const { user } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false); // 👈 Estado para el toggle
 
-  // Verifica si el usuario es ADMIN
   const isAdmin = user?.roles?.includes("ADMIN");
+
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Header */}
-      <DashboardHeader />
+      <DashboardHeader toggleSidebar={toggleSidebar} />
 
-      {/* Contenido con sidebar */}
+      {/* Sidebar toggle button (mobile only) */}
+      <button
+        className="md:hidden fixed top-4 left-4 z-50 bg-blue-600 text-white p-2 rounded shadow"
+        onClick={toggleSidebar}
+      >
+        ☰
+      </button>
+
+      {/* Layout */}
       <div className="flex flex-1">
-        {/* Sidebar dinámico */}
-        {isAdmin ? <AdminSidebar /> : <UserSidebar />}
+        {/* Sidebar */}
+        <div className={`${sidebarOpen ? "block" : "hidden"} md:block`}>
+          {isAdmin ? <AdminSidebar /> : <UserSidebar />}
+        </div>
 
         {/* Main content */}
         <main className="flex-1 p-6">
-          <Outlet /> {/* Aquí se renderizan las rutas hijas */}
+          <Outlet />
         </main>
       </div>
 
@@ -35,4 +47,5 @@ const DashboardLayout = () => {
 };
 
 export default DashboardLayout;
+
 
