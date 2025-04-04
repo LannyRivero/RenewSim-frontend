@@ -3,11 +3,13 @@ import { useAuth } from "@/context/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Users, CheckCircle, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNotification } from "@/context/NotificationContext"; 
 
-const DashboardHeader = ({ message }) => {
+const DashboardHeader = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { notification } = useNotification(); 
 
   const isAdmin = user?.roles?.includes("ADMIN");
 
@@ -16,7 +18,7 @@ const DashboardHeader = ({ message }) => {
     navigate("/login");
   };
 
-  // Breadcrumb dinámico
+  //  Breadcrumb dinámico
   const pathParts = location.pathname.split("/").filter(Boolean);
   const breadcrumb =
     pathParts.slice(1).map(part => {
@@ -44,26 +46,26 @@ const DashboardHeader = ({ message }) => {
 
       {/* Mensaje dinámico + info usuario */}
       <div className="flex items-center gap-4 flex-wrap justify-end">
-        {/* Mensaje de feedback dinámico */}
+        {/* Mensaje global dinámico desde context */}
         <AnimatePresence>
-          {message && (
+          {notification && (
             <motion.span
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.4 }}
               className={`flex items-center gap-2 text-sm px-4 py-2 rounded-full shadow-md transition-all ${
-                message.type === "success"
+                notification.type === "success"
                   ? "bg-green-100 text-green-700"
                   : "bg-red-100 text-red-700"
               }`}
             >
-              {message.type === "success" ? (
+              {notification.type === "success" ? (
                 <CheckCircle className="w-4 h-4" />
               ) : (
                 <AlertTriangle className="w-4 h-4" />
               )}
-              {message.text}
+              {notification.text}
             </motion.span>
           )}
         </AnimatePresence>
@@ -86,4 +88,5 @@ const DashboardHeader = ({ message }) => {
 };
 
 export default DashboardHeader;
+
 
