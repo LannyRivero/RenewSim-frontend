@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import UserDashboardLayout from "./UserDashboardLayout";
 import toast from "react-hot-toast";
 
@@ -6,6 +7,9 @@ const UserSettings = () => {
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("darkMode") === "true"
   );
+  const [showModal, setShowModal] = useState(false);
+  const [loadingReset, setLoadingReset] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
@@ -19,8 +23,23 @@ const UserSettings = () => {
   };
 
   const handleResetSimulations = () => {
-    localStorage.removeItem("userSimulations");
-    toast.success("Historial de simulaciones eliminado ✅");
+    setLoadingReset(true);
+
+    // Backup antes de borrar
+    const simulations = localStorage.getItem("userSimulations");
+    if (simulations) {
+      localStorage.setItem("backupUserSimulations", simulations);
+    }
+
+    setTimeout(() => {
+      localStorage.removeItem("userSimulations");
+      setLoadingReset(false);
+      setShowModal(false);
+      toast.success("Historial de simulaciones eliminado ✅");
+
+      // Redirigimos automáticamente al historial
+      navigate("/dashboard/user/history");
+    }, 1500); // Pequeña pausa para mostrar el "loader"
   };
 
   return (
@@ -44,17 +63,48 @@ const UserSettings = () => {
         <div className="flex items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
           <span>Resetear historial de simulaciones</span>
           <button
-            onClick={handleResetSimulations}
+            onClick={() => setShowModal(true)}
             className="bg-red-600 text-white px-4 py-2 rounded-lg transition hover:bg-red-700"
           >
             Resetear
           </button>
         </div>
-
       </div>
+
+      {/* Modal de confirmación */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 space-y-4 shadow-xl max-w-sm w-full">
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+              ¿Estás seguro?
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300">
+              Esta acción eliminará todo el historial de simulaciones. Se guardará una copia de seguridad por si la necesitas.
+            </p>
+
+            {loadingReset ? (
+              <p className="text-blue-600 dark:text-blue-400 font-medium">Eliminando historial...</p>
+            ) : (
+              <div className="flex justify-end space-x-3">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-4 py-2 rounded hover:bg-gray-400 dark:hover:bg-gray-500 transition"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleResetSimulations}
+                  className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+                >
+                  Confirmar
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </UserDashboardLayout>
   );
 };
 
 export default UserSettings;
-
