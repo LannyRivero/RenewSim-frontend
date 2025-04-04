@@ -1,55 +1,52 @@
-import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
-import { useAuth } from "@/context/AuthContext";
+import React, { useEffect, useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import DashboardHeader from "./DashboardHeader";
 import DashboardFooter from "./DashboardFooter";
 import AdminSidebar from "./AdminSidebar";
 import UserSidebar from "./UserSidebar";
+import { Toaster } from "react-hot-toast";
 
 const DashboardLayout = () => {
-    const { user } = useAuth();
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(
+    localStorage.getItem("darkMode") === "true"
+  );
+  const location = useLocation();
 
-    const isAdmin = user?.roles?.includes("ADMIN");
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+  }, [darkMode]);
 
-    const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+  // Detectamos si es ruta admin
+  const isAdminRoute = location.pathname.includes("/dashboard/admin");
 
-    return (
-        <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900">
-            {/* Header */}
-            <DashboardHeader toggleSidebar={toggleSidebar} />
+  return (
+    <div className={`${darkMode ? "dark" : ""} flex min-h-screen bg-gray-100 dark:bg-gray-900`}>
+      {/* Notificaciones */}
+      <Toaster position="top-right" reverseOrder={false} />
 
-            {/* Sidebar toggle button (mobile only) */}
-            <button
-                className="md:hidden fixed top-4 left-4 z-50 bg-blue-600 text-white p-2 rounded shadow"
-                onClick={toggleSidebar}
-            >
-                ☰
-            </button>
+      {/* Sidebar dinámico */}
+      {isAdminRoute ? <AdminSidebar /> : <UserSidebar />}
 
-            {/* Layout */}
-            <div className="flex flex-1">
-                {/* Sidebar */}
+      {/* Contenedor principal */}
+      <div className="flex flex-col flex-1">
+        {/* Header */}
+        <DashboardHeader isAdmin={isAdminRoute} />
 
-                <div
-                    className={`transition-transform duration-300 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
-                        } md:translate-x-0 md:block`}
-                >
-                    {isAdmin ? <AdminSidebar /> : <UserSidebar />}
-                </div>
+        {/* Contenido principal */}
+        <main className="flex-1 p-8 text-gray-900 dark:text-gray-100">
+          <Outlet />
+        </main>
 
-                {/* Main content */}
-                <main className="flex-1 p-6">
-                    <Outlet />
-                </main>
-            </div>
-
-            {/* Footer */}
-            <DashboardFooter />
-        </div>
-    );
+        {/* Footer */}
+        <DashboardFooter />
+      </div>
+    </div>
+  );
 };
 
 export default DashboardLayout;
+
+
+
 
 

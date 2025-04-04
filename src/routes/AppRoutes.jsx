@@ -5,7 +5,6 @@ import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Unauthorized from "../pages/Unauthorized";
-
 import TestPage from "../pages/TestPage";
 import TestimonialsPage from "../pages/TestimonialsPage";
 
@@ -17,7 +16,7 @@ import UserSettings from "@/pages/dashboard/user/UserSettings";
 import AdminDashboard from "@/pages/dashboard/adminPanel/AdminDashboard";
 
 import Layout from "../components/layout/Layout";
-import DashboardLayout from "../components/layout/DashboardLayout"; 
+import DashboardLayout from "@/components/layout/DashboardLayout";
 
 const AppRoutes = () => {
   return (
@@ -32,17 +31,15 @@ const AppRoutes = () => {
         <Route path="/testimonials" element={<TestimonialsPage />} />
       </Route>
 
-      {/* Rutas protegidas dentro del DashboardLayout */}
+      {/* Rutas protegidas con layout compartido */}
       <Route element={<ProtectedRoute />}>
         <Route element={<DashboardLayout />}>
-          {/* Dashboard de Usuario */}
-          <Route path="/dashboard/user" element={<UserDashboard />}>
-            <Route index element={<SimulationPage />} /> {/* Simulación por defecto */}
-            <Route path="history" element={<SimulationHistory />} />
-            <Route path="settings" element={<UserSettings />} />
-          </Route>
+          {/* User Dashboard */}
+          <Route path="/dashboard/user" element={<UserDashboard />} />
+          <Route path="/dashboard/user/history" element={<SimulationHistory />} />
+          <Route path="/dashboard/user/settings" element={<UserSettings />} />
 
-          {/* Admin Panel */}
+          {/* Admin Dashboard */}
           <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
             <Route path="/dashboard/admin/users" element={<AdminDashboard />} />
           </Route>

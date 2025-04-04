@@ -8,10 +8,6 @@ import AdminHeader from "../../../components/admin/AdminHeader";
 import UserTable from "../../../components/admin/UserTable";
 import SearchBar from "../../../components/admin/SearchBar";
 import Pagination from "../../../components/admin/Pagination";
-import RoleFilter from "../../../components/admin/RoleFilter";
-import ConfirmModal from "@/components/admin/ConfirmModal";
-import ExportCSVButton from "@/components/admin/ExportCSVButton";
-
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
@@ -20,10 +16,6 @@ const AdminPanel = () => {
   const [loadingUserId, setLoadingUserId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [roleFilter, setRoleFilter] = useState("ALL");
-
-  const [showModal, setShowModal] = useState(false);
-  const [userToDelete, setUserToDelete] = useState(null);
 
   const usersPerPage = 10;
 
@@ -75,37 +67,26 @@ const AdminPanel = () => {
     }
   };
 
-  const handleDeleteUser = (userId) => {
-    setUserToDelete(userId);
-    setShowModal(true);
-  };
+  const handleDeleteUser = async (userId) => {
+    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este usuario?");
+    if (!confirmDelete) return;
 
-  const confirmDeleteUser = async () => {
-    if (!userToDelete) return;
-
-    setLoadingUserId(userToDelete);
+    setLoadingUserId(userId);
     try {
-      await deleteUser(userToDelete);
+      await deleteUser(userId);
       setMessage({ type: "success", text: "Usuario eliminado correctamente" });
       await fetchUsers();
     } catch (error) {
       setMessage({ type: "error", text: "Error al eliminar el usuario" });
     } finally {
       setLoadingUserId(null);
-      setUserToDelete(null);
-      setShowModal(false);
       setTimeout(() => setMessage(null), 3000);
     }
   };
 
-  const filteredUsers = users
-    .filter((user) =>
-      user.username.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .filter((user) => {
-      if (roleFilter === "ALL") return true;
-      return user.roles?.includes(roleFilter);
-    });
+  const filteredUsers = users.filter((user) =>
+    user.username.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
   const startIndex = (currentPage - 1) * usersPerPage;
@@ -121,18 +102,6 @@ const AdminPanel = () => {
           setCurrentPage(1);
         }}
       />
-      <RoleFilter
-        selectedRole={roleFilter}
-        onChange={(value) => {
-          setRoleFilter(value);
-          setCurrentPage(1);
-        }}
-      />
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-gray-800">Panel de Administración</h2>
-        <ExportCSVButton data={filteredUsers} filename="usuarios.csv" />
-      </div>
-
       <UserTable
         users={paginatedUsers}
         editedRoles={editedRoles}
@@ -147,20 +116,8 @@ const AdminPanel = () => {
         totalPages={totalPages}
         onPageChange={setCurrentPage}
       />
-
-      <ConfirmModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        onConfirm={confirmDeleteUser}
-        message="¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer."
-      />
     </div>
   );
 };
 
 export default AdminPanel;
-
-
-
-
-
