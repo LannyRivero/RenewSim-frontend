@@ -17,6 +17,7 @@ import UserSettings from "@/pages/dashboard/user/UserSettings";
 import AdminDashboard from "@/pages/dashboard/adminPanel/AdminDashboard";
 
 import Layout from "../components/layout/Layout";
+import DashboardLayout from "../components/layout/DashboardLayout"; 
 
 const AppRoutes = () => {
   return (
@@ -31,22 +32,24 @@ const AppRoutes = () => {
         <Route path="/testimonials" element={<TestimonialsPage />} />
       </Route>
 
-      {/*Rutas protegidas */}
+      {/* Rutas protegidas dentro del DashboardLayout */}
       <Route element={<ProtectedRoute />}>
-        {/* Dashboard de Usuario */}
-        <Route path="/dashboard/user" element={<UserDashboard />}>
-          <Route index element={<SimulationPage />} /> {/* Simulación por defecto */}
-          <Route path="history" element={<SimulationHistory />} />
-          <Route path="settings" element={<UserSettings />} />
-        </Route>
+        <Route element={<DashboardLayout />}>
+          {/* Dashboard de Usuario */}
+          <Route path="/dashboard/user" element={<UserDashboard />}>
+            <Route index element={<SimulationPage />} /> {/* Simulación por defecto */}
+            <Route path="history" element={<SimulationHistory />} />
+            <Route path="settings" element={<UserSettings />} />
+          </Route>
 
-        {/* Admin Panel */}
-        <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
-          <Route path="/dashboard/admin/users" element={<AdminDashboard />} />
+          {/* Admin Panel */}
+          <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
+            <Route path="/dashboard/admin/users" element={<AdminDashboard />} />
+          </Route>
         </Route>
       </Route>
 
-      {/*Ruta comodín */}
+      {/* Ruta comodín */}
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
