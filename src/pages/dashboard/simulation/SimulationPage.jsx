@@ -6,6 +6,7 @@ import SimulationService from "@/services/SimulationService";
 const SimulationPage = () => {
   const [resultados, setResultados] = useState(null);
   const [unidad, setUnidad] = useState("kWh");
+  const [simulationId, setSimulationId] = useState(null);
 
 
   const manejarSimulacion = async (data, unidadSeleccionada) => {
@@ -15,6 +16,7 @@ const SimulationPage = () => {
       const response = await SimulationService.simulate(data);
       console.log("✅ Respuesta de simulación:", response);
       setResultados(response);
+      setSimulationId(result.simulationId);
       setUnidad(unidadSeleccionada); //Guardamos la unidad
     } catch (error) {
       console.error("❌ Error en la simulación:", error);

@@ -24,6 +24,12 @@ const SimulationService = {
         });
         return response.data;
     },
+
+    async getTechnologiesForSimulation(simulationId) {
+        const response = await apiCliente.get(`/simulation/${simulationId}/technologies`);
+        return response.data;
+    },
+
 };
 export default SimulationService;
 
