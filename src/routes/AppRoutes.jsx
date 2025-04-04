@@ -1,11 +1,11 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 
-import Home from "../pages/Home";
-import Login from "../pages/Login";
-import Register from "../pages/Register";
-import Unauthorized from "../pages/Unauthorized";
-import TestimonialsPage from "../pages/TestimonialsPage";
+import Home from "@/pages/Home";
+import Login from "@/pages/Login";
+import Register from "@/pages/Register";
+import Unauthorized from "@/pages/Unauthorized";
+import TestimonialsPage from "@/pages/TestimonialsPage";
 
 import UserDashboard from "@/pages/dashboard/user/UserDashboard";
 import SimulationPage from "@/pages/dashboard/simulation/SimulationPage";
@@ -14,7 +14,7 @@ import UserSettings from "@/pages/dashboard/user/UserSettings";
 
 import AdminDashboard from "@/pages/dashboard/admin/AdminDashboard";
 
-import Layout from "../components/layout/Layout";
+import Layout from "@/components/layout/Layout";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 
 const AppRoutes = () => {

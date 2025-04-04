@@ -3,12 +3,12 @@ import {
   getAllUsers,
   updateUserRoles,
   deleteUser,
-} from "../../../services/UserService";
-import UserTable from "../../../components/admin/UserTable";
-import SearchBar from "../../../components/admin/SearchBar";
-import RoleFilter from "../../../components/admin/RoleFilter";
-import Pagination from "../../../components/admin/Pagination";
-import ExportCSVButton from "../../../components/common/ExportCSVButton";
+} from "@/services/UserService";
+import UserTable from "@/components/admin/UserTable";
+import SearchBar from "@/components/admin/SearchBar";
+import RoleFilter from "@/components/admin/RoleFilter";
+import Pagination from "@/components/admin/Pagination";
+import ExportCSVButton from "@/components/common/ExportCSVButton";
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);

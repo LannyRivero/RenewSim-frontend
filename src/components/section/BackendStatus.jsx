@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import checkBackendStatus from "../../services/apiService";
+import checkBackendStatus from "@/services/apiService";
 
 
 const BackendStatus = () => {

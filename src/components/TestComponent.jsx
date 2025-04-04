@@ -1,4 +1,4 @@
-import BackendStatus from "../components/section/BackendStatus";
+import BackendStatus from "@/components/section/BackendStatus";
 
 const TestComponent = () => {
   return (

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import SimulationForm from "../../../components/forms/SimulationForm";
-import SimulationResults from "../../../components/result/SimulationResults";
-import SimulationService from "../../../services/SimulationService";
+import SimulationForm from "@/components/forms/SimulationForm";
+import SimulationResults from "@/components/result/SimulationResults";
+import SimulationService from "@/services/SimulationService";
 
 const SimulationPage = () => {
   const [resultados, setResultados] = useState(null);

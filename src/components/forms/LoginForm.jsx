@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { loginUser } from '../../services/authService';
-import backgroundImage from '../../assets/generacion-eolica.jpg';
+import { useAuth } from '@/context/AuthContext';
+import { loginUser } from '@/services/authService';
+import backgroundImage from '@/assets/generacion-eolica.jpg';
 
 const LoginForm = () => {
   const navigate = useNavigate();

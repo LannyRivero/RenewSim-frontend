@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { fetchTests } from "../services/apiService"; // ✅ Importación correcta
+import { fetchTests } from "@/services/apiService"; 
 
 
 
 const useFetchTests = (refresh) => {
-  const [tests, setTests] = useState([]); // ✅ Inicializar como array vacío
+  const [tests, setTests] = useState([]); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -12,8 +12,8 @@ const useFetchTests = (refresh) => {
     const fetchData = async () => {
       try {
         const data = await fetchTests();
-        console.log("API Response:", data); // ✅ Ver la estructura en la consola
-        setTests(Array.isArray(data) ? data : []); // ✅ Asegurar que `tests` siempre sea un array
+        console.log("API Response:", data); 
+        setTests(Array.isArray(data) ? data : []); 
       } catch (error) {
         setError(error.message);
       } finally {

@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { registerUser, loginUser } from '../services/authService';
-import backgroundImage from '../assets/generacion-eolica.jpg';
-import RegisterForm from '../components/forms/RegisterForm';
-import { useAuth } from '../context/AuthContext';
+import { registerUser, loginUser } from '@/services/authService';
+import backgroundImage from '@/assets/generacion-eolica.jpg';
+import RegisterForm from '@/components/forms/RegisterForm';
+import { useAuth } from '@/context/AuthContext';
 
 const Register = () => {
   const navigate = useNavigate();

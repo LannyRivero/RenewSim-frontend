@@ -1,12 +1,12 @@
 
 import React, { useState } from "react";
 
-import { obtenerCiudadPorCoordenadas } from "../../services/WeatherService";
-import { obtenerDatosClimaticos } from "../../services/WeatherService";
+import { obtenerCiudadPorCoordenadas } from "@/services/WeatherService";
+import { obtenerDatosClimaticos } from "@/services/WeatherService";
 import InputFieldWithHint from "../common/inputField/InputFieldWithHint";
 import InputWithButton from "../common/inputField/InputWithButton";
 import ErrorToast from "../common/ErrorToast";
-import { buscarUbicaciones } from "../../services/WeatherService";
+import { buscarUbicaciones } from "@/services/WeatherService";
 
 const SimulationForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
