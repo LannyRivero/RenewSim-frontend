@@ -16,25 +16,42 @@ const DashboardHeader = ({ message }) => {
     navigate("/login");
   };
 
-  // Definimos título dinámico según rol
+  // Breadcrumb dinámico
+  const pathParts = location.pathname.split("/").filter(Boolean);
+  const breadcrumb =
+    pathParts.slice(1).map(part => {
+      if (part === "user") return "Usuario";
+      if (part === "admin") return "Administrador";
+      if (part === "history") return "Historial";
+      if (part === "settings") return "Configuración";
+      if (part === "users") return "Gestión de usuarios";
+      return part.charAt(0).toUpperCase() + part.slice(1);
+    }).join(" / ") || "Inicio";
+
+  // Título dinámico
   const title = isAdmin ? "Panel de Administración" : "RenewSim Dashboard";
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 bg-green-50 p-4 rounded-2xl shadow-md">
-      {/* Título dinámico */}
-      <h2 className="text-2xl sm:text-3xl font-bold text-green-700 flex items-center gap-2 mb-3 sm:mb-0">
-        {isAdmin && <Users className="w-6 h-6 sm:w-7 sm:h-7" />}
-        {title}
-      </h2>
+      {/* Título + breadcrumb */}
+      <div>
+        <h2 className="text-2xl sm:text-3xl font-bold text-green-700 flex items-center gap-2 mb-1 sm:mb-0">
+          {isAdmin && <Users className="w-6 h-6 sm:w-7 sm:h-7" />}
+          {title}
+        </h2>
+        <p className="text-sm text-gray-500 capitalize">{breadcrumb}</p>
+      </div>
 
-      <div className="flex items-center gap-4">
-        {/* Mensaje dinámico si existe */}
+      {/* Mensaje dinámico + info usuario */}
+      <div className="flex items-center gap-4 flex-wrap justify-end">
+        {/* Mensaje de feedback dinámico */}
         <AnimatePresence>
           {message && (
             <motion.span
-              initial={{ opacity: 0, y: -5 }}
+              initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -5 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.4 }}
               className={`flex items-center gap-2 text-sm px-4 py-2 rounded-full shadow-md transition-all ${
                 message.type === "success"
                   ? "bg-green-100 text-green-700"
@@ -53,7 +70,7 @@ const DashboardHeader = ({ message }) => {
 
         {/* Info usuario + logout */}
         <div className="flex items-center space-x-4 text-sm">
-          <span className="text-gray-700">
+          <span className="text-gray-700 dark:text-gray-300">
             {user?.username} ({user?.roles?.join(", ")})
           </span>
           <button
@@ -69,3 +86,4 @@ const DashboardHeader = ({ message }) => {
 };
 
 export default DashboardHeader;
+
