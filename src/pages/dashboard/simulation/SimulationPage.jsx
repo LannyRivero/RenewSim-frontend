@@ -4,7 +4,6 @@ import SimulationResults from "@/components/result/SimulationResults";
 import SimulationService from "@/services/SimulationService";
 import TechnologiesList from "@/components/technologies/TechnologiesList";
 
-
 const SimulationPage = () => {
   const [resultados, setResultados] = useState(null);
   const [unidad, setUnidad] = useState("kWh");
@@ -13,18 +12,19 @@ const SimulationPage = () => {
 
   const manejarSimulacion = async (data, unidadSeleccionada) => {
     console.log("🚀 Ejecutando simulación con:", data);
-
+  
     try {
       const response = await SimulationService.simulate(data);
       console.log("✅ Respuesta de simulación:", response);
       setResultados(response);
-      setSimulationId(result.simulationId);
+      setSimulationId(response.simulationId); // ✅ Corregido aquí
       setUnidad(unidadSeleccionada); //Guardamos la unidad
     } catch (error) {
       console.error("❌ Error en la simulación:", error);
       alert("Hubo un problema al ejecutar la simulación.");
     }
   };
+  
 
 
   return (
