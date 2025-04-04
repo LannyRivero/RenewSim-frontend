@@ -25,24 +25,27 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/unauthorized" element={<Unauthorized />} />      
+        <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="/testimonials" element={<TestimonialsPage />} />
       </Route>
 
       {/* Rutas protegidas con layout compartido */}
       <Route element={<ProtectedRoute />}>
-        <Route element={<DashboardLayout />}>
-          {/* User Dashboard */}
-          <Route path="/dashboard/user" element={<UserDashboard />} />
-          <Route path="/dashboard/user/history" element={<SimulationHistory />} />
-          <Route path="/dashboard/user/settings" element={<UserSettings />} />
+  <Route element={<DashboardLayout />}>
+    {/* User Dashboard */}
+    <Route path="/dashboard/user" element={<UserDashboard />}>
+      <Route index element={<SimulationPage />} />
+      <Route path="history" element={<SimulationHistory />} />
+      <Route path="settings" element={<UserSettings />} />
+    </Route>
 
-          {/* Admin Dashboard */}
-          <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
-            <Route path="/dashboard/admin/users" element={<AdminDashboard />} />
-          </Route>
-        </Route>
-      </Route>
+    {/* Admin Dashboard */}
+    <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
+      <Route path="/dashboard/admin/users" element={<AdminDashboard />} />
+    </Route>
+  </Route>
+</Route>
+
 
       {/* Ruta comodín */}
       <Route path="*" element={<Navigate to="/" />} />
