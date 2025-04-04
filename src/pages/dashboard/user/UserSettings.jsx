@@ -22,24 +22,36 @@ const UserSettings = () => {
     toast.success(`Modo ${newMode ? "oscuro" : "claro"} activado`);
   };
 
-  const handleResetSimulations = () => {
+  const handleResetSimulations = async () => {
     setLoadingReset(true);
-
-    // Backup antes de borrar
-    const simulations = localStorage.getItem("userSimulations");
-    if (simulations) {
-      localStorage.setItem("backupUserSimulations", simulations);
-    }
-
-    setTimeout(() => {
+  
+    try {
+      // Backup local antes de borrar (opcional, por si quieres restaurar después)
+      const simulations = localStorage.getItem("userSimulations");
+      if (simulations) {
+        localStorage.setItem("backupUserSimulations", simulations);
+      }
+  
+      // ✅ Petición al backend para borrar las simulaciones del usuario
+      await SimulationService.deleteUserSimulations(token);
+  
+      // Limpieza local adicional por coherencia
       localStorage.removeItem("userSimulations");
-      setLoadingReset(false);
-      setShowModal(false);
+  
       toast.success("Historial de simulaciones eliminado ✅");
-
-      // Redirigimos automáticamente al historial
-      navigate("/dashboard/user/history");
-    }, 1500); // Pequeña pausa para mostrar el "loader"
+  
+      setTimeout(() => {
+        setLoadingReset(false);
+        setShowModal(false);
+  
+        // Redirigimos automáticamente al historial limpio
+        navigate("/dashboard/user/history");
+      }, 1000);
+    } catch (error) {
+      console.error("❌ Error al eliminar historial:", error);
+      toast.error("Error al eliminar el historial.");
+      setLoadingReset(false);
+    }
   };
 
   return (
