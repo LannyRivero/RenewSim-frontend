@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import UserDashboardLayout from "./UserDashboardLayout";
 import toast from "react-hot-toast";
+import SimulationService from "@/services/SimulationService"; 
+
+
 
 const UserSettings = () => {
   const [darkMode, setDarkMode] = useState(
@@ -24,26 +27,26 @@ const UserSettings = () => {
 
   const handleResetSimulations = async () => {
     setLoadingReset(true);
-  
+
     try {
-      // Backup local antes de borrar (opcional, por si quieres restaurar después)
+      // Backup local antes de borrar (opcional)
       const simulations = localStorage.getItem("userSimulations");
       if (simulations) {
         localStorage.setItem("backupUserSimulations", simulations);
       }
-  
-      // ✅ Petición al backend para borrar las simulaciones del usuario
-      await SimulationService.deleteUserSimulations(token);
-  
+
+      // Petición al backend para borrar las simulaciones del usuario
+      await SimulationService.deleteUserSimulations();
+
       // Limpieza local adicional por coherencia
       localStorage.removeItem("userSimulations");
-  
+
       toast.success("Historial de simulaciones eliminado ✅");
-  
+
       setTimeout(() => {
         setLoadingReset(false);
         setShowModal(false);
-  
+
         // Redirigimos automáticamente al historial limpio
         navigate("/dashboard/user/history");
       }, 1000);
@@ -59,7 +62,6 @@ const UserSettings = () => {
       <h2 className="text-2xl font-semibold mb-6">⚙️ Configuración avanzada</h2>
 
       <div className="space-y-6">
-
         {/* Configuración de modo oscuro */}
         <div className="flex items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
           <span>Modo oscuro predeterminado</span>
@@ -95,7 +97,9 @@ const UserSettings = () => {
             </p>
 
             {loadingReset ? (
-              <p className="text-blue-600 dark:text-blue-400 font-medium">Eliminando historial...</p>
+              <p className="text-blue-600 dark:text-blue-400 font-medium">
+                Eliminando historial...
+              </p>
             ) : (
               <div className="flex justify-end space-x-3">
                 <button
@@ -120,3 +124,4 @@ const UserSettings = () => {
 };
 
 export default UserSettings;
+

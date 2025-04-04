@@ -1,16 +1,17 @@
 import React from "react";
-import SimulationPage from "../../dashboard/simulation/SimulationPage";
+import { Outlet } from "react-router-dom";
 import UserDashboardLayout from "./UserDashboardLayout";
 
 const UserDashboard = () => {
   return (
     <UserDashboardLayout>
-      <SimulationPage />
+      <Outlet />
     </UserDashboardLayout>
   );
 };
 
 export default UserDashboard;
+
 
 
 
