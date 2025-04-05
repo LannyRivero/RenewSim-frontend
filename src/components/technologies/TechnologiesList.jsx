@@ -1,7 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-const TechnologiesList = ({ technologies }) => {
-  if (!technologies || technologies.length === 0) return null;
+const TechnologiesList = ({ simulationId }) => {
+  const [technologies, setTechnologies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchTechnologies = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `http://localhost:8080/api/technologies/simulation/${simulationId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        setTechnologies(response.data);
+      } catch (err) {
+        console.error("❌ Error al obtener tecnologías:", err);
+        setError("No se pudieron cargar las tecnologías asociadas.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (simulationId) {
+      fetchTechnologies();
+    }
+  }, [simulationId]);
+
+  if (loading) return <p>Cargando tecnologías asociadas...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
+  if (!technologies.length) return <p>No se encontraron tecnologías asociadas.</p>;
 
   return (
     <div className="mt-8">
@@ -31,4 +64,5 @@ const TechnologiesList = ({ technologies }) => {
 };
 
 export default TechnologiesList;
+
 

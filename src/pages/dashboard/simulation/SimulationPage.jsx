@@ -17,8 +17,8 @@ const SimulationPage = () => {
       const response = await SimulationService.simulate(data);
       console.log("✅ Respuesta de simulación:", response);
       setResultados(response);
-      setSimulationId(response.simulationId); // ✅ Corregido aquí
-      setUnidad(unidadSeleccionada); //Guardamos la unidad
+      setSimulationId(response.simulationId);
+      setUnidad(unidadSeleccionada);
     } catch (error) {
       console.error("❌ Error en la simulación:", error);
       alert("Hubo un problema al ejecutar la simulación.");
