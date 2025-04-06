@@ -1,9 +1,12 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { useSimulation } from "@/context/SimulationContext";
+
 
 const UserSidebar = () => {
   const { user } = useAuth();
+  const { simulationId } = useSimulation();
 
   return (
     <aside className="bg-white dark:bg-gray-800 p-6 shadow-lg w-64 hidden md:block">
@@ -14,10 +17,9 @@ const UserSidebar = () => {
         <NavLink
           to="/dashboard/user"
           className={({ isActive }) =>
-            `flex items-center gap-2 px-3 py-2 rounded-md transition ${
-              isActive
-                ? "bg-blue-100 text-blue-600 dark:bg-blue-800 dark:text-white font-semibold"
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-white"
+            `flex items-center gap-2 px-3 py-2 rounded-md transition ${isActive
+              ? "bg-blue-100 text-blue-600 dark:bg-blue-800 dark:text-white font-semibold"
+              : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-white"
             }`
           }
         >
@@ -27,10 +29,9 @@ const UserSidebar = () => {
         <NavLink
           to="/dashboard/user/history"
           className={({ isActive }) =>
-            `flex items-center gap-2 px-3 py-2 rounded-md transition ${
-              isActive
-                ? "bg-blue-100 text-blue-600 dark:bg-blue-800 dark:text-white font-semibold"
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-white"
+            `flex items-center gap-2 px-3 py-2 rounded-md transition ${isActive
+              ? "bg-blue-100 text-blue-600 dark:bg-blue-800 dark:text-white font-semibold"
+              : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-white"
             }`
           }
         >
@@ -38,12 +39,27 @@ const UserSidebar = () => {
         </NavLink>
 
         <NavLink
+          to={simulationId ? `/dashboard/user/comparison/${simulationId}` : "#"}
+          className={({ isActive }) =>
+            `flex items-center gap-2 px-3 py-2 rounded-md transition ${isActive
+              ? "bg-blue-100 text-blue-600 dark:bg-blue-800 dark:text-white font-semibold"
+              : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-white"
+            } ${!simulationId ? "opacity-50 cursor-not-allowed" : ""}`
+          }
+          onClick={(e) => {
+            if (!simulationId) e.preventDefault(); // Previene navegación si no hay simulationId
+          }}
+        >
+          📈 Comparación
+        </NavLink>
+
+
+        <NavLink
           to="/dashboard/user/settings"
           className={({ isActive }) =>
-            `flex items-center gap-2 px-3 py-2 rounded-md transition ${
-              isActive
-                ? "bg-blue-100 text-blue-600 dark:bg-blue-800 dark:text-white font-semibold"
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-white"
+            `flex items-center gap-2 px-3 py-2 rounded-md transition ${isActive
+              ? "bg-blue-100 text-blue-600 dark:bg-blue-800 dark:text-white font-semibold"
+              : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-white"
             }`
           }
         >

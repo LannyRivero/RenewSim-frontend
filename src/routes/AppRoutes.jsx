@@ -10,6 +10,9 @@ import TestimonialsPage from "@/pages/TestimonialsPage";
 import UserDashboard from "@/pages/dashboard/user/UserDashboard";
 import SimulationPage from "@/pages/dashboard/simulation/SimulationPage";
 import SimulationHistory from "@/pages/dashboard/history/SimulationHistory";
+import Comparison from "@/pages/dashboard/comparison/Comparison";
+
+
 import UserSettings from "@/pages/dashboard/user/UserSettings";
 
 import AdminDashboard from "@/pages/dashboard/admin/AdminDashboard";
@@ -37,6 +40,8 @@ const AppRoutes = () => {
       <Route index element={<SimulationPage />} />
       <Route path="history" element={<SimulationHistory />} />
       <Route path="settings" element={<UserSettings />} />
+      <Route path="comparison/:simulationId" element={<Comparison />} />
+
     </Route>
 
     {/* Admin Dashboard */}
