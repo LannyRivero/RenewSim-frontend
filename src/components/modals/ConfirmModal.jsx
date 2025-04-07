@@ -10,9 +10,19 @@ const ConfirmModal = ({
   onConfirm,
   onCancel,
 }) => {
+  const titleId = 'confirm-modal-title';
+  const descriptionId = 'confirm-modal-description';
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={onCancel}>
+      <Dialog
+        as="div"
+        className="relative z-50"
+        onClose={onCancel}
+        aria-labelledby={titleId}
+        aria-describedby={descriptionId}
+        role="dialog"
+      >
         {/* Fondo oscuro con transición */}
         <Transition.Child
           as={Fragment}
@@ -23,7 +33,7 @@ const ConfirmModal = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 " />
+          <div className="fixed inset-0 " aria-hidden="true" />
         </Transition.Child>
 
         {/* Contenido del modal */}
@@ -38,12 +48,21 @@ const ConfirmModal = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                <Dialog.Title className="text-lg font-medium leading-6 text-gray-900">
+              <Dialog.Panel
+                role="document"
+                className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+              >
+                <Dialog.Title
+                  id={titleId}
+                  className="text-lg font-medium leading-6 text-gray-900"
+                >
                   {title}
                 </Dialog.Title>
+
                 <div className="mt-2">
-                  <p className="text-sm text-gray-500">{description}</p>
+                  <p id={descriptionId} className="text-sm text-gray-500">
+                    {description}
+                  </p>
                 </div>
 
                 <div className="mt-4 flex justify-end space-x-2">
@@ -51,6 +70,7 @@ const ConfirmModal = ({
                     type="button"
                     className="inline-flex justify-center rounded-md border border-transparent bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
                     onClick={onCancel}
+                    aria-label="Cancelar acción"
                   >
                     {cancelText}
                   </button>
@@ -58,6 +78,7 @@ const ConfirmModal = ({
                     type="button"
                     className="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
                     onClick={onConfirm}
+                    aria-label="Confirmar acción"
                   >
                     {confirmText}
                   </button>
@@ -70,4 +91,6 @@ const ConfirmModal = ({
     </Transition>
   );
 };
+
 export default ConfirmModal;
+
