@@ -1,4 +1,4 @@
-// Servicio para la simulación
+
 import apiCliente from "./ApiClient";
 
 const SimulationService = {
@@ -24,6 +24,7 @@ const SimulationService = {
 
     async getTechnologiesForSimulation(simulationId) {
         const response = await apiCliente.get(`/simulation/${simulationId}/technologies`);
+
         return response.data;
     },
 };

@@ -16,10 +16,20 @@ const TechnologiesComparison = ({ simulationId }) => {
           setLoading(false);
           return;
         }
-
+    
         setLoading(true);
         const response = await SimulationService.getTechnologiesForSimulation(simulationId);
-        setData(response);
+    
+        // 🧩 Mapear el nombre correctamente
+        const mappedData = response.map(item => ({
+          ...item,
+          name: item.technologyName, // Agregamos la propiedad que D3 necesita
+          energyGenerated: item.energyProduction, // Aseguramos que también tenga energyGenerated
+          cost: item.installationCost,
+          co2Reduction: item.co2Reduction
+        }));
+    
+        setData(mappedData);
       } catch (error) {
         console.error('Error fetching data:', error);
         setError('Hubo un error al cargar los datos de la simulación.');
