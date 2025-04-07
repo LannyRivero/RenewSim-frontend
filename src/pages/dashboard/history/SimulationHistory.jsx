@@ -1,10 +1,11 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { useNavigate } from "react-router-dom"; // 🔥 NUEVO: Necesario para navegación
-import { FaTrash } from "react-icons/fa";
-import { FaChartBar } from "react-icons/fa"; // 🔥 NUEVO: Icono de comparación
+import { useNavigate } from "react-router-dom";
+import { FaTrash, FaChartBar } from "react-icons/fa";
 import ConfirmModal from "@/components/modals/ConfirmModal";
 import SimulationService from "@/services/SimulationService";
+import Tooltip from "@/components/common/Tooltip";
+
 
 const formatNumber = (value) =>
   new Intl.NumberFormat("es-ES", {
@@ -48,7 +49,7 @@ const SimulationHistory = () => {
     }
   };
 
-  // 🔥 NUEVO: Navegar a la comparación
+  // Navegar a la comparación
   const handleCompare = (simulationId) => {
     navigate(`/dashboard/user/comparison/${simulationId}`);
   };
@@ -117,21 +118,28 @@ const SimulationHistory = () => {
                       "N/A"
                     )}
                   </td>
-                  <td className="px-4 py-2 flex space-x-2">
-                    <button
-                      onClick={() => openModal(sim.id)}
-                      className="text-red-600 hover:text-red-800"
-                      aria-label="Eliminar simulación"
-                    >
-                      <FaTrash />
-                    </button>
+                  <td className="px-4 py-2 flex space-x-2 relative">
+                    <Tooltip text="Eliminar simulación">
+                      <button
+                        onClick={() => openModal(sim.id)}
+                        className="text-red-600 hover:text-red-800"
+                        aria-label="Eliminar simulación"
+
+                      >
+                        <FaTrash />
+                      </button>
+                    </Tooltip>
+
+                    <Tooltip text="Comparar simulación">
                     <button
                       onClick={() => handleCompare(sim.id)}
                       className="text-blue-600 hover:text-blue-800"
-                      aria-label="Comparar simulación"
+                      aria-label="Comparar simulación"                    
+                      
                     >
                       <FaChartBar />
                     </button>
+                    </Tooltip>
                   </td>
                 </tr>
               ))}
