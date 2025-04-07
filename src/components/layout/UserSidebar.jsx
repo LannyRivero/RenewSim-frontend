@@ -8,14 +8,14 @@ const UserSidebar = () => {
   const { simulationId } = useSimulation();
   const location = useLocation();
 
-  // Verifica si estás en la ruta del dashboard home
-  const isHome = location.pathname === "/dashboard/user";
+  // Verifica si estás en la ruta de Home general
+  const isHome = location.pathname === "/";
 
   return (
     <aside className="bg-white dark:bg-gray-800 p-6 shadow-lg w-64 hidden md:block">
-      {/* Logo clickeable con clase activa cuando estamos en Home */}
+      {/* ✅ Logo que ahora lleva a la Home principal (no al dashboard) */}
       <Link
-        to="/dashboard/user"
+        to="/"
         className={`flex items-center gap-2 text-2xl font-bold mb-8 transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 rounded ${
           isHome
             ? "text-green-900 dark:text-green-300"
@@ -106,4 +106,5 @@ const UserSidebar = () => {
 };
 
 export default UserSidebar;
+
 
