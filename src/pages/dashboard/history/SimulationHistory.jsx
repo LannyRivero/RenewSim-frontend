@@ -50,7 +50,7 @@ const SimulationHistory = () => {
 
   // 🔥 NUEVO: Navegar a la comparación
   const handleCompare = (simulationId) => {
-    navigate(`/dashboard/comparison/${simulationId}`);
+    navigate(`/dashboard/user/comparison/${simulationId}`);
   };
 
   const openModal = (id) => {
