@@ -13,16 +13,19 @@ const UserSidebar = () => {
 
   return (
     <aside className="bg-white dark:bg-gray-800 p-6 shadow-lg w-64 hidden md:block">
-      {/* ✅ Logo que ahora lleva a la Home principal (no al dashboard) */}
+     
       <Link
         to="/"
-        className={`flex items-center gap-2 text-2xl font-bold mb-8 transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 rounded ${
+        className={`flex items-center gap-2 text-2xl font-bold mb-8 transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 rounded relative ${
           isHome
             ? "text-green-900 dark:text-green-300"
             : "text-green-700 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300"
         }`}
       >
         RenewSim 🌿
+
+        {/* Efecto pulse cuando haces hover */}
+        <span className="absolute -top-2 -right-2 w-3 h-3 bg-green-400 rounded-full opacity-75 animate-ping hidden group-hover:inline-block"></span>
       </Link>
 
       {/* Menú principal */}
@@ -106,5 +109,6 @@ const UserSidebar = () => {
 };
 
 export default UserSidebar;
+
 
 
