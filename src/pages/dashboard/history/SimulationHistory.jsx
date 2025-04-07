@@ -1,10 +1,10 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom"; // 🔥 NUEVO: Necesario para navegación
 import { FaTrash } from "react-icons/fa";
-import { Dialog, Transition } from "@headlessui/react";
-import SimulationService from "@/services/SimulationService";
+import { FaChartBar } from "react-icons/fa"; // 🔥 NUEVO: Icono de comparación
 import ConfirmModal from "@/components/modals/ConfirmModal";
-
+import SimulationService from "@/services/SimulationService";
 
 const formatNumber = (value) =>
   new Intl.NumberFormat("es-ES", {
@@ -14,12 +14,12 @@ const formatNumber = (value) =>
 
 const SimulationHistory = () => {
   const { token } = useAuth();
+  const navigate = useNavigate(); // 🔥 NUEVO
   const [simulations, setSimulations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedSimulationId, setSelectedSimulationId] = useState(null);
 
-  // Fetch simulations
   useEffect(() => {
     fetchSimulations();
   }, [token]);
@@ -46,6 +46,11 @@ const SimulationHistory = () => {
     } catch (error) {
       console.error("❌ Error al eliminar la simulación:", error);
     }
+  };
+
+  // 🔥 NUEVO: Navegar a la comparación
+  const handleCompare = (simulationId) => {
+    navigate(`/dashboard/comparison/${simulationId}`);
   };
 
   const openModal = (id) => {
@@ -112,9 +117,20 @@ const SimulationHistory = () => {
                       "N/A"
                     )}
                   </td>
-                  <td className="px-4 py-2">
-                    <button onClick={() => openModal(sim.id)} className="text-red-600 hover:text-red-800">
+                  <td className="px-4 py-2 flex space-x-2">
+                    <button
+                      onClick={() => openModal(sim.id)}
+                      className="text-red-600 hover:text-red-800"
+                      aria-label="Eliminar simulación"
+                    >
                       <FaTrash />
+                    </button>
+                    <button
+                      onClick={() => handleCompare(sim.id)}
+                      className="text-blue-600 hover:text-blue-800"
+                      aria-label="Comparar simulación"
+                    >
+                      <FaChartBar />
                     </button>
                   </td>
                 </tr>
@@ -134,9 +150,9 @@ const SimulationHistory = () => {
         onCancel={closeModal}
         onConfirm={handleDelete}
       />
-
     </div>
   );
 };
 
 export default SimulationHistory;
+
