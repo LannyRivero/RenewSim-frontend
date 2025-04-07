@@ -6,6 +6,7 @@ import AdminSidebar from "./AdminSidebar";
 import UserSidebar from "./UserSidebar";
 import { Toaster } from "react-hot-toast";
 
+
 const DashboardLayout = () => {
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("darkMode") === "true"
@@ -20,31 +21,37 @@ const DashboardLayout = () => {
   const isAdminRoute = location.pathname.includes("/dashboard/admin");
 
   return (
-    <div className={`${darkMode ? "dark" : ""} flex min-h-screen bg-gray-100 dark:bg-gray-900`}>
+    <div className={`${darkMode ? "dark" : ""} flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900`}>
       {/* Notificaciones */}
       <Toaster position="top-right" reverseOrder={false} />
 
-      {/* Sidebar dinámico */}
-      {isAdminRoute ? <AdminSidebar /> : <UserSidebar />}
+      {/* Header */}
+      <DashboardHeader
+        isAdmin={isAdminRoute}
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
+      />
+
 
       {/* Contenedor principal */}
-      <div className="flex flex-col flex-1">
-        {/* Header */}
-        <DashboardHeader isAdmin={isAdminRoute} />
+      <div className="flex flex-1 ">
+        {/* Sidebar dinámico */}
+        {isAdminRoute ? <AdminSidebar /> : <UserSidebar />}
 
         {/* Contenido principal */}
         <main className="flex-1 p-8 text-gray-900 dark:text-gray-100">
-          <Outlet />
+          <Outlet context={{ darkMode, setDarkMode }} />
         </main>
-
-        {/* Footer */}
-        <DashboardFooter />
       </div>
+
+      {/* Footer */}
+      <DashboardFooter />
     </div>
   );
 };
 
 export default DashboardLayout;
+
 
 
 

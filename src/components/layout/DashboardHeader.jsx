@@ -6,7 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle, AlertTriangle, LogOut } from "lucide-react";
 
 
-const DashboardHeader = () => {
+
+const DashboardHeader = ({ darkMode, setDarkMode }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { notification } = useNotification();
@@ -49,6 +50,7 @@ const DashboardHeader = () => {
       </h2>
 
       <div className="flex items-center gap-4 flex-wrap">
+   
         {/* Notificación animada */}
         <AnimatePresence>
           {notification && (
