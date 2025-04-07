@@ -11,6 +11,8 @@ import UserDashboard from "@/pages/dashboard/user/UserDashboard";
 import SimulationPage from "@/pages/dashboard/simulation/SimulationPage";
 import SimulationHistory from "@/pages/dashboard/history/SimulationHistory";
 import Comparison from "@/pages/dashboard/comparison/Comparison";
+import GlobalTechnologiesComparison from "@/pages/dashboard/comparison/GlobalTechnologiesComparison";
+
 
 
 import UserSettings from "@/pages/dashboard/user/UserSettings";
@@ -41,6 +43,7 @@ const AppRoutes = () => {
       <Route path="history" element={<SimulationHistory />} />
       <Route path="settings" element={<UserSettings />} />
       <Route path="comparison/:simulationId" element={<Comparison />} />
+      <Route path="global-comparison" element={<GlobalTechnologiesComparison />} />
 
     </Route>
 
