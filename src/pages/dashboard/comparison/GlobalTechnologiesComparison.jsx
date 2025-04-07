@@ -5,15 +5,15 @@ import SimulationService from '@/services/SimulationService';
 const GlobalTechnologiesComparison = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCriteria, setSelectedCriteria] = useState("normalizedEnergyProduction");
+  const [selectedCriteria, setSelectedCriteria] = useState("energyProduction");
   const [error, setError] = useState(null);
   const svgRef = useRef();
 
   const criteriaLabels = {
-    normalizedEnergyProduction: "Generación energética (kWh)",
-    normalizedInstallationCost: "Costo de instalación (€)",
-    normalizedEfficiency: "Eficiencia (%)",
-    normalizedCo2Reduction: "CO₂ reducido (kg)",
+    energyProduction: "Generación energética (kWh)",
+    installationCost: "Costo de instalación (€)",
+    efficiency: "Eficiencia (%)",
+    co2Reduction: "CO₂ reducido (kg)",
     score: "Score global"
   };
 
@@ -25,29 +25,12 @@ const GlobalTechnologiesComparison = () => {
     geothermal: "#D84315"
   };
 
-  // Formateador bonito de números según criterio seleccionado
-  const formatValue = (value, criteria) => {
-    const scaled = value * 100; // Como están normalizados de 0 a 1
-    switch (criteria) {
-      case "normalizedEnergyProduction":
-        return `${scaled.toLocaleString('es-ES', { maximumFractionDigits: 0 })} kWh`;
-      case "normalizedInstallationCost":
-        return `${scaled.toLocaleString('es-ES', { maximumFractionDigits: 0 })} €`;
-      case "normalizedEfficiency":
-      case "score":
-        return `${scaled.toFixed(1)} %`;
-      case "normalizedCo2Reduction":
-        return `${scaled.toLocaleString('es-ES', { maximumFractionDigits: 0 })} kg`;
-      default:
-        return scaled.toLocaleString('es-ES', { maximumFractionDigits: 2 });
-    }
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         const response = await SimulationService.getNormalizedTechnologies();
+        console.log('Normalized data received:', response); // 👀 Debugging
         setData(response);
       } catch (error) {
         console.error('Error fetching global data:', error);
@@ -106,7 +89,7 @@ const GlobalTechnologiesComparison = () => {
       .attr('x', d => xScale(d.technologyName))
       .attr('y', d => yScale(d[selectedCriteria]))
       .attr('width', xScale.bandwidth())
-      .attr('height', d => height - margin.bottom - yScale(d[selectedCriteria]))
+      .attr('height', d => Math.max(height - margin.bottom - yScale(d[selectedCriteria]), 3)) // 👈 Mínimo 3px de altura
       .attr('fill', d => energyTypeColors[d.energyType] || '#ccc')
       .on('mouseover', function (event, d) {
         d3.select(this).attr('fill', '#ffa500');
@@ -114,7 +97,7 @@ const GlobalTechnologiesComparison = () => {
           .style('visibility', 'visible')
           .html(`
             <strong>${d.technologyName}</strong><br/>
-            ${criteriaLabels[selectedCriteria]}: ${formatValue(d[selectedCriteria], selectedCriteria)}
+            ${criteriaLabels[selectedCriteria]}: ${d[selectedCriteria].toLocaleString('es-ES')}
           `);
       })
       .on('mousemove', function (event) {
@@ -128,7 +111,7 @@ const GlobalTechnologiesComparison = () => {
       })
       .transition()
       .duration(800)
-      .attr('height', d => height - margin.bottom - yScale(d[selectedCriteria]));
+      .attr('height', d => Math.max(height - margin.bottom - yScale(d[selectedCriteria]), 3));
 
     svg.selectAll('.label')
       .data(validData)
@@ -139,7 +122,7 @@ const GlobalTechnologiesComparison = () => {
       .attr('text-anchor', 'middle')
       .attr('fill', '#333')
       .style('font-size', '14px')
-      .text(d => formatValue(d[selectedCriteria], selectedCriteria));
+      .text(d => d[selectedCriteria].toLocaleString('es-ES'));
 
     svg.append('g')
       .attr('transform', `translate(0,${height - margin.bottom})`)
@@ -168,13 +151,18 @@ const GlobalTechnologiesComparison = () => {
           onChange={(e) => setSelectedCriteria(e.target.value)}
           className="border rounded p-2 dark:bg-gray-800 dark:text-white"
         >
-          <option value="normalizedEnergyProduction">Generación energética (kWh)</option>
-          <option value="normalizedInstallationCost">Costo de instalación (€)</option>
-          <option value="normalizedEfficiency">Eficiencia (%)</option>
-          <option value="normalizedCo2Reduction">Impacto medioambiental (CO₂ reducido)</option>
+          <option value="energyProduction">Generación energética (kWh)</option>
+          <option value="installationCost">Costo de instalación (€)</option>
+          <option value="efficiency">Eficiencia (%)</option>
+          <option value="co2Reduction">Impacto medioambiental (CO₂ reducido)</option>
           <option value="score">Score global</option>
         </select>
       </div>
+
+      {/* Nota educativa */}
+      <p className="text-gray-500 text-sm mb-4">
+        Nota: Los valores están normalizados para una mejor interpretación visual y educativa.
+      </p>
 
       {loading && <p className="text-gray-500">Cargando tecnologías...</p>}
       {error && <p className="text-red-500">{error}</p>}
@@ -186,4 +174,5 @@ const GlobalTechnologiesComparison = () => {
 };
 
 export default GlobalTechnologiesComparison;
+
 
