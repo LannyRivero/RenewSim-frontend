@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
-import { FaTrash } from "react-icons/fa"; // Icono para eliminar
-import { Dialog } from "@headlessui/react"; // Modal sencillo y limpio
+import { FaTrash } from "react-icons/fa";
+import { Dialog, Transition } from "@headlessui/react";
 
 const formatNumber = (value) =>
   new Intl.NumberFormat("es-ES", {
@@ -127,60 +127,58 @@ const SimulationHistory = () => {
         </div>
       )}
 
-      {/* Modal de Confirmación */}
-     {/* Modal de Confirmación */}
-<Transition appear show={showModal} as={Fragment}>
-  <Dialog as="div" className="relative z-50" onClose={closeModal}>
-    <Transition.Child
-      as={Fragment}
-      enter="ease-out duration-300"
-      enterFrom="opacity-0"
-      enterTo="opacity-100"
-      leave="ease-in duration-200"
-      leaveFrom="opacity-100"
-      leaveTo="opacity-0"
-    >
-      <div className="fixed inset-0 bg-black bg-opacity-25" />
-    </Transition.Child>
-
-    <div className="fixed inset-0 overflow-y-auto">
-      <div className="flex min-h-full items-center justify-center p-4 text-center">
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0 scale-95"
-          enterTo="opacity-100 scale-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100 scale-100"
-          leaveTo="opacity-0 scale-95"
-        >
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="dialog-title"
-            aria-describedby="dialog-description"
-            className="bg-white rounded-lg shadow-xl p-6 max-w-sm mx-auto w-full transform transition-all"
+      <Transition appear show={showModal} as={Fragment}>
+        <Dialog as="div" className="relative z-50" onClose={closeModal}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
           >
-            <h2 id="dialog-title" className="text-lg font-bold text-gray-800">
-              Eliminar simulación
-            </h2>
-            <p id="dialog-description" className="text-gray-600 mt-2">
-              Esta acción no se puede deshacer. ¿Estás seguro de que deseas eliminar esta simulación?
-            </p>
-            <div className="mt-4 flex justify-end space-x-2">
-              <button onClick={closeModal} className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
-                Cancelar
-              </button>
-              <button onClick={handleDelete} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
-                Eliminar
-              </button>
+            <div className="fixed inset-0 " />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <div
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="dialog-title"
+                  aria-describedby="dialog-description"
+                  className="bg-white rounded-lg shadow-xl p-6 max-w-sm mx-auto w-full transform transition-all"
+                >
+                  <h2 id="dialog-title" className="text-lg font-bold text-gray-800">
+                    Eliminar simulación
+                  </h2>
+                  <p id="dialog-description" className="text-gray-600 mt-2">
+                    Esta acción no se puede deshacer. ¿Estás seguro de que deseas eliminar esta simulación?
+                  </p>
+                  <div className="mt-4 flex justify-end space-x-2">
+                    <button onClick={closeModal} className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                      Cancelar
+                    </button>
+                    <button onClick={handleDelete} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+              </Transition.Child>
             </div>
           </div>
-        </Transition.Child>
-      </div>
-    </div>
-  </Dialog>
-</Transition>
+        </Dialog>
+      </Transition>
 
 
 
