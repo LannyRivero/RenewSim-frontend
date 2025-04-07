@@ -1,8 +1,8 @@
 import React, { useEffect, useState, Fragment } from "react";
-import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
 import { FaTrash } from "react-icons/fa";
 import { Dialog, Transition } from "@headlessui/react";
+import SimulationService from "@/services/SimulationService";
 
 const formatNumber = (value) =>
   new Intl.NumberFormat("es-ES", {
@@ -24,10 +24,8 @@ const SimulationHistory = () => {
 
   const fetchSimulations = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/v1/simulation/user", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const sorted = response.data.sort(
+      const data = await SimulationService.getUserSimulations();
+      const sorted = data.sort(
         (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
       );
       setSimulations(sorted);
@@ -38,7 +36,16 @@ const SimulationHistory = () => {
     }
   };
 
-  // Handle modal
+  const handleDelete = async () => {
+    try {
+      await SimulationService.deleteSimulationById(selectedSimulationId);
+      setSimulations(simulations.filter(sim => sim.id !== selectedSimulationId));
+      closeModal();
+    } catch (error) {
+      console.error("❌ Error al eliminar la simulación:", error);
+    }
+  };
+
   const openModal = (id) => {
     setSelectedSimulationId(id);
     setShowModal(true);
@@ -47,18 +54,6 @@ const SimulationHistory = () => {
   const closeModal = () => {
     setShowModal(false);
     setSelectedSimulationId(null);
-  };
-
-  const handleDelete = async () => {
-    try {
-      await axios.delete(`http://localhost:8080/api/v1/simulation/${selectedSimulationId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setSimulations(simulations.filter(sim => sim.id !== selectedSimulationId));
-      closeModal();
-    } catch (error) {
-      console.error("❌ Error al eliminar la simulación:", error);
-    }
   };
 
   return (
@@ -127,6 +122,7 @@ const SimulationHistory = () => {
         </div>
       )}
 
+      {/* Modal de confirmación */}
       <Transition appear show={showModal} as={Fragment}>
         <Dialog as="div" className="relative z-50" onClose={closeModal}>
           <Transition.Child
@@ -179,9 +175,6 @@ const SimulationHistory = () => {
           </div>
         </Dialog>
       </Transition>
-
-
-
     </div>
   );
 };
