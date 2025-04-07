@@ -5,15 +5,16 @@ import SimulationService from '@/services/SimulationService';
 const GlobalTechnologiesComparison = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCriteria, setSelectedCriteria] = useState("energyProduction");
+  const [selectedCriteria, setSelectedCriteria] = useState("normalizedEnergyProduction");
   const [error, setError] = useState(null);
   const svgRef = useRef();
+  const darkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
   const criteriaLabels = {
-    energyProduction: "Generación energética (kWh)",
-    installationCost: "Costo de instalación (€)",
-    efficiency: "Eficiencia (%)",
-    co2Reduction: "CO₂ reducido (kg)",
+    normalizedEnergyProduction: "Generación energética (kWh)",
+    normalizedInstallationCost: "Costo de instalación (€)",
+    normalizedEfficiency: "Eficiencia (%)",
+    normalizedCo2Reduction: "CO₂ reducido (kg)",
     score: "Score global"
   };
 
@@ -25,21 +26,38 @@ const GlobalTechnologiesComparison = () => {
     geothermal: "#D84315"
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await SimulationService.getNormalizedTechnologies();
-        console.log('Normalized data received:', response); // 👀 Debugging
-        setData(response);
-      } catch (error) {
-        console.error('Error fetching global data:', error);
-        setError('Hubo un error al cargar los datos globales.');
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Format values for readability
+  const formatValue = (value, criteria) => {
+    const scaled = value * 100;
+    switch (criteria) {
+      case "normalizedEnergyProduction":
+        return `${scaled.toLocaleString('es-ES', { maximumFractionDigits: 0 })} kWh`;
+      case "normalizedInstallationCost":
+        return `${scaled.toLocaleString('es-ES', { maximumFractionDigits: 0 })} €`;
+      case "normalizedEfficiency":
+      case "score":
+        return `${scaled.toFixed(1)} %`;
+      case "normalizedCo2Reduction":
+        return `${scaled.toLocaleString('es-ES', { maximumFractionDigits: 0 })} kg`;
+      default:
+        return scaled.toLocaleString('es-ES', { maximumFractionDigits: 2 });
+    }
+  };
 
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const response = await SimulationService.getNormalizedTechnologies();
+      setData(response);
+    } catch (error) {
+      console.error('Error fetching global data:', error);
+      setError('Hubo un error al cargar los datos globales.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -49,6 +67,7 @@ const GlobalTechnologiesComparison = () => {
     const validData = data.filter(d => d[selectedCriteria] !== undefined && d[selectedCriteria] !== null);
     if (validData.length === 0) return;
 
+    // Clean previous SVG
     d3.select(svgRef.current).selectAll('*').remove();
 
     const svg = d3.select(svgRef.current);
@@ -59,7 +78,7 @@ const GlobalTechnologiesComparison = () => {
     svg
       .attr('width', width)
       .attr('height', height)
-      .style('background', '#f9f9f9');
+      .style('background', darkMode ? '#1F2937' : '#f9f9f9');
 
     const xScale = d3.scaleBand()
       .domain(validData.map(d => d.technologyName))
@@ -72,15 +91,17 @@ const GlobalTechnologiesComparison = () => {
       .domain([0, maxValue * 1.2])
       .range([height - margin.bottom, margin.top]);
 
+    // Tooltip
     const tooltip = d3.select('body').append('div')
       .style('position', 'absolute')
       .style('visibility', 'hidden')
-      .style('background', 'white')
-      .style('padding', '8px')
-      .style('border-radius', '4px')
-      .style('box-shadow', '0 0 5px rgba(0,0,0,0.3)')
+      .style('background', darkMode ? '#374151' : 'white')
+      .style('padding', '10px')
+      .style('border-radius', '6px')
+      .style('box-shadow', '0 0 10px rgba(0,0,0,0.4)')
       .style('font-size', '14px')
-      .style('color', '#333');
+      .style('color', darkMode ? '#F9FAFB' : '#333')
+      .style('pointer-events', 'none');
 
     svg.selectAll('.bar')
       .data(validData)
@@ -89,7 +110,7 @@ const GlobalTechnologiesComparison = () => {
       .attr('x', d => xScale(d.technologyName))
       .attr('y', d => yScale(d[selectedCriteria]))
       .attr('width', xScale.bandwidth())
-      .attr('height', d => Math.max(height - margin.bottom - yScale(d[selectedCriteria]), 3)) // 👈 Mínimo 3px de altura
+      .attr('height', d => height - margin.bottom - yScale(d[selectedCriteria]))
       .attr('fill', d => energyTypeColors[d.energyType] || '#ccc')
       .on('mouseover', function (event, d) {
         d3.select(this).attr('fill', '#ffa500');
@@ -97,7 +118,7 @@ const GlobalTechnologiesComparison = () => {
           .style('visibility', 'visible')
           .html(`
             <strong>${d.technologyName}</strong><br/>
-            ${criteriaLabels[selectedCriteria]}: ${d[selectedCriteria].toLocaleString('es-ES')}
+            🌟 ${criteriaLabels[selectedCriteria]}: ${formatValue(d[selectedCriteria], selectedCriteria)}
           `);
       })
       .on('mousemove', function (event) {
@@ -111,8 +132,9 @@ const GlobalTechnologiesComparison = () => {
       })
       .transition()
       .duration(800)
-      .attr('height', d => Math.max(height - margin.bottom - yScale(d[selectedCriteria]), 3));
+      .attr('height', d => height - margin.bottom - yScale(d[selectedCriteria]));
 
+    // Labels
     svg.selectAll('.label')
       .data(validData)
       .join('text')
@@ -120,29 +142,73 @@ const GlobalTechnologiesComparison = () => {
       .attr('x', d => xScale(d.technologyName) + xScale.bandwidth() / 2)
       .attr('y', d => yScale(d[selectedCriteria]) - 10)
       .attr('text-anchor', 'middle')
-      .attr('fill', '#333')
+      .attr('fill', darkMode ? '#F9FAFB' : '#333')
       .style('font-size', '14px')
-      .text(d => d[selectedCriteria].toLocaleString('es-ES'));
+      .text(d => formatValue(d[selectedCriteria], selectedCriteria));
 
+    // Axes
     svg.append('g')
       .attr('transform', `translate(0,${height - margin.bottom})`)
       .call(d3.axisBottom(xScale))
       .selectAll('text')
       .attr('transform', 'rotate(-25)')
-      .style('text-anchor', 'end');
+      .style('text-anchor', 'end')
+      .style('fill', darkMode ? '#F9FAFB' : '#333');
 
     svg.append('g')
       .attr('transform', `translate(${margin.left},0)`)
-      .call(d3.axisLeft(yScale).ticks(5));
+      .call(d3.axisLeft(yScale).ticks(5))
+      .selectAll('text')
+      .style('fill', darkMode ? '#F9FAFB' : '#333');
 
-  }, [data, loading, selectedCriteria]);
+  }, [data, loading, selectedCriteria, darkMode]);
+
+  // Download as PNG or SVG
+  const handleDownload = (format) => {
+    const svgElement = svgRef.current;
+    const serializer = new XMLSerializer();
+    const source = serializer.serializeToString(svgElement);
+    const svgBlob = new Blob([source], { type: 'image/svg+xml;charset=utf-8' });
+
+    if (format === 'svg') {
+      const url = URL.createObjectURL(svgBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'global-technologies-comparison.svg';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    if (format === 'png') {
+      const canvas = document.createElement('canvas');
+      canvas.width = svgElement.clientWidth;
+      canvas.height = svgElement.clientHeight;
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      const url = URL.createObjectURL(svgBlob);
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+        const pngUrl = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = pngUrl;
+        link.download = 'global-technologies-comparison.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+      img.src = url;
+    }
+  };
 
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">{`Comparativa Global: ${criteriaLabels[selectedCriteria]}`}</h2>
 
-      <div className="mb-4">
-        <label htmlFor="criteria" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+      <div className="mb-4 flex gap-4 items-center">
+        <label htmlFor="criteria" className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Selecciona criterio de comparación:
         </label>
         <select
@@ -151,18 +217,20 @@ const GlobalTechnologiesComparison = () => {
           onChange={(e) => setSelectedCriteria(e.target.value)}
           className="border rounded p-2 dark:bg-gray-800 dark:text-white"
         >
-          <option value="energyProduction">Generación energética (kWh)</option>
-          <option value="installationCost">Costo de instalación (€)</option>
-          <option value="efficiency">Eficiencia (%)</option>
-          <option value="co2Reduction">Impacto medioambiental (CO₂ reducido)</option>
+          <option value="normalizedEnergyProduction">Generación energética (kWh)</option>
+          <option value="normalizedInstallationCost">Costo de instalación (€)</option>
+          <option value="normalizedEfficiency">Eficiencia (%)</option>
+          <option value="normalizedCo2Reduction">Impacto medioambiental (CO₂ reducido)</option>
           <option value="score">Score global</option>
         </select>
-      </div>
 
-      {/* Nota educativa */}
-      <p className="text-gray-500 text-sm mb-4">
-        Nota: Los valores están normalizados para una mejor interpretación visual y educativa.
-      </p>
+        <button onClick={() => handleDownload('svg')} className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded">
+          Descargar SVG
+        </button>
+        <button onClick={() => handleDownload('png')} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded">
+          Descargar PNG
+        </button>
+      </div>
 
       {loading && <p className="text-gray-500">Cargando tecnologías...</p>}
       {error && <p className="text-red-500">{error}</p>}
@@ -174,5 +242,7 @@ const GlobalTechnologiesComparison = () => {
 };
 
 export default GlobalTechnologiesComparison;
+
+
 
 
