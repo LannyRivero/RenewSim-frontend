@@ -128,14 +128,38 @@ const SimulationHistory = () => {
       )}
 
       {/* Modal de Confirmación */}
-      {showModal && (
-        <Dialog open={showModal} onClose={closeModal} className="fixed inset-0 z-50 flex items-center justify-center">
+     {/* Modal de Confirmación */}
+<Transition appear show={showModal} as={Fragment}>
+  <Dialog as="div" className="relative z-50" onClose={closeModal}>
+    <Transition.Child
+      as={Fragment}
+      enter="ease-out duration-300"
+      enterFrom="opacity-0"
+      enterTo="opacity-100"
+      leave="ease-in duration-200"
+      leaveFrom="opacity-100"
+      leaveTo="opacity-0"
+    >
+      <div className="fixed inset-0 bg-black bg-opacity-25" />
+    </Transition.Child>
+
+    <div className="fixed inset-0 overflow-y-auto">
+      <div className="flex min-h-full items-center justify-center p-4 text-center">
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0 scale-95"
+          enterTo="opacity-100 scale-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100 scale-100"
+          leaveTo="opacity-0 scale-95"
+        >
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="dialog-title"
             aria-describedby="dialog-description"
-            className="bg-white rounded-lg shadow-xl p-6 max-w-sm mx-auto"
+            className="bg-white rounded-lg shadow-xl p-6 max-w-sm mx-auto w-full transform transition-all"
           >
             <h2 id="dialog-title" className="text-lg font-bold text-gray-800">
               Eliminar simulación
@@ -152,9 +176,11 @@ const SimulationHistory = () => {
               </button>
             </div>
           </div>
-
-        </Dialog>
-      )}
+        </Transition.Child>
+      </div>
+    </div>
+  </Dialog>
+</Transition>
 
 
 
