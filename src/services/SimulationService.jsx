@@ -32,6 +32,11 @@ const SimulationService = {
         const response = await apiCliente.get("/simulation/technologies/global");
         return response.data;
     },
+
+    async getNormalizedTechnologies() {
+        const response = await apiCliente.get("/simulation/normalized-technologies");
+        return response.data;
+    },
     
 };
 
