@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import SimulationService from '@/services/SimulationService';
+import Button from '@/components/common/button/Button';
 
 const GlobalTechnologiesComparison = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCriteria, setSelectedCriteria] = useState("normalizedEnergyProduction");
   const [error, setError] = useState(null);
+  const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
   const svgRef = useRef();
-  const darkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
   const criteriaLabels = {
     normalizedEnergyProduction: "Generación energética (kWh)",
@@ -26,7 +27,6 @@ const GlobalTechnologiesComparison = () => {
     geothermal: "#D84315"
   };
 
-  // Format values for readability
   const formatValue = (value, criteria) => {
     const scaled = value * 100;
     switch (criteria) {
@@ -62,12 +62,19 @@ const GlobalTechnologiesComparison = () => {
   }, []);
 
   useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = () => setDarkMode(localStorage.getItem("darkMode") === "true" || mediaQuery.matches);
+    mediaQuery.addEventListener('change', handleChange);
+    handleChange();
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  useEffect(() => {
     if (loading || data.length === 0) return;
 
     const validData = data.filter(d => d[selectedCriteria] !== undefined && d[selectedCriteria] !== null);
     if (validData.length === 0) return;
 
-    // Clean previous SVG
     d3.select(svgRef.current).selectAll('*').remove();
 
     const svg = d3.select(svgRef.current);
@@ -91,7 +98,6 @@ const GlobalTechnologiesComparison = () => {
       .domain([0, maxValue * 1.2])
       .range([height - margin.bottom, margin.top]);
 
-    // Tooltip
     const tooltip = d3.select('body').append('div')
       .style('position', 'absolute')
       .style('visibility', 'hidden')
@@ -110,7 +116,7 @@ const GlobalTechnologiesComparison = () => {
       .attr('x', d => xScale(d.technologyName))
       .attr('y', d => yScale(d[selectedCriteria]))
       .attr('width', xScale.bandwidth())
-      .attr('height', d => height - margin.bottom - yScale(d[selectedCriteria]))
+      .attr('height', 0)
       .attr('fill', d => energyTypeColors[d.energyType] || '#ccc')
       .on('mouseover', function (event, d) {
         d3.select(this).attr('fill', '#ffa500');
@@ -132,9 +138,9 @@ const GlobalTechnologiesComparison = () => {
       })
       .transition()
       .duration(800)
-      .attr('height', d => height - margin.bottom - yScale(d[selectedCriteria]));
+      .attr('height', d => height - margin.bottom - yScale(d[selectedCriteria]))
+      .attr('y', d => yScale(d[selectedCriteria]));
 
-    // Labels
     svg.selectAll('.label')
       .data(validData)
       .join('text')
@@ -146,7 +152,6 @@ const GlobalTechnologiesComparison = () => {
       .style('font-size', '14px')
       .text(d => formatValue(d[selectedCriteria], selectedCriteria));
 
-    // Axes
     svg.append('g')
       .attr('transform', `translate(0,${height - margin.bottom})`)
       .call(d3.axisBottom(xScale))
@@ -163,7 +168,6 @@ const GlobalTechnologiesComparison = () => {
 
   }, [data, loading, selectedCriteria, darkMode]);
 
-  // Download as PNG or SVG
   const handleDownload = (format) => {
     const svgElement = svgRef.current;
     const serializer = new XMLSerializer();
@@ -204,44 +208,47 @@ const GlobalTechnologiesComparison = () => {
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">{`Comparativa Global: ${criteriaLabels[selectedCriteria]}`}</h2>
+    <div className="min-h-screen flex justify-center items-start bg-gradient-to-br from-green-50 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-16 transition-colors duration-500">
+      <div className="w-full max-w-5xl p-8 rounded-3xl shadow-2xl border border-white/30 dark:border-white/20 bg-white/30 dark:bg-white/10 backdrop-blur-xl transition-all duration-500">
+        <h2 className="text-3xl font-bold mb-8 text-center text-gray-800 dark:text-white animate-fade-in-down flex items-center justify-center gap-2">
+          ⚡ Comparación Global de Energías Renovables
+        </h2>
 
-      <div className="mb-4 flex gap-4 items-center">
-        <label htmlFor="criteria" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          Selecciona criterio de comparación:
-        </label>
-        <select
-          id="criteria"
-          value={selectedCriteria}
-          onChange={(e) => setSelectedCriteria(e.target.value)}
-          className="border rounded p-2 dark:bg-gray-800 dark:text-white"
-        >
-          <option value="normalizedEnergyProduction">Generación energética (kWh)</option>
-          <option value="normalizedInstallationCost">Costo de instalación (€)</option>
-          <option value="normalizedEfficiency">Eficiencia (%)</option>
-          <option value="normalizedCo2Reduction">Impacto medioambiental (CO₂ reducido)</option>
-          <option value="score">Score global</option>
-        </select>
+        <div className="mb-6 flex flex-wrap gap-4 items-center justify-center">
+          <label htmlFor="criteria" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            Selecciona criterio de comparación:
+          </label>
+          <select
+            id="criteria"
+            value={selectedCriteria}
+            onChange={(e) => setSelectedCriteria(e.target.value)}
+            className="border rounded p-2 dark:bg-gray-800 dark:text-white"
+          >
+            {Object.entries(criteriaLabels).map(([key, label]) => (
+              <option key={key} value={key}>{label}</option>
+            ))}
+          </select>
 
-        <button onClick={() => handleDownload('svg')} className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded">
-          Descargar SVG
-        </button>
-        <button onClick={() => handleDownload('png')} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded">
-          Descargar PNG
-        </button>
+          <Button variant="secondary" onClick={() => handleDownload('svg')}>
+            Descargar SVG
+          </Button>
+          <Button variant="secondary" onClick={() => handleDownload('png')}>
+            Descargar PNG
+          </Button>
+        </div>
+
+        {loading && <p className="text-gray-500 text-center">Cargando tecnologías...</p>}
+        {error && <p className="text-red-500 text-center">{error}</p>}
+        {!loading && data.length === 0 && <p className="text-gray-500 text-center">No se encontraron tecnologías.</p>}
+
+        <svg ref={svgRef} className="mx-auto block"></svg>
       </div>
-
-      {loading && <p className="text-gray-500">Cargando tecnologías...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-      {!loading && data.length === 0 && <p className="text-gray-500">No se encontraron tecnologías.</p>}
-
-      <svg ref={svgRef}></svg>
     </div>
   );
 };
 
 export default GlobalTechnologiesComparison;
+
 
 
 
