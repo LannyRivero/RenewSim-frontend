@@ -6,13 +6,6 @@ import InputWithButton from "../common/inputField/InputWithButton";
 import ErrorToast from "../common/ErrorToast";
 import PrimaryButton from "@/components/common/button/PrimaryButton";
 
-// ...
-
-<div className="text-center pt-4">
-  <PrimaryButton type="submit" disabled={isSubmitting}>
-    {isSubmitting ? "Simulando..." : "Simular"}
-  </PrimaryButton>
-</div>
 
 
 const SimulationForm = ({ onSubmit }) => {
