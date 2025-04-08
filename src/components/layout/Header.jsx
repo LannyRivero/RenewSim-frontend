@@ -12,8 +12,8 @@ import {
   FaShieldAlt,
   FaHistory
 } from "react-icons/fa";
-import logo from '../../assets/8408600.jpg';
-import { useAuth } from "../../context/AuthContext";
+import logo from '@/assets/8408600.jpg';
+import { useAuth } from "@/context/AuthContext";
 import RoleBasedAccess from "../auth/RoleBasedAccess";
 
 const Header = () => {

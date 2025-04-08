@@ -1,21 +1,25 @@
-import React from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { loginUser } from '../../services/authService';
-import backgroundImage from '../../assets/generacion-eolica.jpg'; // Cambia la ruta según tu estructura de carpetas
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
+import { loginUser } from '@/services/authService';
+import backgroundImage from '@/assets/generacion-eolica.jpg';
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const { user, login } = useAuth();
+  const { user, login } = useAuth(); // Obtenemos los datos del contexto de autenticación
 
-  if (user?.roles?.includes("ADMIN")) {
-    return <Navigate to="/dashboard/admin/users" />;
-  } else if (user?.roles?.includes("ADVANCED_USER")) {
-    return <Navigate to="/dashboard/advanced" />;
-  } else if (user) {
-    return <Navigate to="/dashboard/simulation" />;
-  }
-  
+  // Uso de useEffect para redirigir después de renderizar
+  useEffect(() => {
+    if (user) {
+      if (user.roles.includes("ADMIN")) {
+        navigate("/dashboard/admin/users");
+      } else if (user.roles.includes("ADVANCED_USER")) {
+        navigate("/dashboard/advanced");
+      } else {
+        navigate("/dashboard/user");
+      }
+    }
+  }, [user, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -29,25 +33,21 @@ const LoginForm = () => {
       const { token, username, roles } = await loginUser(credentials);
       console.log("🚀 Login response:", { token, username, roles });
 
+      // Guardar el usuario en el contexto de autenticación
       login(token, { username, roles });
 
-
-      // Redirigir directamente usando `roles` desde la respuesta
-      const userRoles = roles || [];
-
-      if (userRoles.includes("ADMIN")) {
+      // Redirigir según el rol
+      if (roles.includes("ADMIN")) {
         navigate("/dashboard/admin/users");
-      } else if (userRoles.includes("ADVANCED_USER")) {
+      } else if (roles.includes("ADVANCED_USER")) {
         navigate("/dashboard/advanced");
       } else {
-        navigate("/dashboard/simulation");
+        navigate("/dashboard/user");
       }
-
     } catch (error) {
       alert('Credenciales incorrectas o error del servidor.');
     }
   };
-
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden">
@@ -129,5 +129,9 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
+
+
+
+
 
 

@@ -3,19 +3,21 @@ import {
   getAllUsers,
   updateUserRoles,
   deleteUser,
-} from "../../services/UserService";
-import AdminHeader from "../../components/admin/AdminHeader";
-import UserTable from "../../components/admin/UserTable";
-import SearchBar from "../../components/admin/SearchBar";
-import Pagination from "../../components/admin/Pagination";
+} from "@/services/UserService";
+import UserTable from "@/components/admin/UserTable";
+import SearchBar from "@/components/admin/SearchBar";
+import RoleFilter from "@/components/admin/RoleFilter";
+import Pagination from "@/components/admin/Pagination";
+import ExportCSVButton from "@/components/common/ExportCSVButton";
 
-const AdminPanel = () => {
+const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [editedRoles, setEditedRoles] = useState({});
   const [message, setMessage] = useState(null);
   const [loadingUserId, setLoadingUserId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [roleFilter, setRoleFilter] = useState("ALL");
 
   const usersPerPage = 10;
 
@@ -84,9 +86,15 @@ const AdminPanel = () => {
     }
   };
 
-  const filteredUsers = users.filter((user) =>
-    user.username.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredUsers = users
+    .filter((user) =>
+      user.username.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .filter((user) => {
+      if (roleFilter === "ALL") return true;
+      return user.roles?.includes(roleFilter);
+    });
+
 
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
   const startIndex = (currentPage - 1) * usersPerPage;
@@ -94,7 +102,7 @@ const AdminPanel = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-10 bg-white rounded-3xl shadow-xl">
-      <AdminHeader message={message} />
+
       <SearchBar
         searchTerm={searchTerm}
         onChange={(e) => {
@@ -102,6 +110,16 @@ const AdminPanel = () => {
           setCurrentPage(1);
         }}
       />
+      <RoleFilter
+        selectedRole={roleFilter}
+        onChange={(value) => {
+          setRoleFilter(value);
+          setCurrentPage(1);
+        }}
+      />
+      <div className="flex justify-between items-center mb-4">
+        <ExportCSVButton data={filteredUsers} filename="usuarios.csv" />
+      </div>
       <UserTable
         users={paginatedUsers}
         editedRoles={editedRoles}
@@ -120,7 +138,4 @@ const AdminPanel = () => {
   );
 };
 
-export default AdminPanel;
-
-
-
+export default AdminDashboard;
