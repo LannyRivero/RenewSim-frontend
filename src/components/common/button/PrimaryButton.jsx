@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 const PrimaryButton = ({ children, onClick, type = "button", disabled = false }) => {
   const createRipple = (event) => {
-    if (disabled) return; // Evita el ripple si está deshabilitado
+    if (disabled) return; 
 
     const button = event.currentTarget;
     const circle = document.createElement("span");

@@ -8,7 +8,6 @@ const GlobalTechnologiesComparison = () => {
   const [loading, setLoading] = useState(true);
   const [selectedCriteria, setSelectedCriteria] = useState("normalizedEnergyProduction");
   const [error, setError] = useState(null);
-  const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
   const svgRef = useRef();
 
   const criteriaLabels = {
@@ -62,14 +61,6 @@ const GlobalTechnologiesComparison = () => {
   }, []);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = () => setDarkMode(localStorage.getItem("darkMode") === "true" || mediaQuery.matches);
-    mediaQuery.addEventListener('change', handleChange);
-    handleChange();
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
-
-  useEffect(() => {
     if (loading || data.length === 0) return;
 
     const validData = data.filter(d => d[selectedCriteria] !== undefined && d[selectedCriteria] !== null);
@@ -85,7 +76,7 @@ const GlobalTechnologiesComparison = () => {
     svg
       .attr('width', width)
       .attr('height', height)
-      .style('background', darkMode ? '#1F2937' : '#f9f9f9');
+      .style('background', '#f9f9f9'); // Fijo ahora, sin modo oscuro
 
     const xScale = d3.scaleBand()
       .domain(validData.map(d => d.technologyName))
@@ -101,12 +92,12 @@ const GlobalTechnologiesComparison = () => {
     const tooltip = d3.select('body').append('div')
       .style('position', 'absolute')
       .style('visibility', 'hidden')
-      .style('background', darkMode ? '#374151' : 'white')
+      .style('background', 'white')
       .style('padding', '10px')
       .style('border-radius', '6px')
       .style('box-shadow', '0 0 10px rgba(0,0,0,0.4)')
       .style('font-size', '14px')
-      .style('color', darkMode ? '#F9FAFB' : '#333')
+      .style('color', '#333')
       .style('pointer-events', 'none');
 
     svg.selectAll('.bar')
@@ -132,8 +123,8 @@ const GlobalTechnologiesComparison = () => {
           .style('top', event.pageY - 50 + 'px')
           .style('left', event.pageX + 10 + 'px');
       })
-      .on('mouseout', function (event, d) {
-        d3.select(this).attr('fill', energyTypeColors[d.energyType] || '#ccc');
+      .on('mouseout', function () {
+        d3.select(this).attr('fill', d => energyTypeColors[d.energyType] || '#ccc');
         tooltip.style('visibility', 'hidden');
       })
       .transition()
@@ -148,7 +139,7 @@ const GlobalTechnologiesComparison = () => {
       .attr('x', d => xScale(d.technologyName) + xScale.bandwidth() / 2)
       .attr('y', d => yScale(d[selectedCriteria]) - 10)
       .attr('text-anchor', 'middle')
-      .attr('fill', darkMode ? '#F9FAFB' : '#333')
+      .attr('fill', '#333')
       .style('font-size', '14px')
       .text(d => formatValue(d[selectedCriteria], selectedCriteria));
 
@@ -158,15 +149,15 @@ const GlobalTechnologiesComparison = () => {
       .selectAll('text')
       .attr('transform', 'rotate(-25)')
       .style('text-anchor', 'end')
-      .style('fill', darkMode ? '#F9FAFB' : '#333');
+      .style('fill', '#333');
 
     svg.append('g')
       .attr('transform', `translate(${margin.left},0)`)
       .call(d3.axisLeft(yScale).ticks(5))
       .selectAll('text')
-      .style('fill', darkMode ? '#F9FAFB' : '#333');
+      .style('fill', '#333');
 
-  }, [data, loading, selectedCriteria, darkMode]);
+  }, [data, loading, selectedCriteria]);
 
   const handleDownload = (format) => {
     const svgElement = svgRef.current;
@@ -208,21 +199,21 @@ const GlobalTechnologiesComparison = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-start bg-gradient-to-br from-green-50 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-16 transition-colors duration-500">
-      <div className="w-full max-w-5xl p-8 rounded-3xl shadow-2xl border border-white/30 dark:border-white/20 bg-white/30 dark:bg-white/10 backdrop-blur-xl transition-all duration-500">
-        <h2 className="text-3xl font-bold mb-8 text-center text-gray-800 dark:text-white animate-fade-in-down flex items-center justify-center gap-2">
+    <div className="min-h-screen flex justify-center items-start bg-gradient-to-br from-green-50 via-white to-green-100 px-4 py-16 transition-colors duration-500">
+      <div className="w-full max-w-5xl p-8 rounded-3xl shadow-2xl border border-white/30 bg-white/30 backdrop-blur-xl transition-all duration-500">
+        <h2 className="text-3xl font-bold mb-8 text-center text-gray-800 animate-fade-in-down flex items-center justify-center gap-2">
           ⚡ Comparación Global de Energías Renovables
         </h2>
 
         <div className="mb-6 flex flex-wrap gap-4 items-center justify-center">
-          <label htmlFor="criteria" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label htmlFor="criteria" className="text-sm font-medium text-gray-700">
             Selecciona criterio de comparación:
           </label>
           <select
             id="criteria"
             value={selectedCriteria}
             onChange={(e) => setSelectedCriteria(e.target.value)}
-            className="border rounded p-2 dark:bg-gray-800 dark:text-white"
+            className="border rounded p-2"
           >
             {Object.entries(criteriaLabels).map(([key, label]) => (
               <option key={key} value={key}>{label}</option>
@@ -248,6 +239,7 @@ const GlobalTechnologiesComparison = () => {
 };
 
 export default GlobalTechnologiesComparison;
+
 
 
 

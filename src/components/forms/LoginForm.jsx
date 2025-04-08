@@ -6,9 +6,9 @@ import backgroundImage from '@/assets/generacion-eolica.jpg';
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const { user, login } = useAuth(); // Obtenemos los datos del contexto de autenticación
+  const { user, login } = useAuth(); 
 
-  // Uso de useEffect para redirigir después de renderizar
+
   useEffect(() => {
     if (user) {
       if (user.roles.includes("ADMIN")) {
@@ -51,16 +51,14 @@ const LoginForm = () => {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden">
-      {/* Imagen de fondo */}
+    
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       ></div>
 
-      {/* Capa oscura encima */}
       <div className="absolute inset-0 bg-black opacity-40"></div>
 
-      {/* Formulario centrado */}
       <form
         onSubmit={handleLogin}
         className="relative z-10 bg-white p-8 rounded-2xl shadow-lg w-full max-w-md space-y-6"
@@ -70,7 +68,6 @@ const LoginForm = () => {
           Please enter your email and password to continue
         </p>
 
-        {/* Email */}
         <div>
           <label className="block text-sm text-gray-600 mb-1">Email address:</label>
           <input
@@ -82,7 +79,6 @@ const LoginForm = () => {
           />
         </div>
 
-        {/* Password */}
         <div>
           <div className="flex justify-between items-center mb-1">
             <label className="text-sm text-gray-600">Password</label>
@@ -99,13 +95,11 @@ const LoginForm = () => {
           />
         </div>
 
-        {/* Remember me */}
         <div className="flex items-center">
           <input type="checkbox" id="remember" className="mr-2" />
           <label htmlFor="remember" className="text-sm text-gray-600">Remember Password</label>
         </div>
 
-        {/* Botón */}
         <button
           type="submit"
           className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg transition"
@@ -113,7 +107,6 @@ const LoginForm = () => {
           Login to Account
         </button>
 
-        {/* Register */}
         <p className="text-center text-sm text-gray-500">
           Don’t have an account?{' '}
           <span

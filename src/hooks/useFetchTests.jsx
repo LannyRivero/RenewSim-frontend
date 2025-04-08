@@ -22,7 +22,7 @@ const useFetchTests = (refresh) => {
     };
 
     fetchData();
-  }, [refresh]); // ✅ Se ejecuta cuando `refresh` cambia
+  }, [refresh]); 
 
   return { tests, loading, error };
 };

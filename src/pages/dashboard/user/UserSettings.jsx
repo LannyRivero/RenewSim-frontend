@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import SimulationService from "@/services/SimulationService";
@@ -6,50 +6,9 @@ import Button from "@/components/common/button/Button";
 import ConfirmModal from "@/components/modals/ConfirmModal";
 
 const UserSettings = () => {
-  const [darkMode, setDarkMode] = useState(() => {
-    const saved = localStorage.getItem("darkMode");
-    if (saved !== null) {
-      return saved === "true";
-    }
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
-  });
-
   const [showModal, setShowModal] = useState(false);
   const [loadingReset, setLoadingReset] = useState(false);
   const navigate = useNavigate();
-
-  // Apply dark mode class
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [darkMode]);
-
-  // Listen to OS changes (optional, professional touch)
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const handleSystemChange = (event) => {
-      const systemPrefersDark = event.matches;
-      const userPreference = localStorage.getItem("darkMode");
-      if (userPreference === null) {
-        setDarkMode(systemPrefersDark);
-      }
-    };
-
-    mediaQuery.addEventListener("change", handleSystemChange);
-
-    return () => mediaQuery.removeEventListener("change", handleSystemChange);
-  }, []);
-
-  const handleDarkModeToggle = () => {
-    const newMode = !darkMode;
-    setDarkMode(newMode);
-    localStorage.setItem("darkMode", newMode);
-    toast.success(`Modo ${newMode ? "oscuro" : "claro"} activado`);
-  };
 
   const handleResetSimulations = async () => {
     setLoadingReset(true);
@@ -77,9 +36,9 @@ const UserSettings = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-start bg-gradient-to-br from-green-50 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-16 transition-colors duration-500">
+    <div className="min-h-screen flex justify-center items-start bg-gradient-to-br from-green-50 via-white to-green-100 px-4 py-16 transition-colors duration-500">
       <div
-        className="w-full max-w-3xl p-8 rounded-3xl shadow-2xl border border-white/30 dark:border-white/20 bg-white/30 dark:bg-white/10 backdrop-blur-xl transition-all duration-500"
+        className="w-full max-w-3xl p-8 rounded-3xl shadow-2xl border border-white/30 bg-white/30 backdrop-blur-xl transition-all duration-500"
         style={{
           background: "rgba(255, 255, 255, 0.25)",
           boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
@@ -89,22 +48,14 @@ const UserSettings = () => {
           border: "1px solid rgba(255, 255, 255, 0.18)",
         }}
       >
-        <h2 className="text-3xl font-bold mb-8 text-center text-gray-800 dark:text-white animate-fade-in-down flex items-center justify-center gap-2">
+        <h2 className="text-3xl font-bold mb-8 text-center text-gray-800 animate-fade-in-down flex items-center justify-center gap-2">
           <span role="img" aria-label="config">⚙️</span> Configuración Avanzada
         </h2>
 
         <div className="space-y-6">
-          {/* Dark mode toggle */}
-          <div className="flex items-center justify-between bg-white/50 dark:bg-gray-800/50 backdrop-blur-md shadow-lg border border-gray-300 dark:border-gray-700 p-4 rounded-xl animate-fade-in-down">
-            <span className="text-gray-700 dark:text-gray-300">Modo oscuro predeterminado</span>
-            <Button variant="secondary" onClick={handleDarkModeToggle}>
-              {darkMode ? "Desactivar" : "Activar"}
-            </Button>
-          </div>
-
           {/* Reset simulations */}
-          <div className="flex items-center justify-between bg-white/50 dark:bg-gray-800/50 backdrop-blur-md shadow-lg border border-gray-300 dark:border-gray-700 p-4 rounded-xl animate-fade-in-down">
-            <span className="text-gray-700 dark:text-gray-300">Resetear historial de simulaciones</span>
+          <div className="flex items-center justify-between bg-white/50 backdrop-blur-md shadow-lg border border-gray-300 p-4 rounded-xl animate-fade-in-down">
+            <span className="text-gray-700">Resetear historial de simulaciones</span>
             <Button variant="danger" onClick={() => setShowModal(true)}>
               Resetear
             </Button>
@@ -128,5 +79,6 @@ const UserSettings = () => {
 };
 
 export default UserSettings;
+
 
 
