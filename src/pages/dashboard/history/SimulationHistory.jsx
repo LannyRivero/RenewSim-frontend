@@ -65,7 +65,7 @@ const SimulationHistory = () => {
   return (
     <div className="min-h-screen flex justify-center items-start bg-gradient-to-br from-green-50 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-16 transition-colors duration-500">
       <div
-        className="w-full max-w-5xl p-8 rounded-3xl shadow-2xl border border-white/30 dark:border-white/20 bg-white/30 dark:bg-white/10 backdrop-blur-xl transition-all duration-500"
+        className="w-full max-w-5xl p-8 rounded-3xl shadow-2xl border border-white/30 dark:border-white/20 bg-white/30 dark:bg-white/10 backdrop-blur-xl transition-all duration-500 animate-fade-in-down"
         style={{
           background: "rgba(255, 255, 255, 0.25)",
           boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
@@ -84,8 +84,8 @@ const SimulationHistory = () => {
         ) : simulations.length === 0 ? (
           <p className="text-center text-gray-500 dark:text-gray-400">No se encontraron simulaciones.</p>
         ) : (
-          <div className="overflow-x-auto animate-fade-in-down">
-            <table className="min-w-full text-sm text-left bg-white/30 dark:bg-white/10 backdrop-blur-md rounded-xl border border-gray-300 dark:border-gray-700">
+          <div className="w-full overflow-auto animate-fade-in-down">
+            <table className="w-full text-sm text-left bg-white/30 dark:bg-white/10 backdrop-blur-md rounded-xl border border-gray-300 dark:border-gray-700">
               <thead className="bg-blue-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 uppercase text-xs">
                 <tr>
                   <th className="px-4 py-3">Fecha</th>
@@ -101,7 +101,7 @@ const SimulationHistory = () => {
                 {simulations.map((sim) => (
                   <tr
                     key={sim.id}
-                    className="hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    className="hover:bg-gray-100 dark:hover:bg-gray-800 hover:shadow-md transition-all duration-300"
                   >
                     <td className="px-4 py-2">{new Date(sim.timestamp).toLocaleDateString("es-ES")}</td>
                     <td className="px-4 py-2">{sim.location}</td>
@@ -111,21 +111,20 @@ const SimulationHistory = () => {
                     <td className="px-4 py-2">
                       {sim.returnOnInvestment !== undefined ? (
                         <span
-                          className={`font-semibold ${
-                            sim.returnOnInvestment <= 3
+                          className={`font-semibold ${sim.returnOnInvestment <= 3
                               ? "text-green-600"
                               : sim.returnOnInvestment <= 6
-                              ? "text-yellow-600"
-                              : "text-red-600"
-                          }`}
+                                ? "text-yellow-600"
+                                : "text-red-600"
+                            }`}
                           title={`Retorno estimado: ${sim.returnOnInvestment.toFixed(2)} años`}
                         >
                           {sim.returnOnInvestment.toFixed(2)} años{" "}
                           {sim.returnOnInvestment <= 3
                             ? "🟢"
                             : sim.returnOnInvestment <= 6
-                            ? "🟡"
-                            : "🔴"}
+                              ? "🟡"
+                              : "🔴"}
                         </span>
                       ) : (
                         "N/A"
@@ -135,7 +134,7 @@ const SimulationHistory = () => {
                       <Tooltip text="Eliminar simulación">
                         <button
                           onClick={() => openModal(sim.id)}
-                          className="text-red-600 hover:text-red-800"
+                          className="text-red-600 hover:text-red-800 transition-colors"
                           aria-label="Eliminar simulación"
                         >
                           <FaTrash />
@@ -145,7 +144,7 @@ const SimulationHistory = () => {
                       <Tooltip text="Comparar simulación">
                         <button
                           onClick={() => handleCompare(sim.id)}
-                          className="text-blue-600 hover:text-blue-800"
+                          className="text-blue-600 hover:text-blue-800 transition-colors"
                           aria-label="Comparar simulación"
                         >
                           <FaChartBar />
@@ -158,8 +157,6 @@ const SimulationHistory = () => {
             </table>
           </div>
         )}
-
-        {/* Modal de confirmación */}
         <ConfirmModal
           isOpen={showModal}
           title="Eliminar simulación"
@@ -175,6 +172,7 @@ const SimulationHistory = () => {
 };
 
 export default SimulationHistory;
+
 
 
 
