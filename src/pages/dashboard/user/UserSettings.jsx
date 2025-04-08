@@ -49,9 +49,9 @@ const UserSettings = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-8 transition-colors duration-500">
+    <div className="min-h-screen flex justify-center items-start bg-gradient-to-br from-green-50 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-16 transition-colors duration-500">
       <div
-        className="w-full max-w-2xl p-8 rounded-3xl shadow-2xl border border-white/30 dark:border-white/20 bg-white/30 dark:bg-white/10 backdrop-blur-xl transition-all duration-500"
+        className="w-full max-w-3xl p-8 rounded-3xl shadow-xl border border-white/30 dark:border-white/20 bg-white/30 dark:bg-white/10 backdrop-blur-xl transition-all duration-500 animate-fade-in-down"
         style={{
           background: "rgba(255, 255, 255, 0.25)",
           boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
@@ -61,29 +61,23 @@ const UserSettings = () => {
           border: "1px solid rgba(255, 255, 255, 0.18)",
         }}
       >
-        <h2 className="text-2xl font-semibold mb-8 text-center text-gray-800 dark:text-white animate-fade-in-down">
-          ⚙️ Configuración avanzada
+        <h2 className="text-3xl font-bold mb-8 text-center text-gray-800 dark:text-white flex items-center justify-center gap-2">
+          <span role="img" aria-label="config">⚙️</span> Configuración Avanzada
         </h2>
 
         <div className="space-y-6">
-          {/* Configuración de modo oscuro */}
-          <div className="flex items-center justify-between bg-white/50 dark:bg-gray-800/50 backdrop-blur-md shadow-lg border border-gray-300 dark:border-gray-700 p-4 rounded-xl animate-fade-in-down">
+          {/* Dark mode */}
+          <div className="flex items-center justify-between bg-white/50 dark:bg-gray-800/50 backdrop-blur-md shadow-lg border border-gray-300 dark:border-gray-700 p-4 rounded-xl animate-fade-in-down hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300">
             <span className="text-gray-700 dark:text-gray-300">Modo oscuro predeterminado</span>
-            <Button
-              variant="secondary"
-              onClick={handleDarkModeToggle}
-            >
+            <Button variant="secondary" onClick={handleDarkModeToggle}>
               {darkMode ? "Desactivar" : "Activar"}
             </Button>
           </div>
 
-          {/* Reset de simulaciones */}
-          <div className="flex items-center justify-between bg-white/50 dark:bg-gray-800/50 backdrop-blur-md shadow-lg border border-gray-300 dark:border-gray-700 p-4 rounded-xl animate-fade-in-down">
+          {/* Reset simulations */}
+          <div className="flex items-center justify-between bg-white/50 dark:bg-gray-800/50 backdrop-blur-md shadow-lg border border-gray-300 dark:border-gray-700 p-4 rounded-xl animate-fade-in-down hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300">
             <span className="text-gray-700 dark:text-gray-300">Resetear historial de simulaciones</span>
-            <Button
-              variant="danger"
-              onClick={() => setShowModal(true)}
-            >
+            <Button variant="danger" onClick={() => setShowModal(true)}>
               Resetear
             </Button>
           </div>
@@ -91,7 +85,6 @@ const UserSettings = () => {
       </div>
 
       {/* Modal de confirmación */}
-
       <ConfirmModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
@@ -102,12 +95,9 @@ const UserSettings = () => {
         cancelText="Cancelar"
         loading={loadingReset}
       />
-
     </div>
   );
 };
 
 export default UserSettings;
-
-
 

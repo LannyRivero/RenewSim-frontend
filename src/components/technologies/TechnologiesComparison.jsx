@@ -47,7 +47,7 @@ const TechnologiesComparison = ({ simulationId }) => {
       .attr('width', width)
       .attr('height', height)
       .style('background', '#f9f9f9')
-      .style('box-shadow', '0 4px 20px rgba(0, 0, 0, 0.1)') // ✅ Sombra para relieve
+      .style('box-shadow', '0 4px 20px rgba(0, 0, 0, 0.1)') 
       .style('border-radius', '12px');
 
     const xScale = d3.scaleBand()
@@ -76,7 +76,6 @@ const TechnologiesComparison = ({ simulationId }) => {
       .style('color', '#333')
       .style('pointer-events', 'none');
 
-    // ✅ Barras animadas
     svg.selectAll('.bar')
       .data(validData)
       .join('rect')
