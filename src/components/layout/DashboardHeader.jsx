@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useNotification } from "@/context/NotificationContext";
 import { useAuth } from "@/context/AuthContext";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle, AlertTriangle, LogOut, Home } from "lucide-react";
+import Button from "@/components/common/button/Button";
+import ConfirmModal from "@/components/modals/ConfirmModal";
 
 const DashboardHeader = () => {
   const location = useLocation();
@@ -11,7 +13,6 @@ const DashboardHeader = () => {
   const { notification } = useNotification();
   const { user, setUser, logout } = useAuth();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const titles = {
     "/dashboard/user": "Bienvenido 👋",
@@ -25,12 +26,9 @@ const DashboardHeader = () => {
   const title = titles[location.pathname] || "Dashboard";
 
   const handleLogout = () => {
-    setIsLoggingOut(true);
-    setTimeout(() => {
-      logout();
-      setUser(null);
-      navigate("/");
-    }, 500);
+    logout();
+    setUser(null);
+    navigate("/");
   };
 
   const getInitials = (name) => {
@@ -41,13 +39,13 @@ const DashboardHeader = () => {
 
   return (
     <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-gradient-to-b from-green-50 to-white h-24 p-4 shadow-md relative">
-      {/* Título dinámico */}
+
       <h2 className="text-2xl sm:text-3xl font-bold text-green-700 flex items-center gap-2 mb-3 sm:mb-0">
         {title}
       </h2>
 
       <div className="flex items-center gap-4 flex-wrap">
-        {/* Notificación animada */}
+
         <AnimatePresence>
           {notification && (
             <motion.span
@@ -70,7 +68,6 @@ const DashboardHeader = () => {
           )}
         </AnimatePresence>
 
-        {/* Nombre del usuario y avatar */}
         {user && (
           <div className="flex items-center gap-2 px-3 py-2 rounded-lg shadow">
             <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
@@ -80,63 +77,31 @@ const DashboardHeader = () => {
           </div>
         )}
 
-        {/* Botón ir al inicio */}
-        <button
-          onClick={() => navigate("/")}
-          className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg transition-all text-sm sm:text-base"
-        >
+        <Button variant="success" onClick={() => navigate("/")} className="flex items-center gap-2">
           <Home className="w-4 h-4" />
           <span className="hidden sm:inline">Inicio</span>
-        </button>
+        </Button>
 
-        {/* Botón de cerrar sesión */}
-        <button
-          onClick={() => setShowLogoutConfirm(true)}
-          className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg transition-all text-sm sm:text-base"
-        >
+        <Button variant="danger" onClick={() => setShowLogoutConfirm(true)} className="flex items-center gap-2">
           <LogOut className="w-4 h-4" />
           <span className="hidden sm:inline">Cerrar sesión</span>
-        </button>
+        </Button>
       </div>
 
-      {/* Modal de confirmación de cierre de sesión */}
-      <AnimatePresence>
-        {showLogoutConfirm && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 flex items-center justify-center z-50"
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.3 }}
-              className="bg-white rounded-xl p-6 shadow-lg text-center space-y-4"
-            >
-              <p className="text-lg font-semibold text-gray-700">¿Estás seguro de que quieres cerrar sesión?</p>
-              <div className="flex justify-center gap-4">
-                <button
-                  onClick={() => setShowLogoutConfirm(false)}
-                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-                >
-                  Cerrar sesión
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <ConfirmModal
+        isOpen={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={handleLogout}
+        title="Cerrar sesión"
+        description="¿Estás seguro de que quieres cerrar sesión?"
+        confirmText="Cerrar sesión"
+        cancelText="Cancelar"
+      />
     </header>
   );
 };
 
 export default DashboardHeader;
+
+
 
