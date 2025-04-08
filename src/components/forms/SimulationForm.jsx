@@ -4,6 +4,16 @@ import { obtenerCiudadPorCoordenadas, obtenerDatosClimaticos, buscarUbicaciones 
 import InputFieldWithHint from "../common/inputField/InputFieldWithHint";
 import InputWithButton from "../common/inputField/InputWithButton";
 import ErrorToast from "../common/ErrorToast";
+import PrimaryButton from "@/components/common/button/PrimaryButton";
+
+// ...
+
+<div className="text-center pt-4">
+  <PrimaryButton type="submit" disabled={isSubmitting}>
+    {isSubmitting ? "Simulando..." : "Simular"}
+  </PrimaryButton>
+</div>
+
 
 const SimulationForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -236,17 +246,9 @@ const SimulationForm = ({ onSubmit }) => {
 
       {/* Botón animado */}
       <div className="text-center pt-4">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          type="submit"
-          disabled={isSubmitting}
-          className={`bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg text-sm transition-all shadow-md ${
-            isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-        >
+        <PrimaryButton type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Simulando..." : "Simular"}
-        </motion.button>
+        </PrimaryButton>
       </div>
 
       {/* Error animado */}
