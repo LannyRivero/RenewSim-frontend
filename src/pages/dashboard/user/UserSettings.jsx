@@ -4,19 +4,23 @@ import toast from "react-hot-toast";
 import SimulationService from "@/services/SimulationService";
 import Button from "@/components/common/button/Button";
 import ConfirmModal from "@/components/modals/ConfirmModal";
-import ExportCSVButton from "@/components/common/ExportCSVButton"; 
+import ExportCSVButton from "@/components/common/ExportCSVButton";
+import SubmitTestimonialModal from "@/components/modals/SubmitTestimonialModal";
+
 
 const UserSettings = () => {
   const [showModal, setShowModal] = useState(false);
   const [loadingReset, setLoadingReset] = useState(false);
-  const [simulations, setSimulations] = useState([]); 
+  const [simulations, setSimulations] = useState([]);
   const navigate = useNavigate();
+  const [showTestimonialModal, setShowTestimonialModal] = useState(false);
+
 
   useEffect(() => {
     fetchSimulations();
   }, []);
 
-  const fetchSimulations = async () => { 
+  const fetchSimulations = async () => {
     try {
       const data = await SimulationService.getUserSimulations();
       setSimulations(data);
@@ -58,6 +62,12 @@ const UserSettings = () => {
         </h2>
 
         <div className="space-y-6">
+          <div className="flex items-center justify-between bg-white/50 backdrop-blur-md shadow-lg border border-gray-300 p-4 rounded-xl animate-fade-in-down">
+            <span className="text-gray-700">Enviar comentario o sugerencia</span>
+            <Button variant="secondary" onClick={() => setShowTestimonialModal(true)}>
+              Dejar comentario
+            </Button>
+          </div>
 
           <div className="flex items-center justify-between bg-white/50 backdrop-blur-md shadow-lg border border-gray-300 p-4 rounded-xl animate-fade-in-down">
             <span className="text-gray-700">Resetear historial de simulaciones</span>
@@ -83,6 +93,12 @@ const UserSettings = () => {
         cancelText="Cancelar"
         loading={loadingReset}
       />
+
+      <SubmitTestimonialModal
+        isOpen={showTestimonialModal}
+        onClose={() => setShowTestimonialModal(false)}
+      />
+
     </div>
   );
 };
