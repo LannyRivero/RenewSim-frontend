@@ -2,7 +2,7 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const ConfirmModal = ({
-  show,
+  isOpen,
   onClose,
   onConfirm,
   title = "¿Estás seguro?",
@@ -11,10 +11,11 @@ const ConfirmModal = ({
   cancelText = "Cancelar",
   loading = false,
 }) => {
-  if (!show) return null;
+  if (!isOpen) return null;
+
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm">
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 ">
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0, scale: 0.8, y: -50 }}

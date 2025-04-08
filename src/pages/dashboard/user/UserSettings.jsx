@@ -93,7 +93,7 @@ const UserSettings = () => {
       {/* Modal de confirmación */}
 
       <ConfirmModal
-        show={showModal}
+        isOpen={showModal}
         onClose={() => setShowModal(false)}
         onConfirm={handleResetSimulations}
         title="¿Estás seguro?"

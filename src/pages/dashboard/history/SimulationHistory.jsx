@@ -150,14 +150,15 @@ const SimulationHistory = () => {
 
       {/* Modal de confirmación */}
       <ConfirmModal
-        isOpen={showModal}
-        title="Eliminar simulación"
-        description="Esta acción no se puede deshacer. ¿Estás seguro de que deseas eliminar esta simulación?"
-        confirmText="Eliminar"
-        cancelText="Cancelar"
-        onCancel={closeModal}
-        onConfirm={handleDelete}
-      />
+  isOpen={showModal}
+  title="Eliminar simulación"
+  description="Esta acción no se puede deshacer. ¿Estás seguro de que deseas eliminar esta simulación?"
+  confirmText="Eliminar"
+  cancelText="Cancelar"
+  onClose={closeModal} 
+  onConfirm={handleDelete}
+/>
+
     </div>
   );
 };
