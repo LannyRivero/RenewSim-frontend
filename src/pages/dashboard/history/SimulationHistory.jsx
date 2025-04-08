@@ -63,7 +63,7 @@ const SimulationHistory = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-8 transition-colors duration-500">
+    <div className="min-h-screen flex justify-center items-start bg-gradient-to-br from-green-50 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-16 transition-colors duration-500">
       <div
         className="w-full max-w-5xl p-8 rounded-3xl shadow-2xl border border-white/30 dark:border-white/20 bg-white/30 dark:bg-white/10 backdrop-blur-xl transition-all duration-500"
         style={{
@@ -175,5 +175,6 @@ const SimulationHistory = () => {
 };
 
 export default SimulationHistory;
+
 
 
