@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import SimulationService from "@/services/SimulationService";
 import Button from "@/components/common/button/Button";
+import ConfirmModal from "@/components/modals/ConfirmModal";
 
 const UserSettings = () => {
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
@@ -90,33 +91,18 @@ const UserSettings = () => {
       </div>
 
       {/* Modal de confirmación */}
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm">
-          <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-md rounded-xl p-6 space-y-4 shadow-xl border border-gray-300 dark:border-gray-700 max-w-sm w-full animate-fade-in-down">
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-              ¿Estás seguro?
-            </h3>
-            <p className="text-gray-600 dark:text-gray-300">
-              Esta acción eliminará todo el historial de simulaciones. Se guardará una copia de seguridad por si la necesitas.
-            </p>
 
-            {loadingReset ? (
-              <p className="text-blue-600 dark:text-blue-400 font-medium">
-                Eliminando historial...
-              </p>
-            ) : (
-              <div className="flex justify-end space-x-3">
-                <Button variant="outline" onClick={() => setShowModal(false)}>
-                  Cancelar
-                </Button>
-                <Button variant="danger" onClick={handleResetSimulations}>
-                  Confirmar
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      <ConfirmModal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={handleResetSimulations}
+        title="¿Estás seguro?"
+        description="Esta acción eliminará todo el historial de simulaciones. Se guardará una copia de seguridad por si la necesitas."
+        confirmText="Confirmar"
+        cancelText="Cancelar"
+        loading={loadingReset}
+      />
+
     </div>
   );
 };

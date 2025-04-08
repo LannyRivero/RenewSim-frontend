@@ -1,96 +1,66 @@
-import React, { Fragment } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ConfirmModal = ({
-  isOpen,
-  title = 'Confirmar acción',
-  description = '¿Estás seguro de que quieres continuar?',
-  confirmText = 'Confirmar',
-  cancelText = 'Cancelar',
+  show,
+  onClose,
   onConfirm,
-  onCancel,
+  title = "¿Estás seguro?",
+  description = "Esta acción no se puede deshacer.",
+  confirmText = "Confirmar",
+  cancelText = "Cancelar",
+  loading = false,
 }) => {
-  const titleId = 'confirm-modal-title';
-  const descriptionId = 'confirm-modal-description';
+  if (!show) return null;
 
   return (
-    <Transition appear show={isOpen} as={Fragment}>
-      <Dialog
-        as="div"
-        className="relative z-50"
-        onClose={onCancel}
-        aria-labelledby={titleId}
-        aria-describedby={descriptionId}
-        role="dialog"
-      >
-        {/* Fondo oscuro con transición */}
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm">
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8, y: -50 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.8, y: -50 }}
+          transition={{ type: "spring", stiffness: 100, damping: 10 }}
+          className="rounded-2xl bg-white/30 dark:bg-white/10 backdrop-blur-xl border border-white/30 dark:border-white/20 shadow-2xl p-6 space-y-4 max-w-sm w-full"
+          style={{
+            background: "rgba(255, 255, 255, 0.25)",
+            boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
+            backdropFilter: "blur(15px)",
+            WebkitBackdropFilter: "blur(15px)",
+            border: "1px solid rgba(255, 255, 255, 0.18)",
+          }}
         >
-          <div className="fixed inset-0 " aria-hidden="true" />
-        </Transition.Child>
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+            {title}
+          </h3>
+          <p className="text-gray-700 dark:text-gray-300 text-sm">{description}</p>
 
-        {/* Contenido del modal */}
-        <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
-            >
-              <Dialog.Panel
-                role="document"
-                className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+          {loading ? (
+            <p className="text-blue-600 dark:text-blue-400 font-medium">
+              Procesando...
+            </p>
+          ) : (
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={onClose}
+                className="bg-gray-300/60 dark:bg-gray-600/40 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-lg transition hover:bg-gray-400/70 dark:hover:bg-gray-500/70 backdrop-blur-md"
               >
-                <Dialog.Title
-                  id={titleId}
-                  className="text-lg font-medium leading-6 text-gray-900"
-                >
-                  {title}
-                </Dialog.Title>
-
-                <div className="mt-2">
-                  <p id={descriptionId} className="text-sm text-gray-500">
-                    {description}
-                  </p>
-                </div>
-
-                <div className="mt-4 flex justify-end space-x-2">
-                  <button
-                    type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
-                    onClick={onCancel}
-                    aria-label="Cancelar acción"
-                  >
-                    {cancelText}
-                  </button>
-                  <button
-                    type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
-                    onClick={onConfirm}
-                    aria-label="Confirmar acción"
-                  >
-                    {confirmText}
-                  </button>
-                </div>
-              </Dialog.Panel>
-            </Transition.Child>
-          </div>
-        </div>
-      </Dialog>
-    </Transition>
+                {cancelText}
+              </button>
+              <button
+                onClick={onConfirm}
+                className="bg-red-500/70 dark:bg-red-600/60 text-white px-4 py-2 rounded-lg transition hover:bg-red-600/80 dark:hover:bg-red-700/80 backdrop-blur-md"
+              >
+                {confirmText}
+              </button>
+            </div>
+          )}
+        </motion.div>
+      </AnimatePresence>
+    </div>
   );
 };
 
 export default ConfirmModal;
+
 
