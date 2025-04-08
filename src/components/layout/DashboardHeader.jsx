@@ -3,24 +3,23 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useNotification } from "@/context/NotificationContext";
 import { useAuth } from "@/context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle, AlertTriangle, LogOut } from "lucide-react";
+import { CheckCircle, AlertTriangle, LogOut, Home } from "lucide-react";
 
-
-
-const DashboardHeader = ({  }) => {
+const DashboardHeader = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { notification } = useNotification();
-  const { user, setUser, logout} = useAuth();
+  const { user, setUser, logout } = useAuth();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-
 
   const titles = {
     "/dashboard/user": "Bienvenido 👋",
     "/dashboard/user/history": "Historial de Simulaciones 🧾",
     "/dashboard/user/settings": "Configuración Avanzada ⚙️",
     "/dashboard/admin/users": "Panel de Administración 👥",
+    "/dashboard/user/global-comparison": "Comparación Global 🌍",
+    "/dashboard/user/comparison": "Comparativa de Simulación 📊",
   };
 
   const title = titles[location.pathname] || "Dashboard";
@@ -31,10 +30,8 @@ const DashboardHeader = ({  }) => {
       logout();
       setUser(null);
       navigate("/");
-    }, 
-  ); 
+    }, 500);
   };
-  
 
   const getInitials = (name) => {
     if (!name) return "";
@@ -43,18 +40,13 @@ const DashboardHeader = ({  }) => {
   };
 
   return (
-    <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between  bg-gradient-to-b from-green-50 to-white h-24 p-4 shadow-md relative">
-
-
-
-
+    <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-gradient-to-b from-green-50 to-white h-24 p-4 shadow-md relative">
       {/* Título dinámico */}
       <h2 className="text-2xl sm:text-3xl font-bold text-green-700 flex items-center gap-2 mb-3 sm:mb-0">
         {title}
       </h2>
 
       <div className="flex items-center gap-4 flex-wrap">
-   
         {/* Notificación animada */}
         <AnimatePresence>
           {notification && (
@@ -88,6 +80,15 @@ const DashboardHeader = ({  }) => {
           </div>
         )}
 
+        {/* Botón ir al inicio */}
+        <button
+          onClick={() => navigate("/")}
+          className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg transition-all text-sm sm:text-base"
+        >
+          <Home className="w-4 h-4" />
+          <span className="hidden sm:inline">Inicio</span>
+        </button>
+
         {/* Botón de cerrar sesión */}
         <button
           onClick={() => setShowLogoutConfirm(true)}
@@ -98,14 +99,14 @@ const DashboardHeader = ({  }) => {
         </button>
       </div>
 
-      {/* Modal de confirmación con animación */}
+      {/* Modal de confirmación de cierre de sesión */}
       <AnimatePresence>
         {showLogoutConfirm && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0  flex items-center justify-center z-50"
+            className="fixed inset-0 flex items-center justify-center z-50"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -138,3 +139,4 @@ const DashboardHeader = ({  }) => {
 };
 
 export default DashboardHeader;
+
