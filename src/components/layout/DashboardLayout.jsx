@@ -39,7 +39,7 @@ const DashboardLayout = () => {
         {isAdminRoute ? <AdminSidebar /> : <UserSidebar />}
 
         {/* Contenido principal */}
-        <main className="flex-1 p-8 text-gray-900 dark:text-gray-100">
+        <main className="flex-1 px-8 pt-4 pb-8 text-gray-900 dark:text-gray-100">
           <Outlet context={{ darkMode, setDarkMode }} />
         </main>
       </div>

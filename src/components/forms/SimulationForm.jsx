@@ -1,12 +1,9 @@
-
 import React, { useState } from "react";
-
-import { obtenerCiudadPorCoordenadas } from "@/services/WeatherService";
-import { obtenerDatosClimaticos } from "@/services/WeatherService";
+import { motion, AnimatePresence } from "framer-motion";
+import { obtenerCiudadPorCoordenadas, obtenerDatosClimaticos, buscarUbicaciones } from "@/services/WeatherService";
 import InputFieldWithHint from "../common/inputField/InputFieldWithHint";
 import InputWithButton from "../common/inputField/InputWithButton";
 import ErrorToast from "../common/ErrorToast";
-import { buscarUbicaciones } from "@/services/WeatherService";
 
 const SimulationForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -22,34 +19,27 @@ const SimulationForm = ({ onSubmit }) => {
   const [loadingLocation, setLoadingLocation] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [consumptionUnit, setConsumptionUnit] = useState("kWh");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
-    // Si está escribiendo en el campo de ubicación
-    if (name === "location") {
-      if (value.length >= 3) {
-        try {
-          const results = await buscarUbicaciones(value);
-          setSuggestions(results.slice(0, 5)); // mostrar hasta 5 sugerencias
-          setShowSuggestions(true);
-        } catch (err) {
-          console.error("Error al buscar ubicaciones:", err);
-          setSuggestions([]);
-          setShowSuggestions(false);
-        }
-      } else {
+    if (name === "location" && value.length >= 3) {
+      try {
+        const results = await buscarUbicaciones(value);
+        setSuggestions(results.slice(0, 5));
+        setShowSuggestions(true);
+      } catch (err) {
+        console.error("Error al buscar ubicaciones:", err);
         setSuggestions([]);
         setShowSuggestions(false);
       }
+    } else if (name === "location") {
+      setSuggestions([]);
+      setShowSuggestions(false);
     }
   };
-
 
   const handleUseMyLocation = async () => {
     if (!navigator.geolocation) {
@@ -86,12 +76,14 @@ const SimulationForm = ({ onSubmit }) => {
   const validate = () => {
     const newErrors = {};
     if (!formData.location.trim()) newErrors.location = "La ubicación es obligatoria.";
-    if (!formData.projectSize || isNaN(formData.projectSize))
-      newErrors.projectSize = "Introduce un tamaño válido.";
-    if (!formData.budget || isNaN(formData.budget))
-      newErrors.budget = "Introduce un presupuesto válido.";
-    if (!formData.energyConsumption || isNaN(formData.energyConsumption) ||
-      formData.energyConsumption < 50 || formData.energyConsumption > 100000) {
+    if (!formData.projectSize || isNaN(formData.projectSize)) newErrors.projectSize = "Introduce un tamaño válido.";
+    if (!formData.budget || isNaN(formData.budget)) newErrors.budget = "Introduce un presupuesto válido.";
+    if (
+      !formData.energyConsumption ||
+      isNaN(formData.energyConsumption) ||
+      formData.energyConsumption < 50 ||
+      formData.energyConsumption > 100000
+    ) {
       newErrors.energyConsumption = "Debe estar entre 50 y 100000 kWh/mes.";
     }
     setErrors(newErrors);
@@ -101,6 +93,7 @@ const SimulationForm = ({ onSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
+
     setIsSubmitting(true);
 
     try {
@@ -108,43 +101,35 @@ const SimulationForm = ({ onSubmit }) => {
       console.log("📊 Datos climáticos:", climate);
 
       const climaNormalizado = {
-        irradiance: Math.max(climate.irradianciaEstimativa, 50), //mínimo razonable
+        irradiance: Math.max(climate.irradianciaEstimativa, 50),
         wind: climate.viento,
-        hydrology: 3.0, // valor arbitrario para la simulación hidroeléctrica
+        hydrology: 3.0,
       };
-      const consumoConvertido = consumptionUnit === "MWh" ? formData.energyConsumption * 1000 : formData.energyConsumption;
 
       await onSubmit({
         ...formData,
-        energyConsumption: consumoConvertido,
         climate: climaNormalizado,
-        consumptionUnit,
-        date: new Date().toISOString(), // importante si quieres mostrarlo en la tabla
+        date: new Date().toISOString(),
       });
-      
-
     } catch (error) {
-      console.error("Error al obtener datos climáticos o al simular:", error);
-
-      let mensajeError = "Ocurrió un error inesperado al simular.";
-
-      if (error.response?.data?.message) {
-        mensajeError = error.response.data.message;
-      } else if (error.request) {
-        mensajeError = "No se pudo conectar con el servidor. Verifica tu conexión a internet.";
-      } else if (error.message?.includes("timeout")) {
-        mensajeError = "La solicitud tardó demasiado en responder. Intenta nuevamente más tarde.";
-      }
-
-      setErrorMessage(mensajeError);
+      console.error("Error:", error);
+      setErrorMessage(
+        error.response?.data?.message ||
+        "Ocurrió un error inesperado al simular."
+      );
     } finally {
       setIsSubmitting(false);
     }
-
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <motion.form
+      onSubmit={handleSubmit}
+      className="space-y-6 relative"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
       {/* Ubicación */}
       <InputWithButton
         label="Ubicación"
@@ -158,30 +143,41 @@ const SimulationForm = ({ onSubmit }) => {
         disabled={loadingLocation}
         title="Usar mi ubicación actual"
       />
-      {showSuggestions && suggestions.length > 0 && (
-        <ul className="absolute z-10 bg-white border border-gray-300 rounded-md shadow-md max-h-48 overflow-y-auto mt-1 w-full text-sm">
-          {suggestions.map((s, idx) => (
-            <li
-              key={idx}
-              className="flex items-center gap-2 px-4 py-2 hover:bg-blue-100 cursor-pointer"
-              onClick={() => {
-                setFormData({ ...formData, location: s.display_name });
-                setSuggestions([]);
-                setShowSuggestions(false);
-              }}
-            >
-              {s.country_code && (
-                <img
-                  src={`https://flagcdn.com/w20/${s.country_code}.png`}
-                  alt={s.country_code}
-                  className="w-5 h-3 rounded-sm object-cover"
-                />
-              )}
-              <span>{s.display_name}</span>
-            </li>
-          ))}
-        </ul>
-      )}
+
+      {/* Sugerencias animadas */}
+      <AnimatePresence>
+        {showSuggestions && suggestions.length > 0 && (
+          <motion.ul
+            className="absolute z-20 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-md max-h-48 overflow-y-auto mt-1 w-full text-sm"
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+            transition={{ duration: 0.3 }}
+          >
+            {suggestions.map((s, idx) => (
+              <li
+                key={idx}
+                className="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900 transition-all"
+                onClick={() => {
+                  setFormData({ ...formData, location: s.display_name });
+                  setSuggestions([]);
+                  setShowSuggestions(false);
+                }}
+              >
+                {s.country_code && (
+                  <img
+                    src={`https://flagcdn.com/w20/${s.country_code}.png`}
+                    alt={s.country_code}
+                    className="w-5 h-3 rounded-sm object-cover"
+                  />
+                )}
+                <span>{s.display_name}</span>
+              </li>
+            ))}
+          </motion.ul>
+        )}
+      </AnimatePresence>
+
       {/* Tipo de energía */}
       <InputFieldWithHint
         label="Tipo de energía"
@@ -207,43 +203,23 @@ const SimulationForm = ({ onSubmit }) => {
         placeholder="Ej. 150"
         error={errors.projectSize}
         hint="Debe estar entre 1 y 500 kW."
-        title="Ingresa la capacidad total estimada del sistema (en kilovatios)."
+        title="Ingresa la capacidad total estimada del sistema."
         icon="🔧"
       />
 
       {/* Consumo energético */}
-      <div className="flex items-end gap-2">
-        <div className="flex-1">
-          <InputFieldWithHint
-            label="Consumo energético mensual"
-            name="energyConsumption"
-            type="number"
-            value={formData.energyConsumption}
-            onChange={handleChange}
-            placeholder="Ej. 800"
-            error={errors.energyConsumption}
-            hint={
-              consumptionUnit === "kWh"
-                ? "Rango aceptado: 50 – 100000 kWh/mes."
-                : "Rango aceptado: 0.05 – 100 MWh/mes."
-            }
-            title="Introduce tu consumo mensual estimado."
-            icon="⚡"
-          />
-        </div>
-
-        <div className="pt-6">
-          <select
-            value={consumptionUnit}
-            onChange={(e) => setConsumptionUnit(e.target.value)}
-            className="px-2 py-2 border rounded-md text-sm shadow-sm bg-white"
-            title="Unidad de consumo"
-          >
-            <option value="kWh">kWh</option>
-            <option value="MWh">MWh</option>
-          </select>
-        </div>
-      </div>
+      <InputFieldWithHint
+        label="Consumo energético mensual (kWh)"
+        name="energyConsumption"
+        type="number"
+        value={formData.energyConsumption}
+        onChange={handleChange}
+        placeholder="Ej. 800"
+        error={errors.energyConsumption}
+        hint="Rango aceptado: 50 – 100000 kWh/mes."
+        title="Introduce tu consumo mensual estimado."
+        icon="⚡"
+      />
 
       {/* Presupuesto */}
       <InputFieldWithHint
@@ -255,25 +231,41 @@ const SimulationForm = ({ onSubmit }) => {
         placeholder="Ej. 5000"
         error={errors.budget}
         icon="💶"
-        title="Ingresa el presupuesto disponible para tu instalación."
+        title="Ingresa el presupuesto disponible."
       />
-      {/* Botón */}
+
+      {/* Botón animado */}
       <div className="text-center pt-4">
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           type="submit"
           disabled={isSubmitting}
-          className={`bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg text-sm transition-all shadow-md ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+          className={`bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg text-sm transition-all shadow-md ${
+            isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         >
           {isSubmitting ? "Simulando..." : "Simular"}
-        </button>
+        </motion.button>
       </div>
-      {errorMessage && (
-        <ErrorToast message={errorMessage} onClose={() => setErrorMessage("")} />
-      )}
 
-    </form>
+      {/* Error animado */}
+      <AnimatePresence>
+        {errorMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+            transition={{ duration: 0.3 }}
+          >
+            <ErrorToast message={errorMessage} onClose={() => setErrorMessage("")} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.form>
   );
 };
 
 export default SimulationForm;
+
+

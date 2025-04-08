@@ -43,7 +43,11 @@ const DashboardHeader = ({ darkMode, setDarkMode }) => {
   };
 
   return (
-    <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 bg-green-50 p-4 rounded-2xl shadow-md relative">
+    <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between  bg-gradient-to-b from-green-50 to-white h-24 p-4 shadow-md relative">
+
+
+
+
       {/* Título dinámico */}
       <h2 className="text-2xl sm:text-3xl font-bold text-green-700 flex items-center gap-2 mb-3 sm:mb-0">
         {title}
