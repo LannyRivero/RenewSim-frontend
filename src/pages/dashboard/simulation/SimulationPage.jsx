@@ -60,13 +60,10 @@ const SimulationPage = () => {
           Introduce los datos del proyecto para estimar el rendimiento energético.
         </p>
 
-        {/* Formulario */}
         <SimulationForm onSubmit={manejarSimulacion} />
 
-        {/* Loader mientras espera */}
         {loading && <SkeletonLoader />}
 
-        {/* Resultados animados */}
         <AnimatePresence>
           {!loading && resultados && (
             <motion.div

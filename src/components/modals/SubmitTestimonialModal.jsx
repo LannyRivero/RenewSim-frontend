@@ -1,115 +1,70 @@
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast";
 
-const SubmitTestimonialModal = () => {
-  const [submitted, setSubmitted] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    location: "",
-    testimonial: "",
-  });
-  const [errors, setErrors] = useState({});
+const SubmitTestimonialModal = ({ isOpen, onClose }) => {
+  const [message, setMessage] = useState("");
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = "El nombre es obligatorio.";
-    if (!formData.location.trim()) newErrors.location = "La ubicación es obligatoria.";
-    if (formData.testimonial.length < 10) newErrors.testimonial = "El testimonio debe tener al menos 10 caracteres.";
-    return newErrors;
-  };
-
-  const resetForm = () => {
-    setFormData({
-      name: "",
-      location: "",
-      testimonial: "",
-    });
-    setErrors({});
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newErrors = validateForm();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-    } else {
-      setSubmitted(true);
-      resetForm();
+  const handleSubmit = () => {
+    if (!message.trim()) {
+      toast.error("Por favor escribe tu comentario");
+      return;
     }
+
+    const existingTestimonials = JSON.parse(localStorage.getItem("testimonials")) || [];
+    const updatedTestimonials = [...existingTestimonials, { message, date: new Date().toISOString() }];
+    localStorage.setItem("testimonials", JSON.stringify(updatedTestimonials));
+
+    toast.success("¡Gracias por tu comentario!");
+
+    setMessage("");
+    onClose();
   };
+
+  if (!isOpen) return null;
 
   return (
-    <div className="mt-10 mx-auto max-w-2xl bg-gradient-to-r from-gray-800 to-green-700 p-8 rounded-lg shadow-lg text-white text-center animate-fadeIn">
-      {submitted ? (
-        <div>
-          <h1 className="text-2xl font-bold">¡Gracias por tu testimonio!</h1>
-          <p className="mt-2 text-lg">Tu experiencia es muy valiosa para nosotros.</p>
-          <button 
-            className="mt-4 bg-green-500 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition transform hover:scale-105"
-            onClick={() => setSubmitted(false)}
-          >
-            Enviar otro testimonio
-          </button>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <h1 className="text-3xl font-bold">¡Comparte tu experiencia!</h1>
-          <p className="text-lg text-gray-300">Tu opinión nos ayuda a mejorar.</p>
-
-          <div className="text-left">
-            <label className="block text-lg font-semibold">Nombre:</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              placeholder="Escribe tu nombre"
-              className="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500"
-              required
-            />
-            {errors.name && <p className="text-red-400">{errors.name}</p>}
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm">
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8, y: -50 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.8, y: -50 }}
+          transition={{ type: "spring", stiffness: 100, damping: 10 }}
+          className="rounded-2xl bg-white/30 backdrop-blur-xl border border-white/30 shadow-2xl p-6 space-y-4 max-w-sm w-full"
+          style={{
+            background: "rgba(255, 255, 255, 0.25)",
+            boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
+            backdropFilter: "blur(15px)",
+            WebkitBackdropFilter: "blur(15px)",
+            border: "1px solid rgba(255, 255, 255, 0.18)",
+          }}
+        >
+          <h3 className="text-lg font-semibold text-gray-800">
+            📝 Deja tu comentario
+          </h3>
+          <textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="w-full h-32 p-2 border border-gray-300 rounded resize-none"
+            placeholder="Escribe tu comentario aquí..."
+          />
+          <div className="flex justify-end space-x-3">
+            <button
+              onClick={onClose}
+              className="bg-gray-300/60 text-gray-800 px-4 py-2 rounded-lg transition hover:bg-gray-400/70 backdrop-blur-md"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={handleSubmit}
+              className="bg-green-500/70 text-white px-4 py-2 rounded-lg transition hover:bg-green-600/80 backdrop-blur-md"
+            >
+              Enviar
+            </button>
           </div>
-
-          <div className="text-left">
-            <label className="block text-lg font-semibold">Ubicación:</label>
-            <input
-              type="text"
-              name="location"
-              value={formData.location}
-              onChange={handleInputChange}
-              placeholder="Escribe tu ubicación"
-              className="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500"
-              required
-            />
-            {errors.location && <p className="text-red-400">{errors.location}</p>}
-          </div>
-
-          <div className="text-left">
-            <label className="block text-lg font-semibold">Tu experiencia:</label>
-            <textarea
-              name="testimonial"
-              value={formData.testimonial}
-              onChange={handleInputChange}
-              placeholder="Escribe tu experiencia aquí"
-              rows="5"
-              className="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500"
-              required
-            ></textarea>
-            {errors.testimonial && <p className="text-red-400">{errors.testimonial}</p>}
-          </div>
-
-          <button 
-            type="submit"
-            className="w-full bg-green-500 hover:bg-green-400 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition transform hover:scale-105"
-          >
-            Enviar Testimonio
-          </button>
-        </form>
-      )}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { DarkModeProvider } from "./DarkModeContext";
+
 import { NotificationProvider } from "./NotificationContext";
 import { SimulationProvider } from "./SimulationContext";
 import { LoadingProvider } from "./LoadingContext .jsx";
@@ -7,14 +7,14 @@ import { LoadingProvider } from "./LoadingContext .jsx";
 
 
 export const AppProviders = ({ children }) => (
-  <DarkModeProvider>
-    <NotificationProvider>
-      <SimulationProvider>
-        <LoadingProvider>
+
+  <NotificationProvider>
+    <SimulationProvider>
+      <LoadingProvider>
         {children}
-        </LoadingProvider>
-      </SimulationProvider>
-    </NotificationProvider>
-  </DarkModeProvider>
+      </LoadingProvider>
+    </SimulationProvider>
+  </NotificationProvider>
+
 );
 

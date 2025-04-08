@@ -7,7 +7,7 @@ import { CheckCircle, AlertTriangle, LogOut } from "lucide-react";
 
 
 
-const DashboardHeader = ({ darkMode, setDarkMode }) => {
+const DashboardHeader = ({  }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { notification } = useNotification();

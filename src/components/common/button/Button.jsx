@@ -6,8 +6,8 @@ const Button = ({
   onClick,
   type = "button",
   disabled = false,
-  variant = "primary", // primary, secondary, danger, outline, ghost
-  size = "md", // sm, md, lg
+  variant = "primary",
+  size = "md",
   icon = null,
   iconPosition = "left",
   isLoading = false,
@@ -42,7 +42,7 @@ const Button = ({
       disabled={disabled}
       className={`${baseStyle} ${variantStyle[variant]} ${disabled ? 'opacity-70' : ''}`}
       {...motionProps}
-      style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }} // mejora la lectura del texto
+      style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}
     >
       {icon && iconPosition === "left" && icon}
       {children}

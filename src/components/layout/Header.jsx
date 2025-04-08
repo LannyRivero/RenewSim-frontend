@@ -16,17 +16,12 @@ import logo from '@/assets/8408600.jpg';
 import { useAuth } from "@/context/AuthContext";
 import RoleBasedAccess from "../auth/RoleBasedAccess";
 
+
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
-
-  const toggleTheme = () => {
-    setDarkMode(!darkMode);
-    document.body.classList.toggle("dark");
-  };
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -69,11 +64,7 @@ const Header = () => {
       </nav>
 
       {/* Header Actions */}
-      <div className="flex items-center space-x-4">
-        {/* Theme Toggle */}
-        <button onClick={toggleTheme} className="text-xl p-2 rounded-md focus:outline-none">
-          {darkMode ? <FaSun className="text-yellow-400" /> : <FaMoon className="text-gray-500" />}
-        </button>
+      <div className="flex items-center space-x-4">      
 
         {/* Language Selector */}
         <select className="border rounded-md p-2 bg-gray-100 dark:bg-gray-700 dark:text-white" onChange={handleLanguageChange}>

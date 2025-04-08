@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+
 /* ======================
    Animaciones de entrada
 ====================== */
@@ -85,3 +86,4 @@
   outline: 2px solid rgba(16, 185, 129, 0.7);
   outline-offset: 2px;
 }
+

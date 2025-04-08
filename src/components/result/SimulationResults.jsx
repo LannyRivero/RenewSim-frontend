@@ -18,7 +18,7 @@ const SimulationResults = ({ data  }) => {
     const margin = { top: 30, right: 20, bottom: 50, left: 50 };
 
     const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove(); // Clear previous
+    svg.selectAll("*").remove();
 
     const yScale = d3
       .scaleLinear()

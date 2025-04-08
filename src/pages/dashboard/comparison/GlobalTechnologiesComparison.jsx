@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import SimulationService from '@/services/SimulationService';
+import Button from '@/components/common/button/Button';
 
 const GlobalTechnologiesComparison = () => {
   const [data, setData] = useState([]);
@@ -8,7 +9,6 @@ const GlobalTechnologiesComparison = () => {
   const [selectedCriteria, setSelectedCriteria] = useState("normalizedEnergyProduction");
   const [error, setError] = useState(null);
   const svgRef = useRef();
-  const darkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
   const criteriaLabels = {
     normalizedEnergyProduction: "Generación energética (kWh)",
@@ -26,7 +26,6 @@ const GlobalTechnologiesComparison = () => {
     geothermal: "#D84315"
   };
 
-  // Format values for readability
   const formatValue = (value, criteria) => {
     const scaled = value * 100;
     switch (criteria) {
@@ -67,7 +66,6 @@ const GlobalTechnologiesComparison = () => {
     const validData = data.filter(d => d[selectedCriteria] !== undefined && d[selectedCriteria] !== null);
     if (validData.length === 0) return;
 
-    // Clean previous SVG
     d3.select(svgRef.current).selectAll('*').remove();
 
     const svg = d3.select(svgRef.current);
@@ -78,7 +76,7 @@ const GlobalTechnologiesComparison = () => {
     svg
       .attr('width', width)
       .attr('height', height)
-      .style('background', darkMode ? '#1F2937' : '#f9f9f9');
+      .style('background', '#f9f9f9'); // Fijo ahora, sin modo oscuro
 
     const xScale = d3.scaleBand()
       .domain(validData.map(d => d.technologyName))
@@ -91,16 +89,15 @@ const GlobalTechnologiesComparison = () => {
       .domain([0, maxValue * 1.2])
       .range([height - margin.bottom, margin.top]);
 
-    // Tooltip
     const tooltip = d3.select('body').append('div')
       .style('position', 'absolute')
       .style('visibility', 'hidden')
-      .style('background', darkMode ? '#374151' : 'white')
+      .style('background', 'white')
       .style('padding', '10px')
       .style('border-radius', '6px')
       .style('box-shadow', '0 0 10px rgba(0,0,0,0.4)')
       .style('font-size', '14px')
-      .style('color', darkMode ? '#F9FAFB' : '#333')
+      .style('color', '#333')
       .style('pointer-events', 'none');
 
     svg.selectAll('.bar')
@@ -110,7 +107,7 @@ const GlobalTechnologiesComparison = () => {
       .attr('x', d => xScale(d.technologyName))
       .attr('y', d => yScale(d[selectedCriteria]))
       .attr('width', xScale.bandwidth())
-      .attr('height', d => height - margin.bottom - yScale(d[selectedCriteria]))
+      .attr('height', 0)
       .attr('fill', d => energyTypeColors[d.energyType] || '#ccc')
       .on('mouseover', function (event, d) {
         d3.select(this).attr('fill', '#ffa500');
@@ -126,15 +123,15 @@ const GlobalTechnologiesComparison = () => {
           .style('top', event.pageY - 50 + 'px')
           .style('left', event.pageX + 10 + 'px');
       })
-      .on('mouseout', function (event, d) {
-        d3.select(this).attr('fill', energyTypeColors[d.energyType] || '#ccc');
+      .on('mouseout', function () {
+        d3.select(this).attr('fill', d => energyTypeColors[d.energyType] || '#ccc');
         tooltip.style('visibility', 'hidden');
       })
       .transition()
       .duration(800)
-      .attr('height', d => height - margin.bottom - yScale(d[selectedCriteria]));
+      .attr('height', d => height - margin.bottom - yScale(d[selectedCriteria]))
+      .attr('y', d => yScale(d[selectedCriteria]));
 
-    // Labels
     svg.selectAll('.label')
       .data(validData)
       .join('text')
@@ -142,28 +139,26 @@ const GlobalTechnologiesComparison = () => {
       .attr('x', d => xScale(d.technologyName) + xScale.bandwidth() / 2)
       .attr('y', d => yScale(d[selectedCriteria]) - 10)
       .attr('text-anchor', 'middle')
-      .attr('fill', darkMode ? '#F9FAFB' : '#333')
+      .attr('fill', '#333')
       .style('font-size', '14px')
       .text(d => formatValue(d[selectedCriteria], selectedCriteria));
 
-    // Axes
     svg.append('g')
       .attr('transform', `translate(0,${height - margin.bottom})`)
       .call(d3.axisBottom(xScale))
       .selectAll('text')
       .attr('transform', 'rotate(-25)')
       .style('text-anchor', 'end')
-      .style('fill', darkMode ? '#F9FAFB' : '#333');
+      .style('fill', '#333');
 
     svg.append('g')
       .attr('transform', `translate(${margin.left},0)`)
       .call(d3.axisLeft(yScale).ticks(5))
       .selectAll('text')
-      .style('fill', darkMode ? '#F9FAFB' : '#333');
+      .style('fill', '#333');
 
-  }, [data, loading, selectedCriteria, darkMode]);
+  }, [data, loading, selectedCriteria]);
 
-  // Download as PNG or SVG
   const handleDownload = (format) => {
     const svgElement = svgRef.current;
     const serializer = new XMLSerializer();
@@ -204,44 +199,48 @@ const GlobalTechnologiesComparison = () => {
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">{`Comparativa Global: ${criteriaLabels[selectedCriteria]}`}</h2>
+    <div className="min-h-screen flex justify-center items-start bg-gradient-to-br from-green-50 via-white to-green-100 px-4 py-16 transition-colors duration-500">
+      <div className="w-full max-w-5xl p-8 rounded-3xl shadow-2xl border border-white/30 bg-white/30 backdrop-blur-xl transition-all duration-500">
+        <h2 className="text-3xl font-bold mb-8 text-center text-gray-800 animate-fade-in-down flex items-center justify-center gap-2">
+          ⚡ Comparación Global de Energías Renovables
+        </h2>
 
-      <div className="mb-4 flex gap-4 items-center">
-        <label htmlFor="criteria" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          Selecciona criterio de comparación:
-        </label>
-        <select
-          id="criteria"
-          value={selectedCriteria}
-          onChange={(e) => setSelectedCriteria(e.target.value)}
-          className="border rounded p-2 dark:bg-gray-800 dark:text-white"
-        >
-          <option value="normalizedEnergyProduction">Generación energética (kWh)</option>
-          <option value="normalizedInstallationCost">Costo de instalación (€)</option>
-          <option value="normalizedEfficiency">Eficiencia (%)</option>
-          <option value="normalizedCo2Reduction">Impacto medioambiental (CO₂ reducido)</option>
-          <option value="score">Score global</option>
-        </select>
+        <div className="mb-6 flex flex-wrap gap-4 items-center justify-center">
+          <label htmlFor="criteria" className="text-sm font-medium text-gray-700">
+            Selecciona criterio de comparación:
+          </label>
+          <select
+            id="criteria"
+            value={selectedCriteria}
+            onChange={(e) => setSelectedCriteria(e.target.value)}
+            className="border rounded p-2"
+          >
+            {Object.entries(criteriaLabels).map(([key, label]) => (
+              <option key={key} value={key}>{label}</option>
+            ))}
+          </select>
 
-        <button onClick={() => handleDownload('svg')} className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded">
-          Descargar SVG
-        </button>
-        <button onClick={() => handleDownload('png')} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded">
-          Descargar PNG
-        </button>
+          <Button variant="secondary" onClick={() => handleDownload('svg')}>
+            Descargar SVG
+          </Button>
+          <Button variant="secondary" onClick={() => handleDownload('png')}>
+            Descargar PNG
+          </Button>
+        </div>
+
+        {loading && <p className="text-gray-500 text-center">Cargando tecnologías...</p>}
+        {error && <p className="text-red-500 text-center">{error}</p>}
+        {!loading && data.length === 0 && <p className="text-gray-500 text-center">No se encontraron tecnologías.</p>}
+
+        <svg ref={svgRef} className="mx-auto block"></svg>
       </div>
-
-      {loading && <p className="text-gray-500">Cargando tecnologías...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-      {!loading && data.length === 0 && <p className="text-gray-500">No se encontraron tecnologías.</p>}
-
-      <svg ref={svgRef}></svg>
     </div>
   );
 };
 
 export default GlobalTechnologiesComparison;
+
+
 
 
 

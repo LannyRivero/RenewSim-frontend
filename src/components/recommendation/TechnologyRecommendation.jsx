@@ -1,12 +1,10 @@
 const TechnologyRecommendation = ({ resultados }) => {
-    // Verificar si results contiene los datos que necesitamos
-    console.log('Resultados:', resultados);
-  
-    // Accedemos a los datos de la tecnología recomendada
-    const { recommendedTechnology, estimatedSavings, returnOnInvestment, technologies } = resultados;
     
-    // Aseguramos que technologies no esté vacío
-    const technology = technologies && technologies[0]; // Suponiendo que siempre haya un elemento
+    console.log('Resultados:', resultados);  
+
+    const { recommendedTechnology, estimatedSavings, returnOnInvestment, technologies } = resultados;
+
+    const technology = technologies && technologies[0]; 
   
     return (
       <div className="bg-blue-50 p-6 rounded-xl shadow-lg mt-6">
