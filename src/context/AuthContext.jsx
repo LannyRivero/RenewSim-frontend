@@ -1,12 +1,10 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 
-// 1. Crear y exportar el contexto
 export const AuthContext = createContext();
 
-// 2. Crear y exportar el hook personalizado
 export const useAuth = () => useContext(AuthContext);
 
-// 3. Proveedor del contexto
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
