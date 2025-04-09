@@ -2,7 +2,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { getProfile, updateProfile } from '../services/ProfileService';
 import { isAuthenticated } from '../utils/TokenUtils';
-import { useLoading } from './LoadingContext ';
+import { useLoading } from './LoadingContext';
 import { useNotification } from './NotificationContext';
 
 export const ProfileContext = createContext();
