@@ -1,28 +1,45 @@
 
 import React, { createContext, useState, useEffect } from 'react';
-import { getProfile } from '../services/ProfileService';
+import { getProfile, updateProfile } from '../services/ProfileService';
 import { isAuthenticated } from '../utils/TokenUtils';
+import { useLoading } from './LoadingContext ';
+import { useNotification } from './NotificationContext';
 
 export const ProfileContext = createContext();
 
 export const ProfileProvider = ({ children }) => {
   const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+
+  const { startLoading, stopLoading } = useLoading();
+  const { showSuccess, showError } = useNotification();
 
   const fetchProfile = async () => {
-    if (!isAuthenticated()) {
-      setLoading(false);
-      return;
-    }
+    if (!isAuthenticated()) return;
 
+    startLoading();
     try {
       const data = await getProfile();
       setProfile(data);
     } catch (error) {
       console.error('Error fetching profile:', error);
+      showError('Error al cargar el perfil.');
       setProfile(null);
     } finally {
-      setLoading(false);
+      stopLoading();
+    }
+  };
+
+  const updateProfileData = async (profileData) => {
+    startLoading();
+    try {
+      const updatedProfile = await updateProfile(profileData);
+      setProfile(updatedProfile);
+      showSuccess('Perfil actualizado correctamente.');
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      showError('Error al actualizar el perfil.');
+    } finally {
+      stopLoading();
     }
   };
 
@@ -31,8 +48,9 @@ export const ProfileProvider = ({ children }) => {
   }, []);
 
   return (
-    <ProfileContext.Provider value={{ profile, setProfile, loading, fetchProfile }}>
+    <ProfileContext.Provider value={{ profile, setProfile, fetchProfile, updateProfileData }}>
       {children}
     </ProfileContext.Provider>
   );
 };
+
