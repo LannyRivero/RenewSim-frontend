@@ -17,6 +17,7 @@ const ProfileForm = () => {
 
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     if (profile) {
@@ -35,6 +36,8 @@ const ProfileForm = () => {
       ...prev,
       [name]: value
     }));
+
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const validate = () => {
@@ -52,10 +55,13 @@ const ProfileForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSuccessMessage(""); 
     if (!validate()) return;
 
     try {
       await updateProfileData(formData);
+      setSuccessMessage("✅ Perfil actualizado con éxito.");
+      setErrors({});
     } catch (error) {
       console.error("Error updating profile:", error);
       setErrorMessage(
@@ -72,6 +78,21 @@ const ProfileForm = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
+
+      <AnimatePresence>
+        {successMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+            transition={{ duration: 0.3 }}
+            className="text-green-600 text-sm font-medium"
+          >
+            {successMessage}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <InputFieldWithHint
         label="Nombre"
         name="firstName"
@@ -82,6 +103,7 @@ const ProfileForm = () => {
         error={errors.firstName}
         icon="👤"
         title="Introduce tu nombre."
+        disabled={loading}
       />
 
       <InputFieldWithHint
@@ -94,6 +116,7 @@ const ProfileForm = () => {
         error={errors.lastName}
         icon="👥"
         title="Introduce tus apellidos."
+        disabled={loading}
       />
 
       <InputFieldWithHint
@@ -106,6 +129,7 @@ const ProfileForm = () => {
         error={errors.email}
         icon="📧"
         title="Introduce tu email."
+        disabled={loading}
       />
 
       <InputFieldWithHint
@@ -118,6 +142,7 @@ const ProfileForm = () => {
         error={errors.phone}
         icon="📞"
         title="Introduce tu número de teléfono."
+        disabled={loading}
       />
 
       <div className="text-center pt-4">
@@ -143,4 +168,5 @@ const ProfileForm = () => {
 };
 
 export default ProfileForm;
+
 
