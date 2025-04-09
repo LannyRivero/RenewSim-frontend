@@ -5,12 +5,11 @@ import { useAuth } from '@/context/AuthContext';
 const ProtectedRoute = ({ allowedRoles = [] }) => {
   const { user, token } = useAuth();
 
-  // Si no hay sesión activa
   if (!user || !token) {
     return <Navigate to="/login" replace />;
   }
 
-  // Si hay roles permitidos definidos, comprobar acceso
+
   if (allowedRoles.length > 0) {
     const userRoles = Array.isArray(user.roles)
       ? user.roles.map(role => (typeof role === 'string' ? role : role.name))
@@ -23,7 +22,6 @@ const ProtectedRoute = ({ allowedRoles = [] }) => {
     }
   }
 
-  // Si todo está bien, renderiza los hijos protegidos
   return <Outlet />;
 };
 

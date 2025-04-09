@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import { MemoryRouter } from "react-router-dom";
-import Unauthorized from "../src/pages/Unauthorized";
+import Unauthorized from "../../src/pages/Unauthorized";
 
 
 describe("Unauthorized component", () => {
