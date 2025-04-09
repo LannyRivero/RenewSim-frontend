@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { use } from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
@@ -70,4 +70,24 @@ describe('ProtectedRoute', () => {
 
     expect(screen.getByText('Unauthorized Page')).toBeInTheDocument();
   });
+
+  it('renders protected component if user has one of multiple allowed roles', () => {
+    useAuth.mockReturnValue({
+        user: { roles: [ 'USER'] },
+        token: 'valid-token',
+      });
+
+    render(
+      <MemoryRouter initialEntries={['/protected']}>
+        <Routes>
+          <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'USER']} />}>
+            <Route path="/protected" element={<DummyComponent />} />
+          </Route>
+        </Routes>
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText('Protected Content')).toBeInTheDocument();
+  });
+   
 });
