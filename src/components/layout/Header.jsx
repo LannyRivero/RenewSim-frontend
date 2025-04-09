@@ -55,7 +55,8 @@ const Header = () => {
   };
 
   return (
-    <header className={`w-full shadow-md py-3 px-4 md:px-12 flex items-center justify-between ${isDashboard ? "bg-gradient-to-b from-green-50 to-white" : "bg-white dark:bg-gray-900"}`}>
+    <header className="w-full shadow-md py-3 px-4 md:px-12 flex items-center justify-between bg-gradient-to-b from-green-50 to-white">
+
       
       {/* Left Section: Logo + Title */}
       <div className="flex items-center space-x-3">
