@@ -1,103 +1,121 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import { useNotification } from "@/context/NotificationContext";
+import { AnimatePresence, motion } from "framer-motion";
+import { CheckCircle, AlertTriangle, LogOut, Home } from "lucide-react";
 import {
   FaHome,
   FaCog,
   FaClipboardList,
   FaBook,
-  FaMoon,
-  FaSun,
   FaBars,
   FaTimes,
   FaShieldAlt,
   FaHistory
 } from "react-icons/fa";
 import logo from '@/assets/8408600.jpg';
-import { useAuth } from "@/context/AuthContext";
+import Button from "@/components/common/button/Button";
+import ConfirmModal from "@/components/modals/ConfirmModal";
 import RoleBasedAccess from "../auth/RoleBasedAccess";
-
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const navigate = useNavigate();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const { user, logout, setUser } = useAuth();
+  const { notification } = useNotification();
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
+  const isDashboard = location.pathname.includes("/dashboard");
 
-  const handleLanguageChange = (event) => {
-    console.log(`Language changed to: ${event.target.value}`);
-  };
+  const toggleMenu = () => setMenuOpen(!menuOpen);
 
   const handleLogout = () => {
     logout();
-    setMenuOpen(false); 
-    navigate("/login");
+    setShowLogoutConfirm(false);
+    navigate("/");
+  };
+
+  const titles = {
+    "/dashboard/user": "Bienvenido 👋",
+    "/dashboard/user/history": "Historial de Simulaciones 🧾",
+    "/dashboard/user/settings": "Configuración Avanzada ⚙️",
+    "/dashboard/admin/users": "Panel de Administración 👥",
+    "/dashboard/user/global-comparison": "Comparación Global 🌍",
+    "/dashboard/user/comparison": "Comparativa de Simulación 📊",
+  };
+
+  const title = titles[location.pathname] || "Dashboard";
+
+  const getInitials = (name) => {
+    if (!name) return "";
+    const names = name.split(" ");
+    return names.map((n) => n[0].toUpperCase()).join("");
   };
 
   return (
-    <header className="w-full bg-white dark:bg-gray-900 shadow-md py-3 px-4 md:px-12 flex items-center justify-between">
-      {/* Logo */}
+    <header className={`w-full shadow-md py-3 px-4 md:px-12 flex items-center justify-between ${isDashboard ? "bg-gradient-to-b from-green-50 to-white" : "bg-white dark:bg-gray-900"}`}>
+      
+      {/* Left Section: Logo + Title */}
       <div className="flex items-center space-x-3">
         <img src={logo} alt="Logo" className="w-10 h-10 rounded-full object-cover" />
         <h1 className="text-lg font-bold text-gray-700 dark:text-white">Renewable Energy Simulator</h1>
       </div>
 
-      {/* Desktop Navigation */}
-      <nav className="hidden md:flex space-x-6">
-        <NavLink to="/" icon={<FaHome />} label="Home" active={location.pathname === "/"} />
+      {/* Center Section (Only Dashboard): Dynamic Title */}
+      {isDashboard && (
+        <h2 className="text-2xl sm:text-3xl font-bold text-green-700 hidden md:block">{title}</h2>
+      )}
 
-        <RoleBasedAccess allowedRoles={['USER', 'ADVANCED_USER', 'ADMIN']}>
-          <>
-            <NavLink to="/configuration" icon={<FaCog />} label="Configuration" active={location.pathname === "/configuration"} />
-            <NavLink to="/recommendations" icon={<FaClipboardList />} label="Recommendations" active={location.pathname === "/recommendations"} />
-            <NavLink to="/resources" icon={<FaBook />} label="Resources" active={location.pathname === "/resources"} />
-            <NavLink to="/history" icon={<FaHistory />} label="Historial" active={location.pathname === "/history"} />
-          </>
-        </RoleBasedAccess>
+      {/* Right Section: Actions */}
+      <div className="flex items-center space-x-4">
+        
+        {/* Notifications (Only Dashboard) */}
+        <AnimatePresence>
+          {isDashboard && notification && (
+            <motion.span
+              initial={{ opacity: 0, y: -5 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -5 }}
+              className={`flex items-center gap-2 text-sm px-4 py-2 rounded-full shadow-md transition-all ${
+                notification.type === "success" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+              }`}
+            >
+              {notification.type === "success" ? <CheckCircle className="w-4 h-4" /> : <AlertTriangle className="w-4 h-4" />}
+              {notification.text}
+            </motion.span>
+          )}
+        </AnimatePresence>
 
-        <RoleBasedAccess allowedRoles={['ADMIN']}>
-          <NavLink to="/admin/users" icon={<FaShieldAlt />} label="Panel Admin" active={location.pathname === "/admin/users"} />
-        </RoleBasedAccess>
-      </nav>
-
-      {/* Header Actions */}
-      <div className="flex items-center space-x-4">      
-
-        {/* Language Selector */}
-        <select className="border rounded-md p-2 bg-gray-100 dark:bg-gray-700 dark:text-white" onChange={handleLanguageChange}>
-          <option value="en">English</option>
-          <option value="es">Español</option>
-        </select>
-
-        {/* User Info / Login Button */}
-        {user ? (
-          <div className="relative">
-            <button onClick={toggleMenu} className="flex items-center space-x-2 bg-gray-200 dark:bg-gray-700 px-3 py-2 rounded-md hover:bg-gray-300">
-              <img
-                src="https://www.gravatar.com/avatar/?d=mp"
-                alt="User Avatar"
-                className="w-8 h-8 rounded-full"
-              />
-              <span className="hidden md:inline text-gray-700 dark:text-white">Hola {user.username}👋</span>
-            </button>
-            {menuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 z-50">
-                <Link className="block px-4 py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700" to="/profile">Perfil</Link>
-                <Link className="block px-4 py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700" to="/settings">Configuración</Link>
-                <Link className="block px-4 py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700" to="/history">Historial</Link>
-               
-                <button
-                  onClick={handleLogout}
-                  className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
-                >
-                  Cerrar sesión
-                </button>
-              </div>
-            )}
+        {/* User Info */}
+        {user && (
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg shadow">
+            <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
+              {getInitials(user.username || user.email)}
+            </div>
+            <span className="text-sm text-gray-700">{user.username || user.email}</span>
           </div>
+        )}
+
+        {/* Actions */}
+        {isDashboard ? (
+          <>
+            <Button variant="success" onClick={() => navigate("/")} className="flex items-center gap-2">
+              <Home className="w-4 h-4" />
+              <span className="hidden sm:inline">Inicio</span>
+            </Button>
+
+            <Button variant="danger" onClick={() => setShowLogoutConfirm(true)} className="flex items-center gap-2">
+              <LogOut className="w-4 h-4" />
+              <span className="hidden sm:inline">Cerrar sesión</span>
+            </Button>
+          </>
+        ) : user ? (
+          <Button variant="danger" onClick={() => setShowLogoutConfirm(true)} className="flex items-center gap-2">
+            <LogOut className="w-4 h-4" />
+            <span className="hidden sm:inline">Cerrar sesión</span>
+          </Button>
         ) : (
           <Link to="/login" className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition">Iniciar sesión</Link>
         )}
@@ -127,6 +145,17 @@ const Header = () => {
           </RoleBasedAccess>
         </nav>
       )}
+
+      {/* Confirm Logout Modal */}
+      <ConfirmModal
+        isOpen={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={handleLogout}
+        title="Cerrar sesión"
+        description="¿Estás seguro de que quieres cerrar sesión?"
+        confirmText="Cerrar sesión"
+        cancelText="Cancelar"
+      />
     </header>
   );
 };
@@ -139,6 +168,7 @@ const NavLink = ({ to, icon, label, active }) => (
 );
 
 export default Header;
+
 
 
 
