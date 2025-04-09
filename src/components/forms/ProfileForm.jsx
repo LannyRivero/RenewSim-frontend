@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import useProfile from "@/hooks/useProfile";
+import { deleteProfile } from "@/services/ProfileService";
 import InputFieldWithHint from "@/components/common/inputField/InputFieldWithHint";
 import PrimaryButton from "@/components/common/button/PrimaryButton";
 import ErrorToast from "@/components/common/ErrorToast";
 
 const ProfileForm = () => {
   const { profile, updateProfileData, loading } = useProfile();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -55,7 +58,7 @@ const ProfileForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccessMessage(""); 
+    setSuccessMessage("");
     if (!validate()) return;
 
     try {
@@ -70,6 +73,19 @@ const ProfileForm = () => {
     }
   };
 
+  const handleConfirmDelete = async () => {
+    try {
+      await deleteProfile();
+      alert("Perfil eliminado con éxito.");
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error deleting profile:", error);
+      setErrorMessage(
+        error.response?.data?.message || "Ocurrió un error inesperado al eliminar el perfil."
+      );
+    }
+  };
+
   return (
     <motion.form
       onSubmit={handleSubmit}
@@ -78,7 +94,6 @@ const ProfileForm = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-
       <AnimatePresence>
         {successMessage && (
           <motion.div
@@ -151,6 +166,16 @@ const ProfileForm = () => {
         </PrimaryButton>
       </div>
 
+      <div className="text-center pt-2">
+        <button
+          type="button"
+          onClick={handleConfirmDelete}
+          className="text-red-600 hover:text-red-800 transition duration-300 text-sm"
+        >
+          Eliminar perfil
+        </button>
+      </div>
+
       <AnimatePresence>
         {errorMessage && (
           <motion.div
@@ -168,5 +193,7 @@ const ProfileForm = () => {
 };
 
 export default ProfileForm;
+
+
 
 
