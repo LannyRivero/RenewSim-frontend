@@ -73,9 +73,9 @@ describe('ProtectedRoute', () => {
 
   it('renders protected component if user has one of multiple allowed roles', () => {
     useAuth.mockReturnValue({
-        user: { roles: [ 'USER'] },
-        token: 'valid-token',
-      });
+      user: { roles: ['USER'] },
+      token: 'valid-token',
+    });
 
     render(
       <MemoryRouter initialEntries={['/protected']}>
@@ -89,5 +89,25 @@ describe('ProtectedRoute', () => {
 
     expect(screen.getByText('Protected Content')).toBeInTheDocument();
   });
-   
+
+  it('calls useAuth hook to get user and token', () => {
+    const mockUseAuth = useAuth.mockReturnValue({
+      user: { roles: ['USER'] },
+      token: 'valid-token',
+    });
+
+    render(
+      <MemoryRouter initialEntries={['/protected']}>
+        <Routes>
+          <Route element={<ProtectedRoute allowedRoles={['USER']} />}>
+            <Route path="/protected" element={<DummyComponent />} />
+          </Route>
+        </Routes>
+      </MemoryRouter>
+    );
+
+    expect(mockUseAuth).toHaveBeenCalled();
+  });
+
+
 });
