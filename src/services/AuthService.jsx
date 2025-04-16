@@ -1,27 +1,26 @@
-
-import axios from 'axios';
-
-const API_URL = 'http://localhost:8080/api/v1/auth';
+import apiCliente from './ApiClient';
+import { setToken, removeToken } from '../utils/TokenUtils'; 
 
 export const loginUser = async (credentials) => {
-  const response = await axios.post(`${API_URL}/login`, credentials);
+  const response = await apiCliente.post('/auth/login', credentials);
 
-  //Guardar el token
-  const token = response.data.token;
-  if (token) {
-    localStorage.setItem("token", response.data.token);
-
-  }
-  console.log("🔐 Token guardado:", token);
+  setToken(response.data.token);
 
   return response.data;
 };
 
-
 export const registerUser = async (userData) => {
-  const response = await axios.post(`${API_URL}/register`, userData);
-  return response.data; 
+  const response = await apiCliente.post('/auth/register', userData);
+  return response.data;
 };
+
+export const logoutUser = () => {
+  removeToken(); 
+  window.location.href = "/login"; 
+};
+
+
+
 
 
 

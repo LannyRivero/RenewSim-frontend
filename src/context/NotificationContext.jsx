@@ -9,12 +9,17 @@ export const NotificationProvider = ({ children }) => {
 
   const showNotification = (type, text) => {
     setNotification({ type, text });
-    setTimeout(() => setNotification(null), 3000); // Auto-close after 3s
+    setTimeout(() => setNotification(null), 3000); 
   };
 
+  const showSuccess = (message) => showNotification("success", message);
+  const showError = (message) => showNotification("error", message);
+  const showInfo = (message) => showNotification("info", message);
+
   return (
-    <NotificationContext.Provider value={{ notification, showNotification }}>
+    <NotificationContext.Provider value={{ notification, showNotification, showSuccess, showError, showInfo }}>
       {children}
     </NotificationContext.Provider>
   );
 };
+
