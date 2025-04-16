@@ -12,6 +12,7 @@ import SimulationPage from "@/pages/dashboard/simulation/SimulationPage";
 import SimulationHistory from "@/pages/dashboard/history/SimulationHistory";
 import Comparison from "@/pages/dashboard/comparison/Comparison";
 import GlobalTechnologiesComparison from "@/pages/dashboard/comparison/GlobalTechnologiesComparison";
+import About from "@/pages/About";
 
 
 
@@ -32,6 +33,7 @@ const AppRoutes = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="/testimonials" element={<TestimonialsPage />} />
+        <Route path="/about" element={<About />} />
       </Route>
 
       {/* Rutas protegidas con layout compartido */}
