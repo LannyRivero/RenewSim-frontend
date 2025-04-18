@@ -5,6 +5,10 @@ import { FaTrash, FaChartBar } from "react-icons/fa";
 import ConfirmModal from "@/components/modals/ConfirmModal";
 import SimulationService from "@/services/SimulationService";
 import Tooltip from "@/components/common/Tooltip";
+import { toast } from 'react-toastify';
+
+
+
 
 const formatNumber = (value) =>
   new Intl.NumberFormat("es-ES", {
@@ -38,15 +42,17 @@ const SimulationHistory = () => {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (simulationId) => {
     try {
-      await SimulationService.deleteSimulationById(selectedSimulationId);
-      setSimulations(simulations.filter(sim => sim.id !== selectedSimulationId));
+      await SimulationService.deleteSimulationById(simulationId);
+      toast.success("Simulación eliminada");
+      setSimulations((prev) => prev.filter((s) => s.id !== simulationId));
       closeModal();
     } catch (error) {
-      console.error("❌ Error al eliminar la simulación:", error);
+      console.error("Error al eliminar simulación:", error);     
     }
   };
+  
 
   const handleCompare = (simulationId) => {
     navigate(`/dashboard/user/comparison/${simulationId}`);
@@ -112,10 +118,10 @@ const SimulationHistory = () => {
                       {sim.returnOnInvestment !== undefined ? (
                         <span
                           className={`font-semibold ${sim.returnOnInvestment <= 3
-                              ? "text-green-600"
-                              : sim.returnOnInvestment <= 6
-                                ? "text-yellow-600"
-                                : "text-red-600"
+                            ? "text-green-600"
+                            : sim.returnOnInvestment <= 6
+                              ? "text-yellow-600"
+                              : "text-red-600"
                             }`}
                           title={`Retorno estimado: ${sim.returnOnInvestment.toFixed(2)} años`}
                         >
@@ -164,8 +170,9 @@ const SimulationHistory = () => {
           confirmText="Eliminar"
           cancelText="Cancelar"
           onClose={closeModal}
-          onConfirm={handleDelete}
+          onConfirm={() => handleDelete(selectedSimulationId)}
         />
+
       </div>
     </div>
   );
