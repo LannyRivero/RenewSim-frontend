@@ -1,5 +1,5 @@
 import React from "react";
-import { ShieldCheck } from "lucide-react"; 
+import { ShieldCheck } from "lucide-react";
 
 const allRoles = ["ADMIN", "BASIC_USER"];
 
@@ -39,11 +39,10 @@ const RoleSelect = ({ selectedRoles, onChange, originalRoles = [] }) => {
             className="relative group transition transform hover:scale-[1.02]"
           >
             <label
-              className={`flex items-center gap-2 px-3 py-1 border rounded-full shadow-sm cursor-pointer transition-all duration-200 ${
-                isSelected
+              className={`flex items-center gap-2 px-3 py-1 border rounded-full shadow-sm cursor-pointer transition-all duration-200 ${isSelected
                   ? "bg-green-100 border-green-500 text-green-800"
                   : "bg-gray-100 hover:bg-gray-200 border-gray-300 text-gray-700"
-              } ${isOriginal ? "opacity-60 cursor-not-allowed" : ""}`}
+                } ${isOriginal ? "opacity-60 cursor-not-allowed" : ""}`}
             >
               <input
                 type="checkbox"
