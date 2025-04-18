@@ -17,10 +17,8 @@ describe('RoleSelect Component', () => {
     const adminCheckbox = screen.getByLabelText(/Admin/i);
     const userCheckbox = screen.getByLabelText(/Basic User/i);
 
-    // Verify that the "Admin" role checkbox is disabled
     expect(adminCheckbox).toBeDisabled();
 
-    // Verify that the "Basic User" role checkbox is enabled
     expect(userCheckbox).toBeEnabled();
   });
 
@@ -33,7 +31,6 @@ describe('RoleSelect Component', () => {
       />
     );
 
-    // Check if the tooltip for system-assigned roles is shown
     const tooltip = screen.getByText(/Este rol está asignado por el sistema/i);
     expect(tooltip).toBeInTheDocument();
   });
