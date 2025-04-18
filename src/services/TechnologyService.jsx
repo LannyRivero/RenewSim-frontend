@@ -7,7 +7,7 @@ const TechnologyService = {
   },
 
   async getAllTechnologies() {
-    const response = await apiCliente.get("/technology-comparison");
+    const response = await apiCliente.get("/technologies"); 
     return response.data;
   }
 };
