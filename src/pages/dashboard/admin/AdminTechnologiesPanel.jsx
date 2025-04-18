@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import TechnologyService from '@/services/TechnologyService';
-import AllTechnologiesList from "@/components/technologies/AllTechnologiesList";
 import { toast } from 'react-toastify';
 
 const AdminTechnologiesPanel = () => {
@@ -137,9 +136,6 @@ const AdminTechnologiesPanel = () => {
           Crear Tecnología
         </button>
       </form>
-
-      {/* Lista de tecnologías registradas */}
-      <AllTechnologiesList />
     </div>
   );
 };
