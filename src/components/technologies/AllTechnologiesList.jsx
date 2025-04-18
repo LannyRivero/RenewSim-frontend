@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import TechnologyService from "@/services/TechnologyService"; 
+import TechnologyService from "@/services/TechnologyService";
 
 const AllTechnologiesList = () => {
   const [technologies, setTechnologies] = useState([]);
@@ -32,9 +32,9 @@ const AllTechnologiesList = () => {
         Tecnologías Registradas
       </h3>
       <ul className="space-y-3">
-        {technologies.map((tech) => (
+        {technologies.map((tech, index) => (
           <li
-            key={tech.id}
+            key={tech.id ?? `tech-${index}`}
             className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow flex flex-col sm:flex-row justify-between items-start sm:items-center"
           >
             <div>
@@ -44,13 +44,17 @@ const AllTechnologiesList = () => {
               </p>
             </div>
             <div className="text-sm text-gray-500 dark:text-gray-400">
-              Coste instalación: €{tech.installationCost.toLocaleString()}
+              Coste instalación estimado (10 kW): €{tech.installationCost.toLocaleString()}
             </div>
           </li>
         ))}
       </ul>
+      <p className="mt-4 text-xs text-gray-500 dark:text-gray-400 italic">
+        * Los costes de instalación son estimaciones promedio para sistemas de 10 kW, basadas en fuentes oficiales como IRENA, IEA y Eurostat.
+      </p>
     </div>
   );
 };
 
 export default AllTechnologiesList;
+
