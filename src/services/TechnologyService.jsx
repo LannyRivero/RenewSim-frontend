@@ -2,7 +2,7 @@ import apiCliente from "./ApiClient";
 
 const TechnologyService = {
   async createTechnology(data) {
-    const response = await apiCliente.post("/technology-comparison", data);
+    const response = await apiCliente.post("/technologies", data);
     return response.data;
   },
 

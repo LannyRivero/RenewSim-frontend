@@ -46,7 +46,7 @@ const AdminTechnologiesPanel = () => {
     }
 
     try {
-      await TechnologyService.addTechnology(form);
+      await TechnologyService.createTechnology(form);
       toast.success("✅ Tecnología registrada correctamente");
       setForm({
         technologyName: '',

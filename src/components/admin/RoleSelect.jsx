@@ -1,11 +1,10 @@
 import React from "react";
 import { ShieldCheck } from "lucide-react"; 
 
-const allRoles = ["ADMIN", "ADVANCED_USER", "BASIC_USER"];
+const allRoles = ["ADMIN", "BASIC_USER"];
 
 const roleMap = {
   ADMIN: "ADMIN",
-  ADVANCED_USER: "ADVANCED_USER",
   USER: "BASIC_USER",
 };
 
