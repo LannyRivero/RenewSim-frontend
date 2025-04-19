@@ -13,8 +13,8 @@ const RegisterForm = ({ onRegister }) => {
       </p>
 
       <div>
-        <label className="block text-sm mb-1 text-gray-600">Full Name</label>
-        <input
+        <label htmlFor="name" className="block text-sm mb-1 text-gray-600">Full Name</label>
+        <input id="name"
           type="text"
           name="name"
           required
@@ -24,8 +24,8 @@ const RegisterForm = ({ onRegister }) => {
       </div>
 
       <div>
-        <label className="block text-sm mb-1 text-gray-600">Email</label>
-        <input
+        <label htmlFor="email" className="block text-sm mb-1 text-gray-600">Email</label>
+        <input id="email"
           type="email"
           name="email"
           required
@@ -35,8 +35,8 @@ const RegisterForm = ({ onRegister }) => {
       </div>
 
       <div>
-        <label className="block text-sm mb-1 text-gray-600">Password</label>
-        <input
+        <label htmlFor="password" className="block text-sm mb-1 text-gray-600">Password</label>
+        <input id="password"
           type="password"
           name="password"
           required
@@ -46,8 +46,8 @@ const RegisterForm = ({ onRegister }) => {
       </div>
 
       <div>
-        <label className="block text-sm mb-1 text-gray-600">Confirm Password</label>
-        <input
+        <label htmlFor="confirmPassword" className="block text-sm mb-1 text-gray-600">Confirm Password</label>
+        <input id="confirmPassword"
           type="password"
           name="confirmPassword"
           required
