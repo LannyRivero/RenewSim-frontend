@@ -14,6 +14,9 @@ import Comparison from "@/pages/dashboard/comparison/Comparison";
 import GlobalTechnologiesComparison from "@/pages/dashboard/comparison/GlobalTechnologiesComparison";
 import About from "@/pages/About";
 import Resources from "@/pages/Resources";
+import AdminTechnologiesPanel from "@/pages/dashboard/admin/AdminTechnologiesPanel";
+import AllTechnologiesList from "@/components/technologies/AllTechnologiesList";
+
 
 
 
@@ -54,6 +57,8 @@ const AppRoutes = () => {
     {/* Admin Dashboard */}
     <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
       <Route path="/dashboard/admin/users" element={<AdminDashboard />} />
+      <Route path="/dashboard/admin/technologies" element={<AdminTechnologiesPanel />} />
+      <Route path="/dashboard/admin/technologies/list" element={<AllTechnologiesList />} />
     </Route>
   </Route>
 </Route>

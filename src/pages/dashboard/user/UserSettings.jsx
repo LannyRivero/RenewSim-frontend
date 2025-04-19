@@ -109,13 +109,6 @@ const UserSettings = () => {
           <span role="img" aria-label="config">⚙️</span> Configuración Avanzada
         </h2>
   
-        {/* ✅ Nueva sección: Perfil del usuario */}
-        <section className="animate-fade-in-down bg-white/50 backdrop-blur-md shadow-lg border border-gray-300 p-4 rounded-xl space-y-4">
-          <h3 className="text-gray-700 font-semibold text-lg flex items-center gap-2">
-            🧩 Editar perfil de usuario
-          </h3>
-          <ProfileForm />
-        </section>
   
         {/* Reset simulations */}
         <div className="flex items-center justify-between bg-white/50 backdrop-blur-md shadow-lg border border-gray-300 p-4 rounded-xl animate-fade-in-down">

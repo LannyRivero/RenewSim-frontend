@@ -6,9 +6,7 @@ const mapBackendRoleToLabel = (role) => {
 
   switch (role.toUpperCase()) {
     case "ADMIN":
-      return "Admin";
-    case "ADVANCED_USER":
-      return "Advanced User";
+      return "Admin";   
     case "USER":
       return "Basic User";
     default:
