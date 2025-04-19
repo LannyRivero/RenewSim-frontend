@@ -57,8 +57,9 @@ const LoginForm = () => {
 
       <div className="absolute inset-0 bg-black opacity-40"></div>
 
-      <form
-        onSubmit={handleLogin}
+      <form 
+      ref={formRef} 
+      onSubmit={handleLogin}
         className="relative z-10 bg-white p-8 rounded-2xl shadow-lg w-full max-w-md space-y-6"
       >
         <h2 className="text-3xl font-semibold text-center text-gray-800">Welcome Back</h2>
