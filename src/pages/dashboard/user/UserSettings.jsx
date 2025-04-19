@@ -6,7 +6,7 @@ import Button from "@/components/common/button/Button";
 import ConfirmModal from "@/components/modals/ConfirmModal";
 import ExportCSVButton from "@/components/common/ExportCSVButton";
 import SubmitTestimonialModal from "@/components/modals/SubmitTestimonialModal";
-import ProfileForm from "@/components/forms/ProfileForm";
+
 
 const UserSettings = () => {
   const [showModal, setShowModal] = useState(false);

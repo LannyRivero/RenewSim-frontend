@@ -1,14 +1,9 @@
 import React, { createContext, useContext, useState } from 'react';
 
-
-
-// Crear contexto
 const SimulationContext = createContext();
 
-// Hook personalizado para consumir el contexto
 export const useSimulation = () => useContext(SimulationContext);
 
-// Provider
 export const SimulationProvider = ({ children }) => {
   const [simulationIdState, setSimulationIdState] = useState(() => {
     return localStorage.getItem("simulationId") || null;
