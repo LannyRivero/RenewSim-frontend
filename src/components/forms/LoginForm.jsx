@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { loginUser } from '@/services/authService';
@@ -7,6 +7,7 @@ import backgroundImage from '@/assets/generacion-eolica.jpg';
 const LoginForm = () => {
   const navigate = useNavigate();
   const { user, login } = useAuth(); 
+  const formRef = useRef();
 
 
   useEffect(() => {
@@ -23,20 +24,17 @@ const LoginForm = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const form = e.target;
+    const formData  = new FormData(formRef.current);
     const credentials = {
-      username: form.username.value,
-      password: form.password.value,
+      username: formData.get("username"),
+      password: formData.get("password"),
     };
 
     try {
       const { token, username, roles } = await loginUser(credentials);
       console.log("🚀 Login response:", { token, username, roles });
-
-      // Guardar el usuario en el contexto de autenticación
       login(token, { username, roles });
 
-      // Redirigir según el rol
       if (roles.includes("ADMIN")) {
         navigate("/dashboard/admin/users");
       } else if (roles.includes("ADVANCED_USER")) {
@@ -69,8 +67,8 @@ const LoginForm = () => {
         </p>
 
         <div>
-          <label className="block text-sm text-gray-600 mb-1">Email address:</label>
-          <input
+          <label htmlFor="username" className="block text-sm text-gray-600 mb-1">Email address:</label>
+          <input id="username"
             type="email"
             name="username"
             required
@@ -80,13 +78,13 @@ const LoginForm = () => {
         </div>
 
         <div>
-          <div className="flex justify-between items-center mb-1">
+          <div  htmlFor="password" className="flex justify-between items-center mb-1">
             <label className="text-sm text-gray-600">Password</label>
             <a href="#" className="text-sm text-blue-500 hover:underline">
               Forgot Password?
             </a>
           </div>
-          <input
+          <input id="password"
             type="password"
             name="password"
             required
