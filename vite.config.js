@@ -1,27 +1,32 @@
 import { defineConfig } from 'vite';
-import path from "path";
+import path from 'path';
 import react from '@vitejs/plugin-react';
-import tailwindcss from '@tailwindcss/vite'
+import tailwindcss from '@tailwindcss/vite';
+import fs from 'fs';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(),
+  plugins: [
+    react(),
     tailwindcss(),
-
   ],
   server: {
+    https: {
+      key: fs.readFileSync('./cert/localhost-key.pem'),
+      cert: fs.readFileSync('./cert/localhost.pem'),
+    },
     proxy: {
-      '/api': {  // 🔹 Redirige todas las peticiones con /api al backend
-        target: 'http://localhost:8080', // Cambia esto a la URL de tu backend
+      '/api': {
+        target: 'http://localhost:8080',
         changeOrigin: true,
-        secure: false, // Si el backend usa HTTPS en desarrollo, cámbialo a true
-        rewrite: (path) => path.replace(/^\/api/, ''), // Elimina "/api" en la solicitud
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      '@': path.resolve(__dirname, './src'),
     },
   },
   test: {
@@ -30,5 +35,5 @@ export default defineConfig({
     setupFiles: './vitest.setup.js',
     include: ['src/**/*.{test,spec}.{js,jsx,ts,tsx}', 'test/**/*.{test,spec}.{js,jsx,ts,tsx}'],
   },
-  
 });
+
