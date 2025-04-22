@@ -13,6 +13,12 @@ const AdminTechnologiesPanel = () => {
     environmentalImpact: '',
     energyType: '',
   });
+  const ENERGY_TYPES = [
+    { label: "Solar", value: "solar" },
+    { label: "Eólica", value: "wind" },
+    { label: "Hidroeléctrica", value: "hydro" },
+  ];
+
 
   const [errors, setErrors] = useState({});
 
@@ -87,9 +93,8 @@ const AdminTechnologiesPanel = () => {
               value={form[name]}
               onChange={handleChange}
               required
-              className={`mt-1 block w-full border rounded-md shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
-                errors[name] ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`mt-1 block w-full border rounded-md shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white ${errors[name] ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
             {name === "installationCost" && (
               <>
@@ -118,10 +123,13 @@ const AdminTechnologiesPanel = () => {
             className="mt-1 block w-full border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           >
             <option value="">-- Selecciona una opción --</option>
-            {["Solar", "Eólica", "Hidroeléctrica", "Biomasa", "Geotérmica", "Oceánica"].map((type) => (
-              <option key={type} value={type.toLowerCase()}>{type}</option>
+            {ENERGY_TYPES.map(({ label, value }) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
             ))}
           </select>
+
         </div>
 
         <p className="text-sm text-gray-500 dark:text-gray-400 italic mt-2">

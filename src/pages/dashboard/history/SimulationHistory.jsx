@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { FaTrash, FaChartBar } from "react-icons/fa";
+import { FaTrash, FaChartBar, FaEye } from "react-icons/fa";
 import ConfirmModal from "@/components/modals/ConfirmModal";
 import SimulationService from "@/services/SimulationService";
 import Tooltip from "@/components/common/Tooltip";
 import { toast } from 'react-toastify';
-
-
-
 
 const formatNumber = (value) =>
   new Intl.NumberFormat("es-ES", {
@@ -49,10 +46,10 @@ const SimulationHistory = () => {
       setSimulations((prev) => prev.filter((s) => s.id !== simulationId));
       closeModal();
     } catch (error) {
-      console.error("Error al eliminar simulación:", error);     
+      console.error("Error al eliminar simulación:", error);
     }
   };
-  
+
 
   const handleCompare = (simulationId) => {
     navigate(`/dashboard/user/comparison/${simulationId}`);
@@ -62,6 +59,10 @@ const SimulationHistory = () => {
     setSelectedSimulationId(id);
     setShowModal(true);
   };
+  const handleDetails = (simulationId) => {
+    navigate(`/dashboard/user/simulation/${simulationId}`);
+  };
+  
 
   const closeModal = () => {
     setShowModal(false);
@@ -156,6 +157,16 @@ const SimulationHistory = () => {
                           <FaChartBar />
                         </button>
                       </Tooltip>
+                      <Tooltip text="Ver detalles">
+                        <button
+                          onClick={() => handleDetails(sim.id)}
+                          className="text-indigo-600 hover:text-indigo-800 transition-colors"
+                          aria-label="Ver detalles"
+                        >
+                          <FaEye />
+                        </button>
+                      </Tooltip>
+
                     </td>
                   </tr>
                 ))}

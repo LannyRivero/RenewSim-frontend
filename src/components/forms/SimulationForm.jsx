@@ -1,20 +1,21 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { obtenerCiudadPorCoordenadas, obtenerDatosClimaticos, buscarUbicaciones } from "@/services/WeatherService";
-import InputFieldWithHint from "../common/inputField/InputFieldWithHint";
+import {
+  obtenerCiudadPorCoordenadas,
+  obtenerDatosClimaticos,
+  buscarUbicaciones,
+} from "@/services/WeatherService";
 import InputWithButton from "../common/inputField/InputWithButton";
+import InputFieldWithHint from "../common/inputField/InputFieldWithHint";
 import ErrorToast from "../common/ErrorToast";
 import PrimaryButton from "@/components/common/button/PrimaryButton";
-
-
+import { estimateProjectSize, estimateBudget } from "@/utils/estimationUtils";
 
 const SimulationForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
     location: "",
-    energyType: "solar",
-    projectSize: "",
-    budget: "",
     energyConsumption: "",
+    energyType: "solar", 
   });
 
   const [errors, setErrors] = useState({});
@@ -57,19 +58,14 @@ const SimulationForm = ({ onSubmit }) => {
         const { latitude, longitude } = position.coords;
         try {
           const ciudad = await obtenerCiudadPorCoordenadas(latitude, longitude);
-          setFormData((prev) => ({
-            ...prev,
-            location: ciudad,
-          }));
+          setFormData((prev) => ({ ...prev, location: ciudad }));
         } catch (error) {
           alert("No se pudo obtener tu ubicación.");
-          console.error(error);
         } finally {
           setLoadingLocation(false);
         }
       },
       (error) => {
-        console.error("Geolocation error:", error.message);
         alert("No se pudo obtener tu ubicación.");
         setLoadingLocation(false);
       }
@@ -79,8 +75,6 @@ const SimulationForm = ({ onSubmit }) => {
   const validate = () => {
     const newErrors = {};
     if (!formData.location.trim()) newErrors.location = "La ubicación es obligatoria.";
-    if (!formData.projectSize || isNaN(formData.projectSize)) newErrors.projectSize = "Introduce un tamaño válido.";
-    if (!formData.budget || isNaN(formData.budget)) newErrors.budget = "Introduce un presupuesto válido.";
     if (
       !formData.energyConsumption ||
       isNaN(formData.energyConsumption) ||
@@ -101,39 +95,32 @@ const SimulationForm = ({ onSubmit }) => {
 
     try {
       const climate = await obtenerDatosClimaticos(formData.location);
-      console.log("📊 Datos climáticos:", climate);
-
-      const climaNormalizado = {
+      const climateData = {
         irradiance: Math.max(climate.irradianciaEstimativa, 50),
         wind: climate.viento,
         hydrology: 3.0,
       };
 
+      const projectSize = estimateProjectSize(parseFloat(formData.energyConsumption));
+      const budget = estimateBudget(projectSize, formData.energyType);
+
+
       await onSubmit({
         ...formData,
-        climate: climaNormalizado,
+        projectSize,
+        budget,
+        climate: climateData,
         date: new Date().toISOString(),
       });
     } catch (error) {
-      console.error("Error:", error);
-      setErrorMessage(
-        error.response?.data?.message ||
-        "Ocurrió un error inesperado al simular."
-      );
+      setErrorMessage("Ocurrió un error inesperado al simular.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <motion.form
-      onSubmit={handleSubmit}
-      className="space-y-6 relative"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-    >
-      {/* Ubicación */}
+    <motion.form onSubmit={handleSubmit} className="space-y-6 relative">
       <InputWithButton
         label="Ubicación"
         name="location"
@@ -147,41 +134,40 @@ const SimulationForm = ({ onSubmit }) => {
         title="Usar mi ubicación actual"
       />
 
-      {/* Sugerencias animadas */}
       <AnimatePresence>
         {showSuggestions && suggestions.length > 0 && (
-          <motion.ul
-            className="absolute z-20 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-md max-h-48 overflow-y-auto mt-1 w-full text-sm"
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -5 }}
-            transition={{ duration: 0.3 }}
-          >
+          <motion.ul className="absolute z-20 bg-white border rounded-md shadow-md max-h-48 overflow-y-auto mt-1 w-full text-sm">
             {suggestions.map((s, idx) => (
               <li
                 key={idx}
-                className="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900 transition-all"
+                className="px-4 py-2 cursor-pointer hover:bg-blue-100"
                 onClick={() => {
                   setFormData({ ...formData, location: s.display_name });
                   setSuggestions([]);
                   setShowSuggestions(false);
                 }}
               >
-                {s.country_code && (
-                  <img
-                    src={`https://flagcdn.com/w20/${s.country_code}.png`}
-                    alt={s.country_code}
-                    className="w-5 h-3 rounded-sm object-cover"
-                  />
-                )}
-                <span>{s.display_name}</span>
+                {s.display_name}
               </li>
             ))}
           </motion.ul>
         )}
       </AnimatePresence>
 
-      {/* Tipo de energía */}
+      <InputFieldWithHint
+        label="Consumo energético mensual (kWh)"
+        name="energyConsumption"
+        type="number"
+        value={formData.energyConsumption}
+        onChange={handleChange}
+        placeholder="Ej. 800"
+        error={errors.energyConsumption}
+        hint="Rango aceptado: 50 – 100000 kWh/mes."
+        title="Introduce tu consumo mensual estimado."
+        icon="⚡"
+      />
+
+      {/* ✅ NUEVO CAMPO: Tipo de energía */}
       <InputFieldWithHint
         label="Tipo de energía"
         name="energyType"
@@ -196,63 +182,15 @@ const SimulationForm = ({ onSubmit }) => {
         title="Selecciona la fuente de energía renovable."
       />
 
-      {/* Tamaño del proyecto */}
-      <InputFieldWithHint
-        label="Tamaño del proyecto (kW)"
-        name="projectSize"
-        type="number"
-        value={formData.projectSize}
-        onChange={handleChange}
-        placeholder="Ej. 150"
-        error={errors.projectSize}
-        hint="Debe estar entre 1 y 500 kW."
-        title="Ingresa la capacidad total estimada del sistema."
-        icon="🔧"
-      />
-
-      {/* Consumo energético */}
-      <InputFieldWithHint
-        label="Consumo energético mensual (kWh)"
-        name="energyConsumption"
-        type="number"
-        value={formData.energyConsumption}
-        onChange={handleChange}
-        placeholder="Ej. 800"
-        error={errors.energyConsumption}
-        hint="Rango aceptado: 50 – 100000 kWh/mes."
-        title="Introduce tu consumo mensual estimado."
-        icon="⚡"
-      />
-
-      {/* Presupuesto */}
-      <InputFieldWithHint
-        label="Presupuesto estimado (€)"
-        name="budget"
-        type="number"
-        value={formData.budget}
-        onChange={handleChange}
-        placeholder="Ej. 5000"
-        error={errors.budget}
-        icon="💶"
-        title="Ingresa el presupuesto disponible."
-      />
-
-      {/* Botón animado */}
       <div className="text-center pt-4">
         <PrimaryButton type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Simulando..." : "Simular"}
         </PrimaryButton>
       </div>
 
-      {/* Error animado */}
       <AnimatePresence>
         {errorMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -5 }}
-            transition={{ duration: 0.3 }}
-          >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <ErrorToast message={errorMessage} onClose={() => setErrorMessage("")} />
           </motion.div>
         )}
@@ -262,5 +200,6 @@ const SimulationForm = ({ onSubmit }) => {
 };
 
 export default SimulationForm;
+
 
 
