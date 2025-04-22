@@ -11,7 +11,8 @@ const TechnologiesList = ({ simulationId }) => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:8080/api/technologies/simulation/${simulationId}`,
+          `http://localhost:8080/api/v1/simulation/${simulationId}/technologies`,
+
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
