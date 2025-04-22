@@ -40,6 +40,11 @@ const SimulationService = {
     const response = await apiCliente.get("/simulation/normalized-technologies");
     return response.data;
   },
+  async getSimulationById(simulationId) {
+    const response = await apiCliente.get(`/simulation/${simulationId}`);
+    return response.data;
+  },
+  
 };
 
 export default SimulationService;

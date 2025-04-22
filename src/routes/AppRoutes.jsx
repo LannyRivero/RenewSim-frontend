@@ -16,6 +16,8 @@ import About from "@/pages/About";
 import Resources from "@/pages/Resources";
 import AdminTechnologiesPanel from "@/pages/dashboard/admin/AdminTechnologiesPanel";
 import AllTechnologiesList from "@/components/technologies/AllTechnologiesList";
+import SimulationDetail from "@/components/result/SimulationDetail";
+
 
 
 
@@ -51,6 +53,7 @@ const AppRoutes = () => {
       <Route path="settings" element={<UserSettings />} />
       <Route path="comparison/:simulationId" element={<Comparison />} />
       <Route path="global-comparison" element={<GlobalTechnologiesComparison />} />
+      <Route path="simulation/:simulationId" element={<SimulationDetail />} />
 
     </Route>
 
