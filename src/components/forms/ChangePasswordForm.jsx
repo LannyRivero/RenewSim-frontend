@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
-import axios from "axios";
+import apiCliente from "@/services/ApiClient";
 import { useAuth } from "@/context/AuthContext";
 
 const ChangePasswordForm = () => {
@@ -23,19 +23,16 @@ const ChangePasswordForm = () => {
       return;
     }
 
-    try {
-      await axios.put(
-        "/api/v1/users/change-password",
-        {
-          currentPassword: formData.currentPassword,
-          newPassword: formData.newPassword,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+    try {      
+      await apiCliente.put('/users/change-password', {
+        currentPassword: formData.currentPassword,
+        newPassword: formData.newPassword
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-      );
+      });
+      
 
       toast.success("✅ Contraseña cambiada correctamente");
       setFormData({
