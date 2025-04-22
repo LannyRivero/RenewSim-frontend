@@ -102,7 +102,8 @@ const SimulationForm = ({ onSubmit }) => {
       };
 
       const projectSize = estimateProjectSize(parseFloat(formData.energyConsumption));
-      const budget = estimateBudget(projectSize);
+      const budget = estimateBudget(projectSize, formData.energyType);
+
 
       await onSubmit({
         ...formData,

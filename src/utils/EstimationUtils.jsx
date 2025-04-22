@@ -1,12 +1,21 @@
 
 
 export const estimateProjectSize = (monthlyConsumption) => {
-    // Supongamos que 1 kW cubre 100 kWh/mes
-    return Math.max(1, Math.round(monthlyConsumption / 100));
+    const size = monthlyConsumption / 100;
+    return Math.max(1, Math.min(size, 1000)); 
   };
   
-  export const estimateBudget = (projectSize) => {
-    // Supongamos que 1 kW cuesta 1000 €
-    return projectSize * 1000;
+  
+  export const estimateBudget = (projectSize, energyType) => {
+    const costPerKW = {
+      solar: 1000,
+      wind: 1400,
+      hydro: 2500,      
+    };
+  
+    const price = costPerKW[energyType.toLowerCase()] || 1000;
+    return Math.round(projectSize * price);
   };
+  
+  
   
