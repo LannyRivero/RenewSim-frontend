@@ -57,12 +57,13 @@ const Header = () => {
   return (
     <header className="w-full shadow-md py-3 px-4 md:px-12 flex items-center justify-between bg-gradient-to-b from-green-50 to-white">
 
-      
+
       {/* Left Section: Logo + Title */}
-      <div className="flex items-center space-x-3">
+      <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition">
         <img src={logo} alt="Logo" className="w-10 h-10 rounded-full object-cover" />
         <h1 className="text-lg font-bold text-gray-700 dark:text-white">Renewable Energy Simulator</h1>
-      </div>
+      </Link>
+
 
       {/* Center Section (Only Dashboard): Dynamic Title */}
       {isDashboard && (
@@ -71,7 +72,7 @@ const Header = () => {
 
       {/* Right Section: Actions */}
       <div className="flex items-center space-x-4">
-        
+
         {/* Notifications (Only Dashboard) */}
         <AnimatePresence>
           {isDashboard && notification && (
@@ -79,9 +80,8 @@ const Header = () => {
               initial={{ opacity: 0, y: -5 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -5 }}
-              className={`flex items-center gap-2 text-sm px-4 py-2 rounded-full shadow-md transition-all ${
-                notification.type === "success" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-              }`}
+              className={`flex items-center gap-2 text-sm px-4 py-2 rounded-full shadow-md transition-all ${notification.type === "success" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                }`}
             >
               {notification.type === "success" ? <CheckCircle className="w-4 h-4" /> : <AlertTriangle className="w-4 h-4" />}
               {notification.text}
