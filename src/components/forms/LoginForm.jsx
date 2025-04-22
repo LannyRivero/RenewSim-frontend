@@ -6,7 +6,7 @@ import backgroundImage from '@/assets/generacion-eolica.jpg';
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const { user, login } = useAuth(); 
+  const { user, login } = useAuth();
   const formRef = useRef();
 
 
@@ -24,7 +24,7 @@ const LoginForm = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const formData  = new FormData(formRef.current);
+    const formData = new FormData(formRef.current);
     const credentials = {
       username: formData.get("username"),
       password: formData.get("password"),
@@ -49,7 +49,7 @@ const LoginForm = () => {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-gray-100 overflow-hidden">
-    
+
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${backgroundImage})` }}
@@ -57,9 +57,9 @@ const LoginForm = () => {
 
       <div className="absolute inset-0 bg-black opacity-40"></div>
 
-      <form 
-      ref={formRef} 
-      onSubmit={handleLogin}
+      <form
+        ref={formRef}
+        onSubmit={handleLogin}
         className="relative z-10 bg-white p-8 rounded-2xl shadow-lg w-full max-w-md space-y-6"
       >
         <h2 className="text-3xl font-semibold text-center text-gray-800">Welcome Back</h2>
@@ -79,12 +79,8 @@ const LoginForm = () => {
         </div>
 
         <div>
-          <div  htmlFor="password" className="flex justify-between items-center mb-1">
-            <label className="text-sm text-gray-600">Password</label>
-            <a href="#" className="text-sm text-blue-500 hover:underline">
-              Forgot Password?
-            </a>
-          </div>
+          <label htmlFor className="text-sm text-gray-600">Password</label>
+
           <input id="password"
             type="password"
             name="password"
@@ -93,12 +89,6 @@ const LoginForm = () => {
             placeholder="••••••••"
           />
         </div>
-
-        <div className="flex items-center">
-          <input type="checkbox" id="remember" className="mr-2" />
-          <label htmlFor="remember" className="text-sm text-gray-600">Remember Password</label>
-        </div>
-
         <button
           type="submit"
           className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg transition"
