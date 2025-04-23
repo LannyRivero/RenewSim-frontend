@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import SimulationService from "@/services/SimulationService";
 import EstimatedBudgetBreakdown from "@/components/result/EstimatedBudgetBreakdown";
+import TechnologyRecommendation from "@/components/recommendation/TechnologyRecommendation";
 
 const SimulationDetail = () => {
   const { simulationId } = useParams();
@@ -46,44 +47,50 @@ const SimulationDetail = () => {
     new Intl.NumberFormat("es-ES", { maximumFractionDigits: 1 }).format(n);
 
   return (
-    <div className="p-6 max-w-6xl mx-auto mt-10 bg-white rounded-xl shadow-md dark:bg-slate-800 animate-fade-in-down">
-      <h2 className="text-3xl font-bold mb-6 text-center text-gray-800 dark:text-white">📊 Detalles de la Simulación</h2>
+    <div className="p-6 max-w-6xl mx-auto mt-10 bg-white/90 dark:bg-slate-800 rounded-xl shadow-xl animate-fade-in-down space-y-10">
+      <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white">📊 Detalles de la Simulación</h2>
 
       <div className="grid md:grid-cols-3 gap-6">
         {/* Información General */}
-        <div className="bg-white dark:bg-slate-700 p-6 rounded-lg shadow-md col-span-1">
-          <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">🧾 Información General</h3>
-          <p><strong>📅 Fecha:</strong> {new Date(timestamp).toLocaleDateString("es-ES")}</p>
-          <p><strong>📍 Ubicación:</strong> {location}</p>
-          <p><strong>⚡ Tipo de energía:</strong> {energyType}</p>
-          <p><strong>🔋 Generación estimada:</strong> {formatNumber(energyGenerated)} kWh</p>
-          <p><strong>💶 Ahorro estimado:</strong> {formatNumber(estimatedSavings)} €</p>
-          <p><strong>⏳ ROI:</strong> {returnOnInvestment.toFixed(2)} años</p>
-          <p><strong>📏 Tamaño del proyecto:</strong> {projectSize} kW</p>
-          <p><strong>💰 Presupuesto estimado:</strong> {budget} €</p>
+        <div className="border border-green-500 bg-green-50 dark:bg-green-900 p-6 rounded-lg shadow-md col-span-1">
+          <h3 className="text-xl font-semibold text-green-700 dark:text-blue-300 mb-4 flex items-center gap-2">
+            🧾 Información General
+          </h3>
+          <div className="bg-blue-50 dark:bg-blue-900 p-6 rounded-xl shadow-md border border-blue-200 dark:border-blue-700">
+            <p><strong>📅 Fecha:</strong> {new Date(timestamp).toLocaleDateString("es-ES")}</p>
+            <p><strong>📍 Ubicación:</strong> {location}</p>
+            <p><strong>⚡ Tipo de energía:</strong> {energyType}</p>
+            <p><strong>🔋 Generación estimada:</strong> {formatNumber(energyGenerated)} kWh</p>
+            <p><strong>💶 Ahorro estimado:</strong> {formatNumber(estimatedSavings)} €</p>
+            <p><strong>⏳ Retorno de Inversión:</strong> {returnOnInvestment.toFixed(2)} años</p>
+            <p><strong>📏 Tamaño del proyecto:</strong> {projectSize} kW</p>
+            <p><strong>💰 Presupuesto estimado:</strong> {budget} €</p>
+          </div>
+
         </div>
 
         {/* Tecnologías utilizadas */}
-        <div className="bg-white dark:bg-slate-700 p-6 rounded-lg shadow-md col-span-1">
-          <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">💡 Tecnologías Utilizadas</h3>
-          <ul className="list-disc list-inside text-gray-700 dark:text-gray-300">
-            {technologies.map((tech, idx) => (
-              <li key={idx}>
-                <strong>{tech.technologyName}</strong> — Eficiencia: {tech.efficiency}, CO₂: {tech.co2Reduction} kg, Costo: {tech.installationCost} €
-              </li>
-            ))}
-          </ul>
+        <div className="border border-green-500 bg-green-50 dark:bg-green-900 p-6 rounded-lg shadow-md col-span-1">
+          <h3 className="text-xl font-semibold text-green-700 dark:text-blue-300 mb-4 flex items-center gap-2">
+            💡 Tecnologías Utilizadas
+          </h3>
+          <div className="bg-blue-50 dark:bg-blue-900 p-6 rounded-xl shadow-md border border-blue-200 dark:border-blue-700">
+
+            <ul className="list-disc list-inside text-gray-800 dark:text-gray-100">
+              {technologies.map((tech, idx) => (
+                <li key={idx}>
+                  <strong>{tech.technologyName}</strong> — Eficiencia: {tech.efficiency}, CO₂: {tech.co2Reduction} kg, Costo: {tech.installationCost} €
+                </li>
+              ))}
+            </ul>
+          </div>
+
         </div>
 
         {/* Tecnología Recomendada */}
-        <div className="bg-white dark:bg-slate-700 p-6 rounded-lg shadow-md col-span-1">
-          <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">🏆 Tecnología Recomendada</h3>
-          <p className="text-lg text-green-600 dark:text-green-400 font-bold mb-2">
-            ✅ {recommendedTechnology}
-          </p>
-          <p className="text-sm text-gray-600 dark:text-gray-300">
-            Esta tecnología fue recomendada por ofrecer el mejor equilibrio entre eficiencia energética, coste de instalación y reducción de CO₂, según el tamaño del proyecto y el tipo de energía seleccionado.
-          </p>
+        <div className="border border-green-500 bg-green-50 dark:bg-green-900 p-6 rounded-lg shadow-md col-span-1">
+          <h3 className="text-xl font-semibold mb-2 text-green-700 dark:text-green-300">🏆 Tecnología Recomendada</h3>
+          <TechnologyRecommendation resultados={{ recommendedTechnology }} modo="resumen" />
         </div>
       </div>
 
@@ -98,9 +105,9 @@ const SimulationDetail = () => {
       <div className="mt-6 text-center">
         <button
           onClick={() => navigate(-1)}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md transition"
         >
-          ← Volver
+          ← Volver al historial
         </button>
       </div>
     </div>
