@@ -1,11 +1,13 @@
 import React from "react";
 import { ShieldCheck } from "lucide-react";
+import { toast } from "react-toastify";
 
-const allRoles = ["ADMIN", "BASIC_USER"];
+
+const allRoles = ["ADMIN", "USER"];
 
 const roleMap = {
   ADMIN: "ADMIN",
-  USER: "BASIC_USER",
+  USER: "USER",
 };
 
 const inverseRoleMap = Object.fromEntries(
@@ -48,7 +50,7 @@ const RoleSelect = ({ selectedRoles, onChange, originalRoles = [] }) => {
                 type="checkbox"
                 className="form-checkbox text-green-600"
                 checked={isSelected}
-                disabled={isOriginal}
+                disabled={false}
                 onChange={() => handleCheckboxChange(role)}
               />
               <span className="text-sm font-medium">{formatRole(role)}</span>
