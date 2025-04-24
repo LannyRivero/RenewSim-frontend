@@ -13,6 +13,8 @@ const AllTechnologiesList = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedTechId, setSelectedTechId] = useState(null);
   const [selectedTechName, setSelectedTechName] = useState("");
+  const [confirming, setConfirming] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -42,6 +44,8 @@ const AllTechnologiesList = () => {
   const closeModal = () => {
     setShowModal(false);
     setSelectedTechId(null);
+    setSelectedTechName("");
+    setConfirming(false);
   };
 
   const handleDelete = async (technologyId) => {
@@ -60,6 +64,15 @@ const AllTechnologiesList = () => {
         toast.error("Error inesperado al eliminar la tecnología.");
       }
     }
+  };
+
+  const confirmDeletion = () => {
+    if (!confirming) {
+      setConfirming(true);
+      return;
+    }
+    handleDelete(selectedTechId);
+    setConfirming(false);
   };
 
 
@@ -136,12 +149,20 @@ const AllTechnologiesList = () => {
       <ConfirmModal
         isOpen={showModal}
         title="Eliminar tecnología"
-        description={`¿Estás seguro de que deseas eliminar la tecnología "${selectedTechName}"? Esta acción no se puede deshacer.`}
-        confirmText="Eliminar"
+        description={
+          confirming
+            ? `⚠️ Esta acción eliminará permanentemente la tecnología "${selectedTechName}". ¿Estás absolutamente seguro?`
+            : `¿Estás seguro de que deseas eliminar la tecnología "${selectedTechName}"? Esta acción no se puede deshacer.`
+        }
+        confirmText={confirming ? "Sí, eliminar definitivamente" : "Eliminar"}
         cancelText="Cancelar"
-        onClose={closeModal}
-        onConfirm={() => handleDelete(selectedTechId)}
+        onClose={() => {
+          closeModal();
+          setConfirming(false);
+        }}
+        onConfirm={confirmDeletion}
       />
+
     </div>
   );
 };
