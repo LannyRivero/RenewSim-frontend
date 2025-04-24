@@ -9,7 +9,11 @@ const TechnologyService = {
   async getAllTechnologies() {
     const response = await apiCliente.get("/technologies"); 
     return response.data;
-  }
+  },
+  async deleteTechnologyById(technologyId) {
+    const response = await apiCliente.delete(`/technologies/${technologyId}`);
+    return response.data;
+  },
 };
 
 export default TechnologyService;

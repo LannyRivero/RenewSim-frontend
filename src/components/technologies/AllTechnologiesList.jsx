@@ -30,22 +30,6 @@ const AllTechnologiesList = () => {
     fetchTechnologies();
   }, []);
 
-  const handleEdit = (id) => {
-    navigate(`/dashboard/admin/technologies/edit/${id}`);
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      await TechnologyService.deleteTechnology(id);
-      toast.success("Tecnología eliminada correctamente");
-      setTechnologies((prev) => prev.filter((t) => t.id !== id));
-      closeModal();
-    } catch (error) {
-      console.error("Error al eliminar tecnología:", error);
-      toast.error("No se pudo eliminar la tecnología");
-    }
-  };
-
   const openModal = (id) => {
     setSelectedTechId(id);
     setShowModal(true);
@@ -54,6 +38,22 @@ const AllTechnologiesList = () => {
   const closeModal = () => {
     setShowModal(false);
     setSelectedTechId(null);
+  };
+
+  const handleDelete = async (technologyId) => {
+    try {
+      await TechnologyService.deleteTechnologyById(technologyId);
+      toast.success("Tecnología eliminada correctamente");
+      setTechnologies((prev) => prev.filter((t) => t.id !== technologyId));
+      closeModal();
+    } catch (error) {
+      console.error("Error al eliminar tecnología:", error);
+      toast.error("No se pudo eliminar la tecnología");
+    }
+  };
+
+  const handleEdit = (id) => {
+    navigate(`/dashboard/admin/technologies/edit/${id}`);
   };
 
   if (loading) return <p className="text-center">Cargando tecnologías...</p>;
@@ -69,7 +69,7 @@ const AllTechnologiesList = () => {
         {technologies.map((tech) => (
           <li
             key={tech.id}
-            className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-start sm:items-center transition hover:shadow-lg"
+            className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 flex justify-between items-center"
           >
             <div>
               <h4 className="text-lg font-semibold text-gray-900 dark:text-white">{tech.technologyName}</h4>
@@ -80,12 +80,11 @@ const AllTechnologiesList = () => {
                 Coste instalación estimado (10 kW): €{tech.installationCost.toLocaleString()}
               </p>
             </div>
-            <div className="flex items-center gap-4 mt-4 sm:mt-0 sm:ml-4">
+            <div className="flex gap-4 text-lg">
               <Tooltip text="Editar tecnología">
                 <button
                   onClick={() => handleEdit(tech.id)}
-                  className="text-blue-600 hover:text-blue-800 text-lg"
-                  aria-label="Editar tecnología"
+                  className="text-blue-600 hover:text-blue-800"
                 >
                   <FaEdit />
                 </button>
@@ -93,8 +92,7 @@ const AllTechnologiesList = () => {
               <Tooltip text="Eliminar tecnología">
                 <button
                   onClick={() => openModal(tech.id)}
-                  className="text-red-600 hover:text-red-800 text-lg"
-                  aria-label="Eliminar tecnología"
+                  className="text-red-600 hover:text-red-800"
                 >
                   <FaTrash />
                 </button>
@@ -113,15 +111,12 @@ const AllTechnologiesList = () => {
         onClose={closeModal}
         onConfirm={() => handleDelete(selectedTechId)}
       />
-
-      <p className="mt-6 text-xs text-gray-500 dark:text-gray-400 italic text-center">
-        * Costes estimados según datos de IRENA, IEA y Eurostat para instalaciones de 10 kW.
-      </p>
     </div>
   );
 };
 
 export default AllTechnologiesList;
+
 
 
 
