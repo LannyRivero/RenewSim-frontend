@@ -1,7 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import ModalBase from "@/components/modals/ModalBase"; // <-- Aquí importas
-
+import ModalBase from "@/components/modals/ModalBase"; 
 const ConfirmModal = ({
   isOpen,
   onClose,

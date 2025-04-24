@@ -12,6 +12,8 @@ const AllTechnologiesList = () => {
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedTechId, setSelectedTechId] = useState(null);
+  const [selectedTechName, setSelectedTechName] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,8 +32,10 @@ const AllTechnologiesList = () => {
     fetchTechnologies();
   }, []);
 
-  const openModal = (id) => {
+  const openModal = (id, name) => {
+    console.log("🧪 ID recibido en openModal:", id);
     setSelectedTechId(id);
+    setSelectedTechName(name);
     setShowModal(true);
   };
 
@@ -48,9 +52,16 @@ const AllTechnologiesList = () => {
       closeModal();
     } catch (error) {
       console.error("Error al eliminar tecnología:", error);
-      toast.error("No se pudo eliminar la tecnología");
+
+      if (error.response?.status === 400 || error.response?.status === 500) {
+        const backendMessage = error.response?.data?.message || error.message;
+        toast.error(`❌ No se puede eliminar: ${backendMessage}`);
+      } else {
+        toast.error("Error inesperado al eliminar la tecnología.");
+      }
     }
   };
+
 
   const handleEdit = (id) => {
     navigate(`/dashboard/admin/technologies/edit/${id}`);
@@ -66,46 +77,66 @@ const AllTechnologiesList = () => {
         ⚡ Tecnologías Registradas
       </h3>
       <ul className="space-y-4">
-        {technologies.map((tech) => (
-          <li
-            key={tech.id}
-            className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 flex justify-between items-center"
-          >
-            <div>
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-white">{tech.technologyName}</h4>
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                Tipo: {tech.energyType} | Eficiencia: {tech.efficiency} | CO₂ reducido: {tech.co2Reduction} kg
-              </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Coste instalación estimado (10 kW): €{tech.installationCost.toLocaleString()}
-              </p>
-            </div>
-            <div className="flex gap-4 text-lg">
-              <Tooltip text="Editar tecnología">
-                <button
-                  onClick={() => handleEdit(tech.id)}
-                  className="text-blue-600 hover:text-blue-800"
-                >
-                  <FaEdit />
-                </button>
-              </Tooltip>
-              <Tooltip text="Eliminar tecnología">
-                <button
-                  onClick={() => openModal(tech.id)}
-                  className="text-red-600 hover:text-red-800"
-                >
-                  <FaTrash />
-                </button>
-              </Tooltip>
-            </div>
-          </li>
-        ))}
+        {technologies.map((tech) => {
+          return (
+            <li
+              key={tech.id}
+              className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 flex justify-between items-center"
+            >
+              <div>
+                <h4 className="text-lg font-semibold text-gray-900 dark:text-white">{tech.technologyName}</h4>
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  Tipo: {tech.energyType} | Eficiencia: {tech.efficiency} | CO₂ reducido: {tech.co2Reduction} kg
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Coste instalación estimado (10 kW): €{tech.installationCost.toLocaleString()}
+                </p>
+              </div>
+              <div className="flex gap-4 text-lg items-center">
+                <Tooltip text="Editar tecnología">
+                  <button
+                    onClick={() => handleEdit(tech.id)}
+                    className="text-blue-600 hover:text-blue-800"
+                  >
+                    <FaEdit />
+                  </button>
+                </Tooltip>
+
+                {tech.inUse ? (
+                  <Tooltip text="No se puede eliminar porque está asociada a una simulación">
+                    <button
+                      disabled
+                      className="text-gray-400 cursor-not-allowed"
+                    >
+                      <FaTrash />
+                    </button>
+                  </Tooltip>
+                ) : (
+                  <Tooltip text="Eliminar tecnología">
+                    <button
+                      onClick={() => openModal(tech.id, tech.technologyName)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      <FaTrash />
+                    </button>
+                  </Tooltip>
+                )}
+
+                {tech.inUse && (
+                  <span className="ml-2 px-2 py-0.5 text-xs bg-red-100 text-red-600 rounded-full">
+                    🔒 En uso
+                  </span>
+                )}
+              </div>
+            </li>
+          );
+        })}
       </ul>
 
       <ConfirmModal
         isOpen={showModal}
         title="Eliminar tecnología"
-        description="Esta acción no se puede deshacer. ¿Estás seguro de que deseas eliminar esta tecnología?"
+        description={`¿Estás seguro de que deseas eliminar la tecnología "${selectedTechName}"? Esta acción no se puede deshacer.`}
         confirmText="Eliminar"
         cancelText="Cancelar"
         onClose={closeModal}
@@ -116,6 +147,8 @@ const AllTechnologiesList = () => {
 };
 
 export default AllTechnologiesList;
+
+
 
 
 
