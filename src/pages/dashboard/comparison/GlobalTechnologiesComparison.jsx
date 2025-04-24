@@ -18,14 +18,6 @@ const GlobalTechnologiesComparison = () => {
     score: "Score global"
   };
 
-  const energyTypeColors = {
-    solar: "#FDB813",
-    wind: "#6EC6FF",
-    hydro: "#1565C0",
-    biomass: "#388E3C",
-    geothermal: "#D84315"
-  };
-
   const formatValue = (value, criteria) => {
     const scaled = value * 100;
     switch (criteria) {
@@ -41,6 +33,16 @@ const GlobalTechnologiesComparison = () => {
       default:
         return scaled.toLocaleString('es-ES', { maximumFractionDigits: 2 });
     }
+  };
+
+  const getColorByName = (name) => {
+    const lower = name.toLowerCase();
+    if (lower.includes('solar')) return '#FDB813';       // Amarillo
+    if (lower.includes('eólica') || lower.includes('eolica') || lower.includes('wind')) return '#6EC6FF'; // Azul
+    if (lower.includes('hidro')) return '#1565C0';        // Azul oscuro
+    if (lower.includes('biomasa') || lower.includes('bio')) return '#388E3C';  // Verde
+    if (lower.includes('geot')) return '#D84315';         // Naranja
+    return '#ccc'; // Default gris
   };
 
   const fetchData = async () => {
@@ -63,7 +65,12 @@ const GlobalTechnologiesComparison = () => {
   useEffect(() => {
     if (loading || data.length === 0) return;
 
-    const validData = data.filter(d => d[selectedCriteria] !== undefined && d[selectedCriteria] !== null);
+    const validData = data.filter(d =>
+      d[selectedCriteria] !== undefined &&
+      d[selectedCriteria] !== null &&
+      d[selectedCriteria] >= 0
+    );
+
     if (validData.length === 0) return;
 
     d3.select(svgRef.current).selectAll('*').remove();
@@ -76,7 +83,7 @@ const GlobalTechnologiesComparison = () => {
     svg
       .attr('width', width)
       .attr('height', height)
-      .style('background', '#f9f9f9'); // Fijo ahora, sin modo oscuro
+      .style('background', '#f9f9f9');
 
     const xScale = d3.scaleBand()
       .domain(validData.map(d => d.technologyName))
@@ -108,7 +115,7 @@ const GlobalTechnologiesComparison = () => {
       .attr('y', d => yScale(d[selectedCriteria]))
       .attr('width', xScale.bandwidth())
       .attr('height', 0)
-      .attr('fill', d => energyTypeColors[d.energyType] || '#ccc')
+      .attr('fill', d => getColorByName(d.technologyName))
       .on('mouseover', function (event, d) {
         d3.select(this).attr('fill', '#ffa500');
         tooltip
@@ -123,8 +130,8 @@ const GlobalTechnologiesComparison = () => {
           .style('top', event.pageY - 50 + 'px')
           .style('left', event.pageX + 10 + 'px');
       })
-      .on('mouseout', function () {
-        d3.select(this).attr('fill', d => energyTypeColors[d.energyType] || '#ccc');
+      .on('mouseout', function (event, d) {
+        d3.select(this).attr('fill', getColorByName(d.technologyName));
         tooltip.style('visibility', 'hidden');
       })
       .transition()
@@ -227,18 +234,25 @@ const GlobalTechnologiesComparison = () => {
             Descargar PNG
           </Button>
         </div>
+        
 
         {loading && <p className="text-gray-500 text-center">Cargando tecnologías...</p>}
         {error && <p className="text-red-500 text-center">{error}</p>}
         {!loading && data.length === 0 && <p className="text-gray-500 text-center">No se encontraron tecnologías.</p>}
 
         <svg ref={svgRef} className="mx-auto block"></svg>
-      </div>
+      </div>    
+        
     </div>
+
+    
   );
 };
 
 export default GlobalTechnologiesComparison;
+
+
+
 
 
 
