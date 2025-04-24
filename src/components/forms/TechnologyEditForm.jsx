@@ -8,27 +8,19 @@ const TechnologyEditForm = ({ technologyId, onClose, onSaved }) => {
     energyType: "",
     efficiency: "",
     installationCost: "",
-    co2Reduction: "",
+    co2Reduction: ""
   });
 
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchTechnology = async () => {
-      try {
-        const data = await TechnologyService.getTechnologyById(technologyId);
-        setFormData(data);
-      } catch (error) {
-        console.error("Error al cargar la tecnología:", error);
-        toast.error("❌ No se pudo cargar la tecnología.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (technologyId) {
-      fetchTechnology();
+      TechnologyService.getTechnologyById(technologyId)
+        .then((data) => setFormData(data))
+        .catch((error) => {
+          console.error("Error al cargar la tecnología", error);
+          toast.error("Error al cargar los datos de la tecnología.");
+        });
     }
   }, [technologyId]);
 
@@ -39,26 +31,25 @@ const TechnologyEditForm = ({ technologyId, onClose, onSaved }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitting(true);
+    setLoading(true);
     try {
       await TechnologyService.updateTechnology(technologyId, formData);
-      toast.success("✅ Tecnología actualizada correctamente");
-      onSaved(); // actualiza lista y cierra modal
+      toast.success("Tecnología actualizada correctamente");
+      onSaved(); 
     } catch (error) {
       console.error("Error al actualizar la tecnología", error);
-      const backendMessage = error.response?.data?.message || error.message;
-      toast.error(`❌ No se pudo guardar la tecnología: ${backendMessage}`);
+      toast.error("No se pudo guardar la tecnología.");
     } finally {
-      setSubmitting(false);
+      setLoading(false);
     }
   };
 
-  if (loading) return <p className="text-center text-gray-600">Cargando tecnología...</p>;
-
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-4">
+      <h2 className="text-lg font-semibold">Editar Tecnología</h2>
+
       <div>
-        <label className="block text-sm font-medium text-gray-700">Nombre</label>
+        <label className="block text-sm font-medium">Nombre</label>
         <input
           type="text"
           name="technologyName"
@@ -70,7 +61,7 @@ const TechnologyEditForm = ({ technologyId, onClose, onSaved }) => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">Tipo de energía</label>
+        <label className="block text-sm font-medium">Tipo de energía</label>
         <input
           type="text"
           name="energyType"
@@ -82,59 +73,56 @@ const TechnologyEditForm = ({ technologyId, onClose, onSaved }) => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">Eficiencia (%)</label>
+        <label className="block text-sm font-medium">Eficiencia (%)</label>
         <input
           type="number"
           name="efficiency"
           value={formData.efficiency}
           onChange={handleChange}
-          className="w-full p-2 border rounded"
-          min="0"
           step="0.01"
+          className="w-full p-2 border rounded"
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">Coste instalación (€)</label>
+        <label className="block text-sm font-medium">Coste instalación (€)</label>
         <input
           type="number"
           name="installationCost"
           value={formData.installationCost}
           onChange={handleChange}
           className="w-full p-2 border rounded"
-          min="0"
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">Reducción de CO₂ (kg)</label>
+        <label className="block text-sm font-medium">Reducción de CO₂ (kg)</label>
         <input
           type="number"
           name="co2Reduction"
           value={formData.co2Reduction}
           onChange={handleChange}
           className="w-full p-2 border rounded"
-          min="0"
           required
         />
       </div>
 
-      <div className="flex justify-end gap-2 pt-2">
+      <div className="flex justify-end gap-2">
         <button
           type="button"
           onClick={onClose}
-          className="px-4 py-2 border rounded hover:bg-gray-100 text-gray-700"
+          className="px-4 py-2 border rounded hover:bg-gray-100"
         >
           Cancelar
         </button>
         <button
           type="submit"
-          disabled={submitting}
+          disabled={loading}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
-          {submitting ? "Guardando..." : "Guardar cambios"}
+          {loading ? "Guardando..." : "Guardar cambios"}
         </button>
       </div>
     </form>
@@ -142,11 +130,3 @@ const TechnologyEditForm = ({ technologyId, onClose, onSaved }) => {
 };
 
 export default TechnologyEditForm;
-// 
-
-
-
-
-
-
-

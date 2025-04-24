@@ -9,22 +9,24 @@ import SearchBar from "@/components/admin/SearchBar";
 import RoleFilter from "@/components/admin/RoleFilter";
 import Pagination from "@/components/admin/Pagination";
 import ExportCSVButton from "@/components/common/ExportCSVButton";
+import ConfirmModal from "@/components/modals/ConfirmModal";
+import { toast } from "react-toastify";
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [editedRoles, setEditedRoles] = useState({});
-  const [message, setMessage] = useState(null);
   const [loadingUserId, setLoadingUserId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [roleFilter, setRoleFilter] = useState("ALL");
+  const [showUserDeleteModal, setShowUserDeleteModal] = useState(false);
+  const [selectedUserToDelete, setSelectedUserToDelete] = useState(null);
 
   const usersPerPage = 10;
 
   const fetchUsers = async () => {
     try {
       const data = await getAllUsers();
-      console.log("📦 Usuarios con roles:", data);
       setUsers(data);
     } catch (err) {
       console.error("Error al obtener usuarios", err);
@@ -54,7 +56,7 @@ const AdminDashboard = () => {
     setLoadingUserId(userId);
     try {
       await updateUserRoles(userId, rolesToUpdate);
-      setMessage({ type: "success", text: "Roles actualizados correctamente" });
+      toast.success("✅ Roles actualizados correctamente");
       setEditedRoles((prev) => {
         const updated = { ...prev };
         delete updated[userId];
@@ -62,27 +64,33 @@ const AdminDashboard = () => {
       });
       await fetchUsers();
     } catch (err) {
-      setMessage({ type: "error", text: "Error al actualizar roles" });
+      toast.error("❌ Error al actualizar roles");
     } finally {
       setLoadingUserId(null);
-      setTimeout(() => setMessage(null), 3000);
     }
   };
 
-  const handleDeleteUser = async (userId) => {
-    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este usuario?");
-    if (!confirmDelete) return;
+  const handleDeleteUser = (userId, username) => {
+    setSelectedUserToDelete({ id: userId, username });
+    setShowUserDeleteModal(true);
+  };
 
-    setLoadingUserId(userId);
+  // 🔁 Confirmación desde el modal
+  const confirmUserDeletion = async () => {
+    if (!selectedUserToDelete) return;
+    setLoadingUserId(selectedUserToDelete.id);
+
     try {
-      await deleteUser(userId);
-      setMessage({ type: "success", text: "Usuario eliminado correctamente" });
+      await deleteUser(selectedUserToDelete.id);
+      toast.success("✅ Usuario eliminado correctamente");
       await fetchUsers();
     } catch (error) {
-      setMessage({ type: "error", text: "Error al eliminar el usuario" });
+      console.error("Error al eliminar usuario:", error);
+      toast.error("❌ No se pudo eliminar el usuario");
     } finally {
       setLoadingUserId(null);
-      setTimeout(() => setMessage(null), 3000);
+      setShowUserDeleteModal(false);
+      setSelectedUserToDelete(null);
     }
   };
 
@@ -95,14 +103,12 @@ const AdminDashboard = () => {
       return user.roles?.includes(roleFilter);
     });
 
-
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
   const startIndex = (currentPage - 1) * usersPerPage;
   const paginatedUsers = filteredUsers.slice(startIndex, startIndex + usersPerPage);
 
   return (
     <div className="max-w-7xl mx-auto p-10 bg-white rounded-3xl shadow-xl">
-
       <SearchBar
         searchTerm={searchTerm}
         onChange={(e) => {
@@ -110,6 +116,7 @@ const AdminDashboard = () => {
           setCurrentPage(1);
         }}
       />
+
       <RoleFilter
         selectedRole={roleFilter}
         onChange={(value) => {
@@ -117,9 +124,11 @@ const AdminDashboard = () => {
           setCurrentPage(1);
         }}
       />
+
       <div className="flex justify-between items-center mb-4">
         <ExportCSVButton data={filteredUsers} filename="usuarios.csv" />
       </div>
+
       <UserTable
         users={paginatedUsers}
         editedRoles={editedRoles}
@@ -127,12 +136,26 @@ const AdminDashboard = () => {
         onRoleChange={handleRoleChange}
         onSave={saveChanges}
         onCancel={cancelChanges}
-        onDelete={handleDeleteUser}
+        onDelete={handleDeleteUser} 
       />
+
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+      />
+
+      <ConfirmModal
+        isOpen={showUserDeleteModal}
+        title="Eliminar usuario"
+        description={`¿Estás seguro de que deseas eliminar al usuario "${selectedUserToDelete?.username}"? Esta acción no se puede deshacer.`}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        onClose={() => {
+          setShowUserDeleteModal(false);
+          setSelectedUserToDelete(null);
+        }}
+        onConfirm={confirmUserDeletion}
       />
     </div>
   );

@@ -8,6 +8,21 @@ const TechnologiesComparison = ({ simulationId }) => {
   const [error, setError] = useState(null);
   const svgRef = useRef();
 
+  // 🟨 Amarillo, 🟦 Azul, 🟩 Verde, gris por defecto
+  const getColor = (techName) => {
+    const name = techName.toLowerCase();
+    if (name.includes('solar')) return '#FFD700';
+    if (name.includes('eólica')) return '#1E90FF';
+    if (name.includes('hidro')) return '#32CD32';
+    return '#ccc';
+  };
+
+  const legendItems = [
+    { label: '☀️ Solar', color: '#FFD700' },
+    { label: '💨 Eólica', color: '#1E90FF' },
+    { label: '💧 Hidroeléctrica', color: '#32CD32' }
+  ];
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -47,7 +62,7 @@ const TechnologiesComparison = ({ simulationId }) => {
       .attr('width', width)
       .attr('height', height)
       .style('background', '#f9f9f9')
-      .style('box-shadow', '0 4px 20px rgba(0, 0, 0, 0.1)') 
+      .style('box-shadow', '0 4px 20px rgba(0, 0, 0, 0.1)')
       .style('border-radius', '12px');
 
     const xScale = d3.scaleBand()
@@ -60,10 +75,6 @@ const TechnologiesComparison = ({ simulationId }) => {
     const yScale = d3.scaleLinear()
       .domain([0, maxEnergy * 1.2])
       .range([height - margin.bottom, margin.top]);
-
-    const colorScale = d3.scaleOrdinal()
-      .domain(validData.map(d => d.technologyName))
-      .range(d3.schemeSet2);
 
     const tooltip = d3.select('body').append('div')
       .style('position', 'absolute')
@@ -84,7 +95,7 @@ const TechnologiesComparison = ({ simulationId }) => {
       .attr('width', xScale.bandwidth())
       .attr('y', yScale(0))
       .attr('height', 0)
-      .attr('fill', d => colorScale(d.technologyName))
+      .attr('fill', d => getColor(d.technologyName))
       .transition()
       .duration(800)
       .delay((d, i) => i * 150)
@@ -109,7 +120,7 @@ const TechnologiesComparison = ({ simulationId }) => {
           .style('left', event.pageX + 15 + 'px');
       })
       .on('mouseout', function (event, d) {
-        d3.select(this).attr('fill', colorScale(d.technologyName));
+        d3.select(this).attr('fill', getColor(d.technologyName));
         tooltip.style('visibility', 'hidden');
       });
 
@@ -137,12 +148,13 @@ const TechnologiesComparison = ({ simulationId }) => {
       .call(d3.axisLeft(yScale).ticks(5))
       .selectAll('text')
       .style('font-size', '12px');
-
   }, [data, loading]);
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white text-center">Comparación de generación energética (kWh)</h2>
+      <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white text-center">
+        Comparación de generación energética (kWh)
+      </h2>
 
       {loading && <p className="text-gray-500 text-center">Cargando datos de la simulación...</p>}
       {!loading && error && <p className="text-red-500 text-center">{error}</p>}
@@ -156,11 +168,23 @@ const TechnologiesComparison = ({ simulationId }) => {
       <div className="flex justify-center mt-8">
         <svg ref={svgRef}></svg>
       </div>
+
+      {/* Leyenda visual */}
+      <div className="mt-6 flex justify-center gap-6">
+        {legendItems.map(({ label, color }) => (
+          <div key={label} className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded-full" style={{ backgroundColor: color }}></div>
+            <span className="text-gray-700 dark:text-gray-200">{label}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
 export default TechnologiesComparison;
+// 
+
 
 
 

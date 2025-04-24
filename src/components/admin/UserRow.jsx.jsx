@@ -88,7 +88,7 @@ const UserRow = ({
               </>
             )}
             <button
-              onClick={() => onDelete(user.id)}
+              onClick={() => onDelete(user.id, user.username)}
               className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs shadow"
             >
               Eliminar
