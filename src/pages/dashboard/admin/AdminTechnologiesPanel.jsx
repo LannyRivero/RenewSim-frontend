@@ -109,7 +109,6 @@ const AdminTechnologiesPanel = () => {
           </div>
         ))}
 
-        {/* Energy Type Select */}
         <div>
           <label htmlFor="energyType" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Tipo de Energía

@@ -5,6 +5,9 @@ import Tooltip from "@/components/common/Tooltip";
 import ConfirmModal from "@/components/modals/ConfirmModal";
 import TechnologyService from "@/services/TechnologyService";
 import { useNavigate } from "react-router-dom";
+import ModalBase from "@/components/modals/ModalBase";
+import TechnologyEditForm from "@/components/forms/TechnologyEditForm";
+
 
 const AllTechnologiesList = () => {
   const [technologies, setTechnologies] = useState([]);
@@ -14,6 +17,9 @@ const AllTechnologiesList = () => {
   const [selectedTechId, setSelectedTechId] = useState(null);
   const [selectedTechName, setSelectedTechName] = useState("");
   const [confirming, setConfirming] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [technologyToEdit, setTechnologyToEdit] = useState(null);
+
 
 
   const navigate = useNavigate();
@@ -75,6 +81,11 @@ const AllTechnologiesList = () => {
     setConfirming(false);
   };
 
+  const openEditModal = (id) => {
+    setTechnologyToEdit(id);
+    setShowEditModal(true);
+  };
+
 
   const handleEdit = (id) => {
     navigate(`/dashboard/admin/technologies/edit/${id}`);
@@ -108,7 +119,7 @@ const AllTechnologiesList = () => {
               <div className="flex gap-4 text-lg items-center">
                 <Tooltip text="Editar tecnología">
                   <button
-                    onClick={() => handleEdit(tech.id)}
+                    onClick={() => openEditModal(tech.id)}
                     className="text-blue-600 hover:text-blue-800"
                   >
                     <FaEdit />
@@ -162,6 +173,21 @@ const AllTechnologiesList = () => {
         }}
         onConfirm={confirmDeletion}
       />
+      <ModalBase
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        title="Editar Tecnología"
+      >
+        <TechnologyEditForm
+          technologyId={technologyToEdit}
+          onClose={() => setShowEditModal(false)}
+          onSaved={() => {
+            setShowEditModal(false);
+            fetchTechnologies(); 
+          }}
+        />
+      </ModalBase>
+
 
     </div>
   );
