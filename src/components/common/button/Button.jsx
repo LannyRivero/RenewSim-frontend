@@ -12,6 +12,7 @@ const Button = ({
   iconPosition = "left",
   isLoading = false,
   noAnimation = false,
+  className = "",
 }) => {
   const baseStyle = `
     inline-flex items-center justify-center gap-2 
@@ -40,9 +41,9 @@ const Button = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`${baseStyle} ${variantStyle[variant]} ${disabled ? 'opacity-70' : ''}`}
+      className={`${baseStyle} ${variantStyle[variant]} ${disabled ? "opacity-70" : ""} ${className}`} // ✅ USADO AQUÍ
       {...motionProps}
-      style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}
+      style={{ textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}
     >
       {icon && iconPosition === "left" && icon}
       {children}
