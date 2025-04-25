@@ -66,7 +66,9 @@ describe('LoginForm', () => {
   });
 
   it('shows alert on failed login', async () => {
-    window.alert = vi.fn(); // mock alert
+    useAuth.mockReturnValue({ user: null, login: mockLogin });
+
+    window.alert = vi.fn();
     authService.loginUser.mockRejectedValue(new Error('Login failed'));
 
     render(<LoginForm />, { wrapper: MemoryRouter });
@@ -84,4 +86,16 @@ describe('LoginForm', () => {
       expect(window.alert).toHaveBeenCalledWith('Credenciales incorrectas o error del servidor.');
     });
   });
+
+  it('redirects immediately if user is already logged in', () => {
+    useAuth.mockReturnValue({
+      user: { username: 'test', roles: ['USER'] },
+      login: mockLogin,
+    });
+
+    render(<LoginForm />, { wrapper: MemoryRouter });
+
+    expect(mockNavigate).toHaveBeenCalledWith('/dashboard/user');
+  });
+
 });
