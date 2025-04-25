@@ -8,7 +8,6 @@ const TechnologiesComparison = ({ simulationId }) => {
   const [error, setError] = useState(null);
   const svgRef = useRef();
 
-  // 🟨 Amarillo, 🟦 Azul, 🟩 Verde, gris por defecto
   const getColor = (techName) => {
     const name = techName.toLowerCase();
     if (name.includes('solar')) return '#FFD700';
@@ -24,6 +23,7 @@ const TechnologiesComparison = ({ simulationId }) => {
   ];
 
   useEffect(() => {
+    console.log("🧪 simulationId recibido:", simulationId)
     const fetchData = async () => {
       try {
         if (!simulationId) {
