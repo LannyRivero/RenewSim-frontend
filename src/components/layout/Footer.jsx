@@ -1,6 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { FaChevronDown } from "react-icons/fa";
-import logo from '@/assets/8408600.jpg';
 
 const Footer = () => {
   const [showDropdown, setShowDropdown] = useState(false);

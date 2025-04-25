@@ -14,13 +14,13 @@ export const obtenerDatosClimaticos = async (ciudad) => {
 
   const { temp, humidity } = response.data.main;
   const windSpeed = response.data.wind.speed;
-  const irradiancia = response.data.clouds.all; // Porcentaje de nubes
+  const irradiancia = response.data.clouds.all;
 
   return {
     temperatura: temp,
     humedad: humidity,
-    viento: windSpeed, // m/s
-    irradianciaEstimativa: 1000 * (1 - irradiancia / 100), // W/m² estimado
+    viento: windSpeed,
+    irradianciaEstimativa: 1000 * (1 - irradiancia / 100),
   };
 };
 
@@ -41,6 +41,6 @@ export const buscarUbicaciones = async (query) => {
     throw new Error("Error al buscar ubicaciones.");
   }
 
-  return await response.json(); 
+  return await response.json();
 };
 

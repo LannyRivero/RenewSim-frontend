@@ -35,7 +35,7 @@ const Home = () => {
       <div className="absolute inset-0 bg-black/60"></div>
 
       <main className="relative z-10 flex flex-col items-center text-white text-center px-0 py-20 gap-16">
-        {/* Hero principal */}
+
         <motion.section
           className="w-full max-w-6xl mx-auto space-y-6 px-4 md:px-0"
           initial="hidden"
@@ -66,7 +66,6 @@ const Home = () => {
           </div>
         </motion.section>
 
-        {/* Impacto */}
         <motion.section
           className="w-full max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 bg-white/10 backdrop-blur-sm rounded-xl py-10 px-6"
           initial="hidden"
@@ -92,7 +91,6 @@ const Home = () => {
           ))}
         </motion.section>
 
-        {/* Testimonio destacado */}
         <motion.section
           className="w-full max-w-3xl mx-auto bg-white/80 text-black p-6 rounded-xl shadow-lg px-4 md:px-6"
           initial="hidden"
@@ -109,7 +107,6 @@ const Home = () => {
           <p className="mt-2 font-medium">Carlos García, México</p>
         </motion.section>
 
-        {/* CTA adicional */}
         <motion.section
           className="w-full max-w-6xl mx-auto text-white text-center mt-12 px-4 md:px-0"
           initial="hidden"

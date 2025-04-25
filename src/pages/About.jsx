@@ -48,7 +48,6 @@ const About = () => {
           tomar decisiones más informadas sobre tu futuro energético.
         </p>
 
-        {/* Beneficios con animación */}
         <div className="grid gap-8 md:grid-cols-3 mb-16">
           {benefits.map((item, index) => (
             <motion.div
@@ -69,7 +68,6 @@ const About = () => {
           ))}
         </div>
 
-        {/* Tecnologías */}
         <motion.div
           className="bg-green-50 p-8 rounded-xl shadow-inner text-center"
           variants={fadeIn}
@@ -89,7 +87,6 @@ const About = () => {
           </ul>
         </motion.div>
 
-        {/* Botón volver */}
         <motion.div
           className="mt-12 text-center"
           variants={fadeIn}

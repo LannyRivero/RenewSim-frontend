@@ -51,7 +51,6 @@ const SimulationDetail = () => {
       <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white">📊 Detalles de la Simulación</h2>
 
       <div className="grid md:grid-cols-3 gap-6">
-        {/* Información General */}
         <div className="border border-green-500 bg-green-50 dark:bg-green-900 p-6 rounded-lg shadow-md col-span-1">
           <h3 className="text-xl font-semibold text-green-700 dark:text-blue-300 mb-4 flex items-center gap-2">
             🧾 Información General
@@ -68,8 +67,6 @@ const SimulationDetail = () => {
           </div>
 
         </div>
-
-        {/* Tecnologías utilizadas */}
         <div className="border border-green-500 bg-green-50 dark:bg-green-900 p-6 rounded-lg shadow-md col-span-1">
           <h3 className="text-xl font-semibold text-green-700 dark:text-blue-300 mb-4 flex items-center gap-2">
             💡 Tecnologías Utilizadas
@@ -87,21 +84,18 @@ const SimulationDetail = () => {
 
         </div>
 
-        {/* Tecnología Recomendada */}
         <div className="border border-green-500 bg-green-50 dark:bg-green-900 p-6 rounded-lg shadow-md col-span-1">
           <h3 className="text-xl font-semibold mb-2 text-green-700 dark:text-green-300">🏆 Tecnología Recomendada</h3>
           <TechnologyRecommendation resultados={{ recommendedTechnology }} modo="resumen" />
         </div>
       </div>
 
-      {/* Visualización con D3 */}
       <EstimatedBudgetBreakdown
         energyType={energyType}
         projectSize={projectSize}
         budget={budget}
       />
 
-      {/* Botón de volver */}
       <div className="mt-6 text-center">
         <button
           onClick={() => navigate(-1)}

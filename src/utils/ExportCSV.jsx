@@ -33,4 +33,3 @@ export const exportToCSV = (data, filename = "data.csv") => {
   toast.success("📄 Archivo CSV descargado con éxito");
 };
 
-  

@@ -84,8 +84,8 @@ const UserSettings = () => {
 
         <div className="flex items-center justify-between bg-white/50 backdrop-blur-md shadow-lg border border-gray-300 p-4 rounded-xl animate-fade-in-down">
           <span className="text-gray-700">Exportar historial de simulaciones</span>
-          <ExportCSVButton data={simulations} filename="historial_simulaciones" className="w-40"/>
-        </div>        
+          <ExportCSVButton data={simulations} filename="historial_simulaciones" className="w-40" />
+        </div>
         <div className="flex items-center justify-between bg-white/50 backdrop-blur-md shadow-lg border border-gray-300 p-4 rounded-xl animate-fade-in-down">
           <span className="text-gray-700">Cambiar contraseña de usuario</span>
           <Button variant="secondary" onClick={() => setShowChangePasswordModal(true)} className="w-40">
@@ -126,8 +126,3 @@ const UserSettings = () => {
   );
 };
 export default UserSettings;
-
-
-
-
-

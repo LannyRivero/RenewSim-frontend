@@ -2,7 +2,6 @@ import React from "react";
 import { ShieldCheck } from "lucide-react";
 import { toast } from "react-toastify";
 
-
 const allRoles = ["ADMIN", "USER"];
 
 const roleMap = {

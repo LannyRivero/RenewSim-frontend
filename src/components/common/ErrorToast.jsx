@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 const ErrorToast = ({ message, onClose }) => {
   useEffect(() => {
-    const timeout = setTimeout(onClose, 5000); // auto-close after 5s
+    const timeout = setTimeout(onClose, 5000); 
     return () => clearTimeout(timeout);
   }, [onClose]);
 

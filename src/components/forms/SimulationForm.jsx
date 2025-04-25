@@ -15,7 +15,7 @@ const SimulationForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
     location: "",
     energyConsumption: "",
-    energyType: "solar", 
+    energyType: "solar",
   });
 
   const [errors, setErrors] = useState({});
@@ -166,8 +166,6 @@ const SimulationForm = ({ onSubmit }) => {
         title="Introduce tu consumo mensual estimado."
         icon="⚡"
       />
-
-      {/* ✅ NUEVO CAMPO: Tipo de energía */}
       <InputFieldWithHint
         label="Tipo de energía"
         name="energyType"
