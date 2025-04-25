@@ -11,7 +11,7 @@ const Login = () => {
   const handleLogin = async (credentials) => {
     try {
       const { token, username, roles } = await loginUser(credentials);
-      login(token, { username, roles }); 
+      login(token, { username, roles });
       navigate('/');
     } catch (error) {
       alert('Credenciales incorrectas o error del servidor.');

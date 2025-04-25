@@ -56,20 +56,16 @@ const Header = () => {
 
   return (
     <header className="w-full shadow-md py-3 px-4 md:px-12 flex items-center justify-between bg-gradient-to-b from-green-50 to-white">
-      {/* Left Section: Logo + Title */}
       <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition">
         <img src={logo} alt="Logo" className="w-10 h-10 rounded-full object-cover" />
         <h1 className="text-lg font-bold text-gray-700 dark:text-white">Renewable Energy Simulator</h1>
       </Link>
 
-      {/* Center Section: Dynamic Title */}
       {isDashboard && (
         <h2 className="text-2xl sm:text-3xl font-bold text-green-700 hidden md:block">{title}</h2>
       )}
 
-      {/* Right Section: User Actions */}
       <div className="flex items-center space-x-4">
-        {/* Notifications */}
         <AnimatePresence>
           {isDashboard && notification && (
             <motion.span
@@ -85,7 +81,6 @@ const Header = () => {
           )}
         </AnimatePresence>
 
-        {/* User Info */}
         {user && (
           <div className="flex items-center gap-2 px-3 py-2 rounded-lg shadow">
             <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
@@ -95,30 +90,28 @@ const Header = () => {
           </div>
         )}
 
-        {/* Dashboard Actions */}
         {isDashboard ? (
           <>
-            {/* 🔄 Botón para cambiar entre paneles si tiene ambos roles */}
             {user?.roles?.includes("ADMIN") && user?.roles?.includes("USER") && (
-             <Button
-             variant="secondary"
-             onClick={() => {
-               if (location.pathname.includes("/admin")) {
-                 navigate("/dashboard/user"); // ✅ Esta es la ruta correcta
-               } else {
-                 navigate("/dashboard/admin/users");
-               }
-             }}
-             className="flex items-center gap-2"
-           >
-             <FaShieldAlt className="w-4 h-4" />
-             <span className="hidden sm:inline">
-               {location.pathname.includes("/admin")
-                 ? "Ir al Panel de Usuario"
-                 : "Ir al Panel de Admin"}
-             </span>
-           </Button>
-           
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  if (location.pathname.includes("/admin")) {
+                    navigate("/dashboard/user"); // ✅ Esta es la ruta correcta
+                  } else {
+                    navigate("/dashboard/admin/users");
+                  }
+                }}
+                className="flex items-center gap-2"
+              >
+                <FaShieldAlt className="w-4 h-4" />
+                <span className="hidden sm:inline">
+                  {location.pathname.includes("/admin")
+                    ? "Ir al Panel de Usuario"
+                    : "Ir al Panel de Admin"}
+                </span>
+              </Button>
+
             )}
 
             <Button variant="success" onClick={() => navigate("/")} className="flex items-center gap-2">
@@ -140,13 +133,11 @@ const Header = () => {
           <Link to="/login" className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition">Iniciar sesión</Link>
         )}
 
-        {/* Mobile Toggle */}
         <button onClick={toggleMenu} className="md:hidden text-xl">
           {menuOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {menuOpen && (
         <nav className="absolute top-16 left-0 w-full bg-white dark:bg-gray-900 shadow-md flex flex-col items-center py-4 space-y-4 md:hidden z-40">
           <NavLink to="/" icon={<FaHome />} label="Home" active={location.pathname === "/"} />
@@ -166,7 +157,6 @@ const Header = () => {
         </nav>
       )}
 
-      {/* Confirm Logout Modal */}
       <ConfirmModal
         isOpen={showLogoutConfirm}
         onClose={() => setShowLogoutConfirm(false)}

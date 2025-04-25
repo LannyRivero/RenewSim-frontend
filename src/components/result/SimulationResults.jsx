@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-const SimulationResults = ({ data  }) => {
+const SimulationResults = ({ data }) => {
   const svgRef = useRef();
   const tooltipRef = useRef();
 
@@ -37,7 +37,6 @@ const SimulationResults = ({ data  }) => {
       .attr("viewBox", `0 0 ${width} ${height}`)
       .attr("preserveAspectRatio", "xMidYMid meet");
 
-    // Ejes
     svg.append("g")
       .attr("transform", `translate(0,${height - margin.bottom})`)
       .call(d3.axisBottom(xScale));
@@ -46,10 +45,8 @@ const SimulationResults = ({ data  }) => {
       .attr("transform", `translate(${margin.left},0)`)
       .call(d3.axisLeft(yScale));
 
-    // Tooltip
     const tooltip = d3.select(tooltipRef.current);
 
-    // Barras con animación
     svg.selectAll("rect")
       .data(chartData)
       .enter()
