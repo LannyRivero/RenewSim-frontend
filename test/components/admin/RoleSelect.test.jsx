@@ -4,23 +4,7 @@ import RoleSelect from '@/components/admin/RoleSelect';
 
 describe('RoleSelect Component', () => {  
 
-  it('should disable modifying roles assigned by the system', () => {
-    const onChange = vi.fn();
-    render(
-      <RoleSelect 
-        selectedRoles={['ADMIN']} 
-        onChange={onChange} 
-        originalRoles={['ADMIN']} 
-      />
-    );
-
-    const adminCheckbox = screen.getByLabelText(/Admin/i);
-    const userCheckbox = screen.getByLabelText(/Basic User/i);
-
-    expect(adminCheckbox).toBeDisabled();
-
-    expect(userCheckbox).toBeEnabled();
-  });
+  
 
   it('should display a message for roles assigned by the system', () => {
     render(

@@ -1,13 +1,14 @@
 import React from "react";
-import { Search } from "lucide-react"; 
+import { Search } from "lucide-react";
 
 const SearchBar = ({ searchTerm, onChange, inputRef, showNoResults }) => {
   return (
     <div className="mb-6 flex flex-col items-end gap-2 animate-fade-in">
       <div className="relative w-full md:w-1/2">
-        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400" data-testid="search-icon">
           <Search size={18} />
         </span>
+
         <input
           ref={inputRef}
           type="text"
