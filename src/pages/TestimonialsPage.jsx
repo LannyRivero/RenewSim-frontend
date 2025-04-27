@@ -36,22 +36,19 @@ const TestimonialsPage = () => {
 
   return (
     <section className="w-full max-w-3xl mx-auto bg-white bg-opacity-90 p-6 rounded-xl shadow-lg text-center text-gray-900">
-      {/* Título */}
+
       <h2 className="text-3xl font-bold text-green-600 mb-6">Lo que dicen nuestros usuarios</h2>
 
-      {/* Slider */}
       <Slider {...testimonialSettings}>
         {testimonials.map((testimonial, index) => (
           <div key={index} className="p-4 bg-gray-100 rounded-lg shadow-md">
             <p className="text-lg italic text-gray-700">"{testimonial.text}"</p>
             <span className="mt-2 block text-sm font-semibold text-green-600 bg-green-100 px-3 py-1 rounded-md inline-block">
               {testimonial.author}
-            </span>
-          </div>
+            </span>          </div>
         ))}
       </Slider>
 
-      {/* Botón para abrir el modal */}
       <div className="mt-6 flex justify-center">
         <button
           onClick={() => setIsModalOpen(true)}
@@ -61,7 +58,6 @@ const TestimonialsPage = () => {
         </button>
       </div>
 
-      {/* Modal para el formulario */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-green-10 p-6 rounded-lg shadow-xl max-w-lg w-full relative">

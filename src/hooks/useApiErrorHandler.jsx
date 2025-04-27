@@ -9,7 +9,6 @@ const useApiErrorHandler = () => {
     let message = "An unexpected error occurred.";
 
     if (error.response) {
-      // Error con respuesta del servidor
       const { status, data } = error.response;
       if (status >= 400 && status < 500) {
         message = data.message || "Client error. Please check your request.";
@@ -17,10 +16,8 @@ const useApiErrorHandler = () => {
         message = "Server error. Please try again later.";
       }
     } else if (error.request) {
-      // No se recibió respuesta del servidor
       message = "No response from server. Check your network connection.";
     } else {
-      // Error desconocido
       message = error.message || "Unknown error occurred.";
     }
 

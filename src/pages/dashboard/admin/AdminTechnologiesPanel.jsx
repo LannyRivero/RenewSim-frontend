@@ -18,8 +18,6 @@ const AdminTechnologiesPanel = () => {
     { label: "Eólica", value: "wind" },
     { label: "Hidroeléctrica", value: "hydro" },
   ];
-
-
   const [errors, setErrors] = useState({});
 
   const validateForm = (name, value) => {
