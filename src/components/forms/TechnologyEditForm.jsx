@@ -35,7 +35,7 @@ const TechnologyEditForm = ({ technologyId, onClose, onSaved }) => {
     try {
       await TechnologyService.updateTechnology(technologyId, formData);
       toast.success("Tecnología actualizada correctamente");
-      onSaved(); 
+      onSaved();
     } catch (error) {
       console.error("Error al actualizar la tecnología", error);
       toast.error("No se pudo guardar la tecnología.");

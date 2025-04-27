@@ -94,25 +94,25 @@ const Header = () => {
         {isDashboard ? (
           <>
             {user?.roles?.includes("ADMIN") && user?.roles?.includes("USER") && (
-             <Button
-             variant="secondary"
-             onClick={() => {
-               if (location.pathname.includes("/admin")) {
-                 navigate("/dashboard/user"); 
-               } else {
-                 navigate("/dashboard/admin/users");
-               }
-             }}
-             className="flex items-center gap-2"
-           >
-             <FaShieldAlt className="w-4 h-4" />
-             <span className="hidden sm:inline">
-               {location.pathname.includes("/admin")
-                 ? "Ir al Panel de Usuario"
-                 : "Ir al Panel de Admin"}
-             </span>
-           </Button>
-           
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  if (location.pathname.includes("/admin")) {
+                    navigate("/dashboard/user");
+                  } else {
+                    navigate("/dashboard/admin/users");
+                  }
+                }}
+                className="flex items-center gap-2"
+              >
+                <FaShieldAlt className="w-4 h-4" />
+                <span className="hidden sm:inline">
+                  {location.pathname.includes("/admin")
+                    ? "Ir al Panel de Usuario"
+                    : "Ir al Panel de Admin"}
+                </span>
+              </Button>
+
             )}
 
             <Button variant="danger" onClick={() => setShowLogoutConfirm(true)} className="flex items-center gap-2">
