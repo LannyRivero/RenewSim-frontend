@@ -13,10 +13,9 @@ const DashboardHeader = () => {
 
   return (
     <header className="bg-white shadow-md py-4 px-6 flex justify-between items-center">
-      {/* Logo o título */}
+    
       <div className="text-xl font-bold text-green-700">RenewSim Dashboard</div>
 
-      {/* Navegación interna */}
       <nav className="space-x-6 text-sm font-medium">
         <NavLink
           to="/dashboard/simulation"
@@ -45,8 +44,6 @@ const DashboardHeader = () => {
           </NavLink>
         )}
       </nav>
-
-      {/* Info usuario + logout */}
       <div className="flex items-center gap-4">
         <span className="text-sm text-gray-700">👋 {user?.username}</span>
         <button

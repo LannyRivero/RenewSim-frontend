@@ -20,11 +20,11 @@ const GlobalTechnologiesComparison = () => {
 
   const getColorByName = (name) => {
     const lower = name.toLowerCase();
-    if (lower.includes('solar')) return '#FDB813';       // Amarillo
-    if (lower.includes('eólica') || lower.includes('eolica') || lower.includes('wind')) return '#6EC6FF'; // Azul
-    if (lower.includes('hidro')) return '#1565C0';        // Azul oscuro
-    if (lower.includes('biomasa') || lower.includes('bio')) return '#388E3C';  // Verde
-    if (lower.includes('geot')) return '#D84315';         // Naranja
+    if (lower.includes('solar')) return '#FDB813';  
+    if (lower.includes('eólica') || lower.includes('eolica') || lower.includes('wind')) return '#6EC6FF'; 
+    if (lower.includes('hidro')) return '#1565C0';       
+    if (lower.includes('biomasa') || lower.includes('bio')) return '#388E3C';  
+    if (lower.includes('geot')) return '#D84315';       
     return '#ccc';
   };
 

@@ -32,9 +32,9 @@ const Button = ({
   const motionProps = noAnimation
     ? {}
     : {
-        whileHover: disabled ? {} : { scale: 1.05 },
-        whileTap: disabled ? {} : { scale: 0.95 },
-      };
+      whileHover: disabled ? {} : { scale: 1.05 },
+      whileTap: disabled ? {} : { scale: 0.95 },
+    };
 
   return (
     <motion.button

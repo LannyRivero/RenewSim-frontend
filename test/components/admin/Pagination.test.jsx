@@ -23,7 +23,7 @@ describe("Pagination Component", () => {
   });
 
   it("should call onPageChange when a page is clicked", async () => {
-    const onPageChange = vi.fn(); // Mock function
+    const onPageChange = vi.fn();
     render(<Pagination currentPage={1} totalPages={5} onPageChange={onPageChange} />);
 
     const pageButton = screen.getByText("2");

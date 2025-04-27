@@ -18,9 +18,6 @@ import AdminTechnologiesPanel from "@/pages/dashboard/admin/AdminTechnologiesPan
 import AllTechnologiesList from "@/components/technologies/AllTechnologiesList";
 import SimulationDetail from "@/components/result/SimulationDetail";
 
-
-
-
 import UserSettings from "@/pages/dashboard/user/UserSettings";
 
 import AdminDashboard from "@/pages/dashboard/admin/AdminDashboard";

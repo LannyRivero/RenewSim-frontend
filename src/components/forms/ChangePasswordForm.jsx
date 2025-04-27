@@ -23,7 +23,7 @@ const ChangePasswordForm = () => {
       return;
     }
 
-    try {      
+    try {
       await apiCliente.put('/users/change-password', {
         currentPassword: formData.currentPassword,
         newPassword: formData.newPassword
@@ -32,7 +32,7 @@ const ChangePasswordForm = () => {
           Authorization: `Bearer ${token}`
         }
       });
-      
+
 
       toast.success("✅ Contraseña cambiada correctamente");
       setFormData({

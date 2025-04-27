@@ -26,9 +26,8 @@ const InputWithButton = ({
           onChange={onChange}
           placeholder={placeholder}
           title={title}
-          className={`flex-1 px-4 py-2 border rounded-lg text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            error ? "border-red-500" : "border-gray-300"
-          }`}
+          className={`flex-1 px-4 py-2 border rounded-lg text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${error ? "border-red-500" : "border-gray-300"
+            }`}
         />
         <button
           type="button"

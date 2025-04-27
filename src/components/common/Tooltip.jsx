@@ -12,7 +12,7 @@ const Tooltip = ({ children, text }) => {
   };
 
   const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => setIsVisible(false), 150); 
+    timeoutRef.current = setTimeout(() => setIsVisible(false), 150);
   };
 
   useEffect(() => {
@@ -51,9 +51,8 @@ const Tooltip = ({ children, text }) => {
       {children}
 
       <div
-        className={`absolute z-50 px-3 py-1 text-sm font-medium text-white bg-black rounded shadow-lg whitespace-nowrap transition-all duration-300 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1 pointer-events-none"
-        } bottom-full left-1/2 ${getTransform()} mb-2`}
+        className={`absolute z-50 px-3 py-1 text-sm font-medium text-white bg-black rounded shadow-lg whitespace-nowrap transition-all duration-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1 pointer-events-none"
+          } bottom-full left-1/2 ${getTransform()} mb-2`}
       >
         {text}
         <div className="absolute left-1/2 transform -translate-x-1/2 bottom-[-4px] w-2 h-2 bg-black rotate-45" />

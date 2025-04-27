@@ -3,7 +3,7 @@ import React from "react";
 const InputFieldWithHint = ({
   label,
   name,
-  type = "text",          
+  type = "text",
   value,
   onChange,
   placeholder = "",
@@ -11,7 +11,7 @@ const InputFieldWithHint = ({
   hint = "",
   title = "",
   icon = null,
-  options = [],          
+  options = [],
 }) => {
   const baseClasses = `
     w-full px-4 py-2 pl-10 rounded-lg shadow-md 
@@ -75,7 +75,7 @@ const InputFieldWithHint = ({
 
   return (
     <div className="flex flex-col gap-1 relative">
-    
+
       <label htmlFor={name} className="text-gray-700 dark:text-gray-300 font-medium flex items-center gap-1 mb-1">
         {icon && <span className="text-gray-400 dark:text-gray-500">{icon}</span>}
         {label}

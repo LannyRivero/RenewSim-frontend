@@ -74,8 +74,6 @@ const AdminDashboard = () => {
     setSelectedUserToDelete({ id: userId, username });
     setShowUserDeleteModal(true);
   };
-
-  // 🔁 Confirmación desde el modal
   const confirmUserDeletion = async () => {
     if (!selectedUserToDelete) return;
     setLoadingUserId(selectedUserToDelete.id);

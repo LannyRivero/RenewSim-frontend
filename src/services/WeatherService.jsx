@@ -1,4 +1,4 @@
-// Servicio para consultar la API de OpenWeatherMap y obtener datos climáticos
+
 import axios from "axios";
 
 const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;

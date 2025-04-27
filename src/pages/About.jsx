@@ -55,8 +55,7 @@ const About = () => {
               className="bg-white shadow-md p-6 rounded-xl hover:shadow-lg transition text-center sm:text-left"
               variants={fadeIn}
               initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
+              animate="visible"
               custom={index}
             >
               <h3 className="text-xl sm:text-2xl font-bold mb-2 flex justify-center sm:justify-start items-center gap-2">
@@ -72,8 +71,7 @@ const About = () => {
           className="bg-green-50 p-8 rounded-xl shadow-inner text-center"
           variants={fadeIn}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          animate="visible"
           custom={benefits.length}
         >
           <h2 className="text-2xl font-bold text-green-700 mb-4">
@@ -91,8 +89,7 @@ const About = () => {
           className="mt-12 text-center"
           variants={fadeIn}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          animate="visible"
           custom={benefits.length + 1}
         >
           <a
@@ -108,5 +105,6 @@ const About = () => {
 };
 
 export default About;
+
 
 

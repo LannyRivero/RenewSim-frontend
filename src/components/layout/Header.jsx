@@ -97,7 +97,7 @@ const Header = () => {
                 variant="secondary"
                 onClick={() => {
                   if (location.pathname.includes("/admin")) {
-                    navigate("/dashboard/user"); // ✅ Esta es la ruta correcta
+                    navigate("/dashboard/user");
                   } else {
                     navigate("/dashboard/admin/users");
                   }
