@@ -1,9 +1,7 @@
 @import "tailwindcss";
 
 
-/* ======================
-   Animaciones de entrada
-====================== */
+
 
 @keyframes fade-in-down {
   0% {
@@ -20,9 +18,6 @@
   animation: fade-in-down 0.4s ease-out;
 }
 
-/* ======================
-   Glassmorphism Container
-====================== */
 
 .glass-container {
   background: rgba(255, 255, 255, 0.25);
@@ -38,7 +33,7 @@
   transition: all 0.3s ease;
 }
 
-/* Responsive glass adjustments */
+
 @media (max-width: 640px) {
   .glass-container {
     padding: 1.5rem;
@@ -46,9 +41,6 @@
   }
 }
 
-/* ======================
-   Ripple Effect
-====================== */
 
 .ripple {
   position: absolute;
@@ -66,21 +58,15 @@
   }
 }
 
-/* ======================
-   Hover Glow Effect
-====================== */
 
 .hover-glow {
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.5); /* verde suave */
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.5); 
 }
 
 .dark .hover-glow {
-  box-shadow: 0 0 15px rgba(34, 197, 94, 0.7); /* verde brillante dark mode */
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.7);
 }
 
-/* ======================
-   Focus Ring Accesibilidad
-====================== */
 
 :focus-visible {
   outline: 2px solid rgba(16, 185, 129, 0.7);
