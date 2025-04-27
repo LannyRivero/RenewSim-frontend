@@ -5,13 +5,11 @@ import { render, screen } from '@testing-library/react';
 import ProtectedRoute from '../../src/routes/ProtectedRoute';
 import { useAuth } from '@/context/AuthContext';
 
-
-// Mock del hook useAuth
 vi.mock('@/context/AuthContext', () => ({
   useAuth: vi.fn(),
 }));
 
-// Componente para rutas protegidas
+
 const DummyComponent = () => <div>Protected Content</div>;
 
 describe('ProtectedRoute', () => {

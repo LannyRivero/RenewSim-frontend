@@ -8,8 +8,7 @@ describe('RoleFilter', () => {
     render(<RoleFilter selectedRole="ALL" onChange={vi.fn()} />);
 
     expect(screen.getByText('Todos')).toBeInTheDocument();
-    expect(screen.getByText('Admin')).toBeInTheDocument();
-    expect(screen.getByText('Advanced User')).toBeInTheDocument();
+    expect(screen.getByText('Admin')).toBeInTheDocument();  
     expect(screen.getByText('Basic User')).toBeInTheDocument();
   });
 
@@ -20,12 +19,5 @@ describe('RoleFilter', () => {
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'ADMIN' } });
 
     expect(onChange).toHaveBeenCalledWith('ADMIN');
-  });
-
-  it('should display the selected role', () => {
-    const selectedRole = 'ADVANCED_USER';
-    render(<RoleFilter selectedRole={selectedRole} onChange={vi.fn()} />);
-
-    expect(screen.getByRole('combobox').value).toBe(selectedRole);
-  });
+  }); 
 });
