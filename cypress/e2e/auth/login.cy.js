@@ -27,12 +27,22 @@ describe('Login Flow', () => {
     });
   });
 
- it('should successfully login as Daniel and redirect to dashboard', () => {
-  cy.fixture('users').then((users) => {
-    const user = users.daniel;
-    cy.loginViaUI(user.email, user.password);
+  it('should successfully login as Daniel and redirect to dashboard', () => {
+    cy.fixture('users').then((users) => {
+      const user = users.daniel;
+      cy.loginViaUI(user.email, user.password);
+    });
   });
-});
+
+  it('should redirect automatically if already logged in', () => {
+    cy.fixture('users').then((users) => {
+      const user = users.daniel;
+      cy.loginViaUI(user.email, user.password);
+      cy.visit('/login');
+      cy.url().should('include', '/dashboard');
+    });
+  });
+
 
 
 
