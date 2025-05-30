@@ -15,7 +15,8 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:run": "cypress run",
+    "cy:run": "start-server-and-test dev https://localhost:5174 'cypress run'"
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
@@ -66,6 +67,7 @@
     "jsdom": "^26.0.0",
     "lint-staged": "^15.5.0",
     "prettier": "^3.5.3",
+    "start-server-and-test": "^2.0.12",
     "vite": "^6.2.0",
     "vitest": "^3.1.1"
   }
