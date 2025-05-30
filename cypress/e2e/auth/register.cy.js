@@ -26,6 +26,15 @@ describe('Register Flow', () => {
             expect($input[0].checkValidity()).to.be.false;
         });
     });
+
+    it('should show error with invalid email format', () => {
+        cy.get('input[name="name"]').type('John Doe');
+        cy.get('input[name="email"]').type('invalid-email');
+        cy.get('input[name="password"]').type('password123');
+        cy.get('input[name="confirmPassword"]').type('password123');
+        cy.get('button[type="submit"]').click();       
+    });
+
 });
 
 
