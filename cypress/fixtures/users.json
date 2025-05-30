@@ -1,0 +1,10 @@
+{
+  "daniel": {
+    "email": "daniel@gmail.com",
+    "password": "daniel"
+  },
+  "admin": {
+    "email": "admin@renewsim.com",
+    "password": "admin"
+  }
+}
