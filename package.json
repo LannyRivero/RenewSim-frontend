@@ -16,7 +16,7 @@
     "test:coverage": "vitest run --coverage",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "cy:run": "start-server-and-test dev https://localhost:5174 'cypress run'"
+    "cy:run": "start-server-and-test dev http://localhost:5174 'cypress run'"
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
