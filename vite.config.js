@@ -12,7 +12,8 @@ export default defineConfig({
   ],
   server: {
     port: 5174,
-    https: {
+    // ⚠️ Ajuste aquí para HTTPS solo en local
+    https: process.env.CI ? false : {
       key: fs.readFileSync('./cert/localhost-key.pem'),
       cert: fs.readFileSync('./cert/localhost.pem'),
     },
@@ -37,4 +38,3 @@ export default defineConfig({
     include: ['src/**/*.{test,spec}.{js,jsx,ts,tsx}', 'test/**/*.{test,spec}.{js,jsx,ts,tsx}'],
   },
 });
-
