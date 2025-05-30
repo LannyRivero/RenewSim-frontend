@@ -30,6 +30,31 @@ Cypress.Commands.add('loginViaUI', (email, password) => {
   cy.get('input[name="username"]').type(email);
   cy.get('input[name="password"]').type(password);
   cy.get('button[type="submit"]').click();
-  
+
   cy.url().should('include', '/dashboard');
 });
+
+Cypress.Commands.add('register', (name, email, password) => {
+  cy.request({
+    method: 'POST',
+    url: '/api/v1/auth/register',
+    body: {
+      name,
+      email,
+      password,
+      confirmPassword: password
+    },
+    failOnStatusCode: false
+  }).then((response) => {
+
+    cy.log('Status:', response.status);
+
+    if (response.status === 201) {
+      cy.log('✅ Registro exitoso');
+    } else {
+      cy.log('⚠️ Registro falló con código:', response.status);
+    }
+  });
+});
+
+
