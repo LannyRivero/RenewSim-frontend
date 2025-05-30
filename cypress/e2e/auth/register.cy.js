@@ -32,7 +32,12 @@ describe('Register Flow', () => {
         cy.get('input[name="email"]').type('invalid-email');
         cy.get('input[name="password"]').type('password123');
         cy.get('input[name="confirmPassword"]').type('password123');
-        cy.get('button[type="submit"]').click();       
+
+        cy.get('button[type="submit"]').click();
+
+        cy.get('input[name="email"]')
+            .invoke('prop', 'validationMessage')
+            .should('not.be.empty');
     });
 
 });
