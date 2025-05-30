@@ -1,5 +1,5 @@
 import React from "react";
-import { exportToCSV } from "@/utils/exportCSV";
+import { exportToCSV } from "@/utils/ExportCSV";
 
 const ExportCSVButton = ({ data, filename = "data.csv", className = "" }) => {
   return (

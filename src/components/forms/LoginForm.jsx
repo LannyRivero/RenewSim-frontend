@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { loginUser } from '@/services/authService';
+import { loginUser } from '@/services/AuthService';
 import backgroundImage from '@/assets/generacion-eolica.jpg';
 
 const LoginForm = () => {
