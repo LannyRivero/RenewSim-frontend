@@ -48,13 +48,20 @@ describe('Register Flow', () => {
         cy.get('input[name="password"]').type('password123');
         cy.get('input[name="confirmPassword"]').type('password123');
 
-        cy.get('button[type="submit"]').click();        
+        cy.get('button[type="submit"]').click();
         cy.url().should('include', '/dashboard');
     });
+    it('should show error if email is already taken', () => {
+        const existingEmail = 'daniel@gmail.com';
 
+        cy.get('input[name="name"]').type('Daniel User');
+        cy.get('input[name="email"]').type(existingEmail);
+        cy.get('input[name="password"]').type('password123');
+        cy.get('input[name="confirmPassword"]').type('password123');
+        cy.get('button[type="submit"]').click();
 
-
-
+        cy.contains('Error del servidor. Inténtalo más tarde.').should('be.visible');
+    });
 
 });
 
