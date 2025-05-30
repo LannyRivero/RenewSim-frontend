@@ -9,7 +9,7 @@ import InputWithButton from "../common/inputField/InputWithButton";
 import InputFieldWithHint from "../common/inputField/InputFieldWithHint";
 import ErrorToast from "../common/ErrorToast";
 import PrimaryButton from "@/components/common/button/PrimaryButton";
-import { estimateProjectSize, estimateBudget } from "@/utils/estimationUtils";
+import { estimateProjectSize, estimateBudget } from "@/utils/EstimationUtils";
 
 const SimulationForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({

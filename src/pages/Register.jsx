@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { registerUser, loginUser } from '@/services/authService';
+import { registerUser, loginUser } from '@/services/AuthService';
 import backgroundImage from '@/assets/generacion-eolica.jpg';
 import RegisterForm from '@/components/forms/RegisterForm';
 import { useAuth } from '@/context/AuthContext';
