@@ -24,11 +24,12 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('login', (email, password) => {
-  cy.request('POST', '/api/v1/auth/login', {
-    email,
-    password
-  }).then((response) => {
-    window.localStorage.setItem('token', response.body.token);
-  });
+Cypress.Commands.add('loginViaUI', (email, password) => {
+  cy.visit('/login');
+
+  cy.get('input[name="username"]').type(email);
+  cy.get('input[name="password"]').type(password);
+  cy.get('button[type="submit"]').click();
+  
+  cy.url().should('include', '/dashboard');
 });
