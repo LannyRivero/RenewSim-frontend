@@ -1,3 +1,22 @@
+version: "3.9"
+
+services:
+  renewsim-frontend:
+    build: .
+    container_name: renewsim-frontend
+    ports:
+      - "5174:5174"
+    networks:
+      - renewsim-net
+
+  renewsim-backend:
+    image: lannyrivero/renewsim-backend:latest
+    container_name: renewsim-backend
+    ports:
+      - "8080:8080"
+    networks:
+      - renewsim-net
+
   cypress:
     build:
       context: .
@@ -8,3 +27,7 @@
       - renewsim-backend
     networks:
       - renewsim-net
+
+networks:
+  renewsim-net:
+
