@@ -9,18 +9,29 @@ on:
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
+
+    services:
+      docker:
+        image: docker:24.0.5
+        options: --privileged
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+      - name: Set up Docker Compose
+        uses: docker/setup-buildx-action@v2
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Build and start containers
+        run: |
+          docker-compose -f docker-compose.yml up -d --build
+          sleep 10 # da tiempo a que los contenedores levanten
 
-      - name: Run Cypress tests
-        run: npm run cy:run
+      - name: Run Cypress container
+        run: |
+          docker-compose -f docker-compose.yml run --rm cypress
+
+      - name: Tear down containers
+        run: docker-compose -f docker-compose.yml down -v
+
 

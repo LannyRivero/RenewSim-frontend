@@ -1,0 +1,10 @@
+  cypress:
+    build:
+      context: .
+      dockerfile: cypress.Dockerfile
+    container_name: renewsim-cypress
+    depends_on:
+      - renewsim-frontend
+      - renewsim-backend
+    networks:
+      - renewsim-net
