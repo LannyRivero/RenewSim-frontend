@@ -21,6 +21,6 @@ FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 
 # Expone el puerto 5174 (opcional, si necesitas exponerlo desde aquí)
-EXPOSE 5174
+EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
