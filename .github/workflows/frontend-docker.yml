@@ -32,3 +32,4 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/renewsim-frontend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/renewsim-frontend:${{ github.sha }}
+
