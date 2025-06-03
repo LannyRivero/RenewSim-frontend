@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import fs from 'fs';
 
-export default defineConfig(({ command, mode }) => {
+export default defineConfig(() => {
   let httpsOptions = false;
 
   if (!process.env.CI) {
@@ -42,4 +42,5 @@ export default defineConfig(({ command, mode }) => {
     },
   };
 });
+
 
