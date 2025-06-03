@@ -1,4 +1,3 @@
-// vite.config.js
 import { defineConfig } from 'vite';
 import path from 'path';
 import react from '@vitejs/plugin-react';
@@ -8,6 +7,7 @@ import fs from 'fs';
 export default defineConfig(() => {
   let httpsOptions = false;
 
+  // 👇 Solo en local cargamos los certificados
   if (!process.env.CI) {
     httpsOptions = {
       key: fs.readFileSync('./cert/localhost-key.pem'),
@@ -19,7 +19,7 @@ export default defineConfig(() => {
     plugins: [react(), tailwindcss()],
     server: {
       port: 5174,
-      https: httpsOptions,
+      https: httpsOptions, // 👈 Aquí se usa solo si se definió
       proxy: {
         '/api': {
           target: 'http://renewsim-backend:8080',
@@ -42,5 +42,6 @@ export default defineConfig(() => {
     },
   };
 });
+
 
 
