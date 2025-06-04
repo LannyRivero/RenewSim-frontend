@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17' # ajusta si usas otra versión
+          java-version: '21' # ajusta si usas otra versión
 
       # ✅ 4. Compilar y arrancar el backend
       - name: Build and start backend
