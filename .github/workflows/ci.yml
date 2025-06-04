@@ -47,20 +47,29 @@ jobs:
         with:
           node-version: 20 # o el que uses
 
+      # ✅ 6.5 Crear archivo .env para el frontend
+      - name: Create .env file for frontend
+        run: |
+          echo "VITE_API_BASE_URL=http://localhost:8080/api" >> .env
+          echo "VITE_AUTH_TOKEN_SECRET=your_secret_key" >> .env
+          echo "VITE_OPENWEATHER_API_KEY=75a86c6a8e0e72b3b99cfbc6fb9bf349" >> .env
+
+      # ✅ 7. Instalar dependencias del frontend
       - name: Install frontend dependencies
         run: npm ci
-      
-      # ✅ 9. Arrancar frontend en segundo plano para Cypress
+
+      # ✅ 8. Arrancar frontend en segundo plano para Cypress
       - name: Start frontend dev server
         run: |
           nohup npm run dev > /dev/null 2>&1 &
           sleep 10
 
-      # ✅ 10. E2E tests con Cypress
+      # ✅ 9. E2E tests con Cypress
       - name: Cypress e2e tests
         run: npx cypress run
 
-      # ✅ 11. Build final del frontend
+      # ✅ 10. Build final del frontend
       - name: Build project
         run: npm run build
+
 
