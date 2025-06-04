@@ -41,7 +41,7 @@ jobs:
         run: |
           echo "Checking if backend is up..."
           for i in {1..10}; do
-            status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/v1/auth/login)
+            status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/)
             if [ "$status" -eq 401 ] || [ "$status" -eq 200 ]; then
               echo "Backend is up and reachable (status: $status)"
               exit 0
