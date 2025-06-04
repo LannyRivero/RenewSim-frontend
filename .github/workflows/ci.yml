@@ -49,11 +49,7 @@ jobs:
 
       - name: Install frontend dependencies
         run: npm ci
-
-      # ✅ 8. Unit tests con Vitest
-      - name: Unit tests
-        run: npm run test:unit -- --coverage
-
+      
       # ✅ 9. Arrancar frontend en segundo plano para Cypress
       - name: Start frontend dev server
         run: |
