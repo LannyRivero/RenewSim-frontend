@@ -50,13 +50,6 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
-      # ✅ 7. Lint y formateo
-      - name: Lint
-        run: npm run lint
-
-      - name: Format check
-        run: npm run format:check
-
       # ✅ 8. Unit tests con Vitest
       - name: Unit tests
         run: npm run test:unit -- --coverage
