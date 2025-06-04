@@ -20,46 +20,46 @@ jobs:
           repository: LannyRivero/RenewSim-backend
           path: backend
 
-      # 🚀 Copiamos el docker-compose.yml del backend
+      # Copiamos el docker-compose.yml del backend
       - name: Copy docker-compose file
         run: cp backend/docker-compose.yml .
 
-      # 🚀 Arrancamos MySQL y backend con Docker Compose moderno
+      # Arrancamos MySQL y backend con Docker Compose moderno
       - name: Start backend and MySQL with Docker Compose
         run: docker compose up -d
 
-      # 🚀 Esperamos a que backend y MySQL estén listos
+      # Esperamos a que backend y MySQL estén listos
       - name: Wait for backend to be ready
         run: sleep 30
 
-      # ✅ Setup Node.js
+      # Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
 
-      # ✅ Crear archivo .env para el frontend
+      # Crear archivo .env para el frontend
       - name: Create .env file for frontend
         run: |
           echo "VITE_API_BASE_URL=http://localhost:8080/api" >> .env
           echo "VITE_AUTH_TOKEN_SECRET=your_secret_key" >> .env
           echo "VITE_OPENWEATHER_API_KEY=75a86c6a8e0e72b3b99cfbc6fb9bf349" >> .env
 
-      # ✅ Instalar dependencias del frontend
+      # Instalar dependencias del frontend
       - name: Install frontend dependencies
         run: npm ci
 
-      # ✅ Arrancar frontend dev server para Cypress
+      # Arrancar frontend dev server para Cypress
       - name: Start frontend dev server
         run: |
           nohup npm run dev > /dev/null 2>&1 &
           sleep 10
 
-      # ✅ E2E tests con Cypress
+      # E2E tests con Cypress
       - name: Cypress e2e tests
         run: npx cypress run
 
-      # ✅ Build final del frontend
+      # Build final del frontend
       - name: Build project
         run: npm run build
 
