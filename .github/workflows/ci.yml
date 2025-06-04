@@ -24,6 +24,10 @@ jobs:
       - name: Copy docker-compose file
         run: cp backend/docker-compose.yml .
 
+      # Copiamos el init.sql del backend
+      - name: Copy init.sql for CI
+        run: cp backend/init.sql .
+
       # Arrancamos MySQL y backend con Docker Compose moderno
       - name: Start backend and MySQL with Docker Compose
         run: docker compose up -d
@@ -62,6 +66,7 @@ jobs:
       # Build final del frontend
       - name: Build project
         run: npm run build
+
 
 
 
