@@ -28,13 +28,28 @@ jobs:
       - name: Copy init.sql for CI
         run: cp backend/init.sql .
 
-      # Arrancamos MySQL y backend con Docker Compose moderno
+      # Arrancamos MySQL y backend con Docker Compose
       - name: Start backend and MySQL with Docker Compose
         run: docker compose up -d
 
-      # Esperamos a que backend y MySQL estén listos
-      - name: Wait for backend to be ready
-        run: sleep 60
+      # Esperamos un poco para que se inicien los contenedores
+      - name: Initial wait for backend to start
+        run: sleep 30
+
+      # Verificamos que el backend responde en /api/v1/auth/login
+      - name: Check backend is reachable from runner
+        run: |
+          echo "Checking if backend is up..."
+          for i in {1..10}; do
+            status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/v1/auth/login)
+            if [ "$status" -eq 401 ] || [ "$status" -eq 200 ]; then
+              echo "Backend is up and reachable (status: $status)"
+              exit 0
+            fi
+            echo "Backend not ready yet (status: $status). Retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Backend did not become ready in time." && exit 1
 
       # Setup Node.js
       - name: Setup Node.js
@@ -45,7 +60,7 @@ jobs:
       # Crear archivo .env para el frontend
       - name: Create .env file for frontend
         run: |
-          echo "VITE_API_BASE_URL=http://renewsim-backend:8080/api" >> .env
+          echo "VITE_API_BASE_URL=http://localhost:8080/api" >> .env
           echo "VITE_AUTH_TOKEN_SECRET=your_secret_key" >> .env
           echo "VITE_OPENWEATHER_API_KEY=75a86c6a8e0e72b3b99cfbc6fb9bf349" >> .env
 
@@ -66,6 +81,7 @@ jobs:
       # Build final del frontend
       - name: Build project
         run: npm run build
+
 
 
 
