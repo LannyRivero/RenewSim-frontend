@@ -1,4 +1,4 @@
-name: Frontend CI with Backend (Docker)
+name: Frontend CI with Backend and Cypress
 
 on:
   push:
@@ -20,70 +20,59 @@ jobs:
           repository: LannyRivero/RenewSim-backend
           path: backend
 
-      # Copiamos el docker-compose.yml y el init.sql del backend
-      - name: Copy docker-compose file
-        run: cp backend/docker-compose.yml .
-
-      - name: Copy init.sql
+      # Copy init.sql from backend repo to frontend repo root (for MySQL)
+      - name: Copy init.sql from backend
         run: cp backend/init.sql .
 
-      # Copiamos el cypress.Dockerfile y la carpeta de tests e2e
-      - name: Copy Cypress Dockerfile and e2e tests
+      # Start backend + MySQL + Cypress via docker-compose from frontend repo
+      - name: Start all services with docker-compose
+        run: docker-compose -f docker-compose.cypress.yml up -d
+
+      # Wait for backend readiness
+      - name: Wait for backend readiness
         run: |
-          cp cypress.Dockerfile backend/
-          mkdir -p backend/cypress
-          cp -r cypress backend/cypress
-          cp -r cypress.config.* backend/
-
-      # Arrancamos MySQL y backend con Docker Compose
-      - name: Start backend and MySQL with Docker Compose
-        run: docker compose up -d
-
-      # Esperamos un poco para que se inicien los contenedores
-      - name: Initial wait for backend to start
-        run: sleep 30
-
-      # Verificamos que el backend responde en la home (o en un endpoint sencillo)
-      - name: Check backend is reachable from runner
-        run: |
-          echo "Checking if backend is up..."
-          for i in {1..10}; do
-            status=$(curl -s -o /dev/null -w "%{http_code}" http://renewsim-backend:8080)
-            if [ "$status" -eq 401 ] || [ "$status" -eq 200 ]; then
-              echo "Backend is up and reachable (status: $status)"
+          for i in {1..15}; do
+            status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080)
+            if [[ "$status" == "200" || "$status" == "401" ]]; then
+              echo "Backend is ready with status $status"
               exit 0
             fi
-            echo "Backend not ready yet (status: $status). Retrying in 5 seconds..."
+            echo "Waiting for backend, retrying in 5 seconds..."
             sleep 5
           done
-          echo "Backend did not become ready in time." && exit 1
+          echo "Backend did not become ready in time."
+          exit 1
 
-      # E2E tests con Cypress en contenedor
-      - name: Cypress e2e tests
-        run: |
-          docker compose build cypress
-          docker compose run --rm cypress
+      # Run Cypress tests inside container
+      - name: Run Cypress tests
+        run: docker-compose -f docker-compose.cypress.yml run --rm cypress
 
-      # Setup Node.js
+      # Setup Node.js for frontend build
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
 
-      # Crear archivo .env para el frontend
-      - name: Create .env file for frontend
+      # Create .env file for frontend build
+      - name: Create .env file
         run: |
-          echo "VITE_API_BASE_URL=http://renewsim-backend:8080/api" >> .env
+          echo "VITE_API_BASE_URL=http://localhost:8080/api" > .env
           echo "VITE_AUTH_TOKEN_SECRET=your_secret_key" >> .env
           echo "VITE_OPENWEATHER_API_KEY=75a86c6a8e0e72b3b99cfbc6fb9bf349" >> .env
 
-      # Instalar dependencias del frontend
+      # Install frontend dependencies
       - name: Install frontend dependencies
         run: npm ci
 
-      # Build final del frontend
-      - name: Build project
+      # Build frontend
+      - name: Build frontend
         run: npm run build
+
+      # Shutdown docker compose services after tests
+      - name: Stop docker-compose services
+        run: docker-compose -f docker-compose.cypress.yml down
+
+
 
 
 

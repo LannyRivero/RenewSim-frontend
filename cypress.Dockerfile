@@ -1,17 +1,18 @@
 FROM cypress/included:14.4.0
 
-# Crea el directorio de trabajo explícitamente
-RUN mkdir -p /e2e
-
-# Copia tus tests e2e y config
-COPY ./cypress ./cypress
-COPY ./cypress.config.js /e2e/
-COPY ./package*.json /e2e/
-
+# Establecer directorio de trabajo
 WORKDIR /e2e
 
-# Instala dependencias (opcional)
+# Copiar package.json y package-lock.json para aprovechar cache de dependencias
+COPY ./package*.json ./
+
+# Instalar dependencias
 RUN npm ci
+
+# Copiar tests e2e y configuración
+COPY ./cypress ./cypress
+COPY ./cypress.config.js ./
+
 
 
 
