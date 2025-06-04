@@ -1,0 +1,72 @@
+name: Frontend CI with Backend
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ✅ 1. Clonar el repo de frontend
+      - name: Checkout frontend repo
+        uses: actions/checkout@v3
+
+      # ✅ 2. Clonar el repo del backend en otra carpeta
+      - name: Checkout backend repo
+        uses: actions/checkout@v3
+        with:
+          repository: LannyRivero/RenewSim-backend
+          path: backend
+
+      # ✅ 3. Configurar Java para el backend
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17' # ajusta si usas otra versión
+
+      # ✅ 4. Compilar y arrancar el backend
+      - name: Build and start backend
+        run: |
+          cd backend
+          ./mvnw clean install -DskipTests
+          nohup java -jar target/*.jar > /dev/null 2>&1 &
+          sleep 20
+
+      # ✅ 5. Configurar Node.js para el frontend
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20 # o el que uses
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      # ✅ 6. Lint y formateo
+      - name: Lint
+        run: npm run lint
+
+      - name: Format check
+        run: npm run format:check
+
+      # ✅ 7. Unit tests con Vitest
+      - name: Unit tests
+        run: npm run test:unit -- --coverage
+
+      # ✅ 8. Arrancar frontend en segundo plano para Cypress
+      - name: Start frontend dev server
+        run: |
+          nohup npm run dev > /dev/null 2>&1 &
+          sleep 10
+
+      # ✅ 9. E2E tests con Cypress
+      - name: Cypress e2e tests
+        run: npx cypress run
+
+      # ✅ 10. Build final del frontend
+      - name: Build project
+        run: npm run build
