@@ -1,14 +1,17 @@
-# cypress.Dockerfile
-FROM cypress/included:13.1.0
+FROM cypress/included:14.4.0
 
 WORKDIR /e2e
+
 COPY ./cypress ./cypress
-COPY ./cypress.config.js ./
-COPY ./package.json ./
-COPY ./package-lock.json ./
+COPY ./cypress.config.js .  # Ajusta si usas config separado
+COPY ./package.json .       # Para que Cypress conozca las dependencias
+COPY ./package-lock.json .  # Opcional
+RUN npm ci
 
-# Ajusta el baseUrl de Cypress para que apunte al frontend
-ENV CYPRESS_baseUrl=http://renewsim-frontend:5174
+# Usa la red interna de docker compose
+ENV CYPRESS_baseUrl=http://renewsim-backend:8080
 
-CMD ["cypress", "run"]
+CMD ["npx", "cypress", "run"]
+
+
 
