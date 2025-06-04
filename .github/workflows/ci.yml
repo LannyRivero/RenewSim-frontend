@@ -41,7 +41,7 @@ jobs:
         run: |
           echo "Checking if backend is up..."
           for i in {1..10}; do
-            status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/)
+            status=$(curl -s -o /dev/null -w "%{http_code}" http://renewsim-backend:8080)
             if [ "$status" -eq 401 ] || [ "$status" -eq 200 ]; then
               echo "Backend is up and reachable (status: $status)"
               exit 0
@@ -60,7 +60,7 @@ jobs:
       # Crear archivo .env para el frontend
       - name: Create .env file for frontend
         run: |
-          echo "VITE_API_BASE_URL=http://localhost:8080/api" >> .env
+          echo "VITE_API_BASE_URL=http://renewsim-backend:8080/api" >> .env
           echo "VITE_AUTH_TOKEN_SECRET=your_secret_key" >> .env
           echo "VITE_OPENWEATHER_API_KEY=75a86c6a8e0e72b3b99cfbc6fb9bf349" >> .env
 
