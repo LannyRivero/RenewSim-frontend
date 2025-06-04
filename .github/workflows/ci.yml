@@ -29,7 +29,11 @@ jobs:
           distribution: 'temurin'
           java-version: '21' # ajusta si usas otra versión
 
-      # ✅ 4. Compilar y arrancar el backend
+      # ✅ 4. Dar permisos de ejecución a mvnw
+      - name: Give mvnw execution permissions
+        run: chmod +x backend/mvnw
+
+      # ✅ 5. Compilar y arrancar el backend
       - name: Build and start backend
         run: |
           cd backend
@@ -37,7 +41,7 @@ jobs:
           nohup java -jar target/*.jar > /dev/null 2>&1 &
           sleep 20
 
-      # ✅ 5. Configurar Node.js para el frontend
+      # ✅ 6. Configurar Node.js para el frontend
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -46,27 +50,28 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
-      # ✅ 6. Lint y formateo
+      # ✅ 7. Lint y formateo
       - name: Lint
         run: npm run lint
 
       - name: Format check
         run: npm run format:check
 
-      # ✅ 7. Unit tests con Vitest
+      # ✅ 8. Unit tests con Vitest
       - name: Unit tests
         run: npm run test:unit -- --coverage
 
-      # ✅ 8. Arrancar frontend en segundo plano para Cypress
+      # ✅ 9. Arrancar frontend en segundo plano para Cypress
       - name: Start frontend dev server
         run: |
           nohup npm run dev > /dev/null 2>&1 &
           sleep 10
 
-      # ✅ 9. E2E tests con Cypress
+      # ✅ 10. E2E tests con Cypress
       - name: Cypress e2e tests
         run: npx cypress run
 
-      # ✅ 10. Build final del frontend
+      # ✅ 11. Build final del frontend
       - name: Build project
         run: npm run build
+
