@@ -1,4 +1,4 @@
-name: Frontend CI with Backend
+name: Frontend CI with Backend (Docker)
 
 on:
   push:
@@ -11,65 +11,57 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ✅ 1. Clonar el repo de frontend
       - name: Checkout frontend repo
         uses: actions/checkout@v3
 
-      # ✅ 2. Clonar el repo del backend en otra carpeta
       - name: Checkout backend repo
         uses: actions/checkout@v3
         with:
           repository: LannyRivero/RenewSim-backend
           path: backend
 
-      # ✅ 3. Configurar Java para el backend
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '21' # ajusta si usas otra versión
+      # 🚀 Copiamos el docker-compose.yml del backend
+      - name: Copy docker-compose file
+        run: cp backend/docker-compose.yml .
 
-      # ✅ 4. Dar permisos de ejecución a mvnw
-      - name: Give mvnw execution permissions
-        run: chmod +x backend/mvnw
+      # 🚀 Arrancamos MySQL y backend con Docker Compose
+      - name: Start backend and MySQL with Docker Compose
+        run: docker-compose up -d
 
-      # ✅ 5. Compilar y arrancar el backend
-      - name: Build and start backend
-        run: |
-          cd backend
-          ./mvnw clean install -DskipTests
-          nohup java -jar target/*.jar > /dev/null 2>&1 &
-          sleep 20
+      # 🚀 Esperamos a que backend y MySQL estén listos
+      - name: Wait for backend to be ready
+        run: sleep 30
 
-      # ✅ 6. Configurar Node.js para el frontend
+      # ✅ Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20 # o el que uses
+          node-version: 20
 
-      # ✅ 6.5 Crear archivo .env para el frontend
+      # ✅ Crear archivo .env para el frontend
       - name: Create .env file for frontend
         run: |
           echo "VITE_API_BASE_URL=http://localhost:8080/api" >> .env
           echo "VITE_AUTH_TOKEN_SECRET=your_secret_key" >> .env
           echo "VITE_OPENWEATHER_API_KEY=75a86c6a8e0e72b3b99cfbc6fb9bf349" >> .env
 
-      # ✅ 7. Instalar dependencias del frontend
+      # ✅ Instalar dependencias del frontend
       - name: Install frontend dependencies
         run: npm ci
 
-      # ✅ 8. Arrancar frontend en segundo plano para Cypress
+      # ✅ Arrancar frontend dev server para Cypress
       - name: Start frontend dev server
         run: |
           nohup npm run dev > /dev/null 2>&1 &
           sleep 10
 
-      # ✅ 9. E2E tests con Cypress
+      # ✅ E2E tests con Cypress
       - name: Cypress e2e tests
         run: npx cypress run
 
-      # ✅ 10. Build final del frontend
+      # ✅ Build final del frontend
       - name: Build project
         run: npm run build
+
 
 
