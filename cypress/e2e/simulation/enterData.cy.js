@@ -1,27 +1,29 @@
 describe('Energy Simulation Flow - Datos válidos', () => {
 
 beforeEach(() => {
-  cy.visit('https://localhost:5174/login');
-
-  cy.get('#username').type('daniel@gmail.com');
-  cy.get('#password').type('daniel');
-  cy.get('button[type="submit"]').click();
-  cy.url().should('include', '/dashboard/user');
+ cy.fixture('users').then((users) => {
+      const user = users.daniel;
+      cy.loginViaUI(user.email, user.password);
+    });
 });
 
 
-it('Debe permitir ingresar datos válidos y mostrar resultados correctos', () => {
+it('should allow entering valid data and display correct results', () => {
   cy.get('form').should('be.visible');
-
-  cy.get('#location').type('Gijón');
-  cy.get('#energyConsumption').type('100');
-  cy.get('#energyType').select('solar');
-
-  cy.get('button[type="submit"]').click();
+  cy.fillSimulationForm('Gijón', '100', 'solar'); 
   cy.contains('h3', 'Simulation Results').should('be.visible');
-  cy.contains('Energia Generada al Año').should('be.visible');
-  cy.contains('Ahorros Estimados').should('be.visible');
-  cy.contains('Retorno de Inversión').should('be.visible');
+  
+  const expectedResults = [
+      'Energia Generada al Año',
+      'Ahorros Estimados',
+      'Retorno de Inversión'
+    ];
+
+    expectedResults.forEach((resultText) => {
+      cy.contains(resultText).should('be.visible');
+
+      cy.log('Flujo de simulación completado con éxito y resultados verificados');
+    });
 });
 
 
