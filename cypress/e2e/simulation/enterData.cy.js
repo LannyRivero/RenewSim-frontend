@@ -1,4 +1,6 @@
-describe('Energy Simulation Flow - Datos válidos', () => {
+
+
+describe('Energy Simulation Flow ', () => {
 
   beforeEach(() => {
     cy.fixture('users').then((users) => {
@@ -29,7 +31,22 @@ describe('Energy Simulation Flow - Datos válidos', () => {
       cy.log('✅ Flujo de simulación completado con éxito y resultados verificados');
     });
   });
-  
+
+it('should show validation errors with invalid data', () => {
+  cy.fixture('simulationData').then((data) => {
+    const { location, consumption, energyType } = data.invalidSimulation;
+
+    cy.get('form').should('be.visible');
+    cy.fillSimulationForm(location, consumption, energyType);
+
+    cy.contains('La ubicación es obligatoria').should('be.visible');
+    cy.contains('Debe estar entre 50 y 100000 kWh/mes.').should('be.visible');
+
+    cy.log('⚠️ Errores correctamente mostrados para datos inválidos');
+  });
+});
+
+
 });
 
 
