@@ -57,4 +57,21 @@ Cypress.Commands.add('register', (name, email, password) => {
   });
 });
 
+Cypress.Commands.add('loginByApi', (username, password) => {
+
+  cy.request({
+    method: 'POST',
+    url: 'http://localhost:8080/api/v1/auth/login',
+    body: { username, password },
+  }).then((response) => {
+    expect(response.status).to.eq(200);
+
+    // Guarda el token en localStorage
+    const token = response.body.token;
+    window.localStorage.setItem('authToken', token);
+  });
+});
+
+
+
 
