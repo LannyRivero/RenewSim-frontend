@@ -1,0 +1,23 @@
+
+{
+  "validSimulation": {
+    "location": "Gijón",
+    "consumption": "100",
+    "energyType": "solar"
+  },
+  "alternativeSimulation": {
+    "location": "Madrid",
+    "consumption": "150",
+    "energyType": "wind"
+  },
+  "invalidSimulation": {
+    "location": "",
+    "consumption": "0",
+    "energyType": ""
+  },
+  "highBudgetSimulation": {
+    "location": "Madrid",
+    "consumption": "10000",
+    "energyType": "hydro"
+  }
+}
