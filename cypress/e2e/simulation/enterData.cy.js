@@ -46,6 +46,20 @@ it('should show validation errors with invalid data', () => {
   });
 });
 
+it('should handle high budget simulation data', () => {
+    cy.fixture('simulationData').then((data) => {
+      const { location, consumption, energyType } = data.highBudgetSimulation;
+
+      cy.get('form').should('be.visible');
+      cy.fillSimulationForm(location, consumption, energyType);
+
+      cy.contains('h3', 'Simulation Results').should('be.visible');
+      cy.contains('Ahorros Estimados').should('be.visible');
+
+      cy.log('💰 Flujo con alto presupuesto verificado');
+    });
+  });
+
 
 });
 
